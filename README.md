@@ -1,4 +1,4 @@
-Baseball GDT Bot v2.0 by Matt Bullock
+Baseball GDT Bot v2.0.1 by Matt Bullock
 =====================================
 
 This project was originally written by Matt Bullock,
@@ -9,15 +9,20 @@ The point of this project is to create a bot that will generate a
 	post it in the correct subreddit for that team, and keep it
 	updated throughout the game.
 	
-Version 1.0 was written in a mix of Python and Java, and it is being
+Version 1.0 was written in a mix of Python and Java, and has been
 	completely ported to Python for v2.0 (this version).
 	
 Modules being used:
 
 	praw - interfacing reddit
-	
 	simplejson - JSON parsing
-	
 	urllib2 - pulling data from MLB servers
-	
 	ElementTree - XML parsing
+
+###Updates
+
+####v2.0.1
+
+* Fixed the TV media showing the same for both home and away.
+* Fixed the timestamp on the game/time checks not displaying correctly.
+	
