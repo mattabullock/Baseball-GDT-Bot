@@ -96,7 +96,7 @@ def generateheader(files):
 	header = header + date_object.strftime("%I:%M %p") + " " + timezone + "|**Audio**||" + game.get('home_name_abbrev') + "|" + broadcast[0][0].text + "|" + subreddits[0] + "\n"
 	header = header + "**Weather**| ||" + game.get('away_name_abbrev') + "|" + broadcast[1][0].text + "|" + subreddits[1] + "\n"
 	header = header + weather.get('condition') + " " + weather.get('temp') + " F|**Video**||" + game.get('home_name_abbrev') + "|" + broadcast[0][1].text + "| **Location**\n"
-	header = header + weather.get('wind') + " |||" + game.get('away_name_abbrev') + "|" + broadcast[0][1].text + "|" + game.get('venue') + "\n"
+	header = header + weather.get('wind') + " |||" + game.get('away_name_abbrev') + "|" + broadcast[1][1].text + "|" + game.get('venue') + "\n"
 	header = header + "\n---\n"
 	return header
 	
