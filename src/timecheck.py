@@ -30,7 +30,7 @@ def gamecheck(dir):
 	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
 	while True:
 		check = datetime.today()
-		if (date_object - check).seconds <= 5400 or (date_object - check).seconds >= 43200:
+		if (date_object - check).seconds <= 5400:
 			return
 		else:
 			print "Last game check: " + datetime.strftime(check, "%I:%M %p")
