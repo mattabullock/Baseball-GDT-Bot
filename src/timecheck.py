@@ -1,0 +1,49 @@
+# does all the time checking
+
+import urllib2
+import time
+from datetime import datetime
+import simplejson as json
+
+def endofdaycheck():
+	today = datetime.today()
+	while True:
+		check = datetime.today()
+		if today.day != check.day:
+			print "NEW DAY"
+			return
+		else:
+			print "Last time check: " + check.strftime("%I:%m %p")
+			time.sleep(60)
+			
+def gamecheck(dir):
+	while True:
+		try:
+			response = urllib2.urlopen(dir + "linescore.json")
+			break
+		except:
+			print "Couldn't find file, trying again..."
+			time.sleep(20)
+	jsonfile = json.load(response)
+	game = jsonfile.get('data').get('game')
+	timestring = game.get('time_date') + " " + game.get('ampm')
+	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+	while True:
+		check = datetime.today()
+		if (date_object - check).seconds <= 5400 or (date_object - check).seconds >= 43200:
+			return
+		else:
+			print (date_object - check).seconds
+			print "Last game check: " + str(check)
+			print str(date_object)
+			time.sleep(600)
+			
+def ppcheck(dir):
+	try:
+		response = urllib2.urlopen(dir + "linescore.json")
+	except:
+		print "Couldn't find file, trying again..."
+		time.sleep(20)
+	jsonfile = json.load(response)
+	game = jsonfile.get('data').get('game')
+	return (game.get('status') == "Postponed")
