@@ -23,6 +23,7 @@ Modules being used:
 
 ####v2.0.1
 
+* Fixed gamecheck not always working correctly.
 * Fixed the TV media showing the same for both home and away.
 * Fixed the timestamp on the game/time checks not displaying correctly.
 	
