@@ -13,8 +13,8 @@ def endofdaycheck():
 			print "NEW DAY"
 			return
 		else:
-			print "Last time check: " + check.strftime("%I:%m %p")
-			time.sleep(60)
+			print "Last time check: " + datetime.strftime(check, "%I:%M %p") 
+			time.sleep(600)
 			
 def gamecheck(dir):
 	while True:
@@ -33,9 +33,7 @@ def gamecheck(dir):
 		if (date_object - check).seconds <= 5400 or (date_object - check).seconds >= 43200:
 			return
 		else:
-			print (date_object - check).seconds
-			print "Last game check: " + str(check)
-			print str(date_object)
+			print "Last game check: " + datetime.strftime(check, "%I:%M %p")
 			time.sleep(600)
 			
 def ppcheck(dir):
