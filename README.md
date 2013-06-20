@@ -1,7 +1,7 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-####Current Version: 2.0.1
+####Current Version: 2.0.2
 
 This project was originally written by Matt Bullock,
 	A.K.A. /u/DetectiveWoofles on reddit and Woofles on GitHub.
@@ -22,6 +22,11 @@ Modules being used:
 	ElementTree - XML parsing
 
 ###Updates
+
+####v2.0.2
+
+* Fixed random crashing
+* Fixed bug where some teams names were not displayed correctly. (Though Chi White Sox White Sox is a great name...)
 
 ####v2.0.1
 
