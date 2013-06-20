@@ -75,6 +75,7 @@ def downloadfiles(dirs):
 			files["plays"] = json.load(response)
 			response = urllib2.urlopen(dirs[4])
 			files["scores"] = ET.parse(response)
+			break
 		except:
 			print "Couldn't open file, retrying..."
 			time.sleep(10)
