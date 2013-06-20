@@ -49,7 +49,13 @@ while True:
 					time.sleep(300)
 			while True:
 				str = editor.generatecode(d)
-				sub.edit(str)
+				while True:
+					try:
+						sub.edit(str)
+						break
+					except Exception, err:
+						print "Couldn't submit edits, trying again..."
+						time.sleep(10)
 				if "###FINAL" in str:
 					break
 				elif "###POSTPONED" in str:
