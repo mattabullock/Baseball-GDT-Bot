@@ -13,17 +13,20 @@ def generatetitle(dir):
 	while True:
 		try:
 			response = urllib2.urlopen(dir + "linescore.json")
+			oresponse = urllib2.urlopen(dir + "boxscore.json")
 			break
 		except :
 			print "Couldn't find file, trying again..."
 			time.sleep(20)
 	filething = json.load(response)
+	ofilething = json.load(oresponse)
 	game = filething.get('data').get('game')
+	ogame = ofilething.get('data').get('boxscore')
 	timestring = game.get('time_date') + " " + game.get('ampm')
 	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-	title = title + game.get('away_team_city') + " " + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
+	title = title + ogame.get('away_fname') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
 	title = title + " @ "
-	title = title + game.get('home_team_city') + " " + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
+	title = title + ogame.get('home_fname') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
 	title = title + " - "
 	title = title + date_object.strftime("%B %d, %Y")
 	return title
@@ -32,14 +35,13 @@ def generatecode(dir):
 	code = ""
 	# files needed to download
 	files = dict()
-	while not files:
-		dirs = []
-		dirs.append(dir + "linescore.json")
-		dirs.append(dir + "boxscore.json")
-		dirs.append(dir + "gamecenter.xml")
-		dirs.append(dir + "plays.json")
-		dirs.append(dir + "/inning/inning_Scores.xml")
-		files = downloadfiles(dirs)
+	dirs = []
+	dirs.append(dir + "linescore.json")
+	dirs.append(dir + "boxscore.json")
+	dirs.append(dir + "gamecenter.xml")
+	dirs.append(dir + "plays.json")
+	dirs.append(dir + "/inning/inning_Scores.xml")
+	files = downloadfiles(dirs)
 	
 	#generate post
 	code = code + generateheader(files)
@@ -61,25 +63,28 @@ def generatecode(dir):
 
 def downloadfiles(dirs):
 	files = dict()
-	try:
-		response = urllib2.urlopen(dirs[0])
-		files["linescore"] = json.load(response)
-		response = urllib2.urlopen(dirs[1])
-		files["boxscore"] = json.load(response)
-		response = urllib2.urlopen(dirs[2])
-		files["gamecenter"] = ET.parse(response)
-		response = urllib2.urlopen(dirs[3])
-		files["plays"] = json.load(response)
-		response = urllib2.urlopen(dirs[4])
-		files["scores"] = ET.parse(response)
-	except:
-		return files
+	while True:
+		try:
+			response = urllib2.urlopen(dirs[0])
+			files["linescore"] = json.load(response)
+			response = urllib2.urlopen(dirs[1])
+			files["boxscore"] = json.load(response)
+			response = urllib2.urlopen(dirs[2])
+			files["gamecenter"] = ET.parse(response)
+			response = urllib2.urlopen(dirs[3])
+			files["plays"] = json.load(response)
+			response = urllib2.urlopen(dirs[4])
+			files["scores"] = ET.parse(response)
+		except:
+			print "Couldn't open file, retrying..."
+			time.sleep(10)
 	return files
 
 	
 def generateheader(files):
 	header = ""
 	game = files["linescore"].get('data').get('game')
+	ogame = files["boxscore"].get('data').get('boxscore')
 	timestring = game.get('time_date') + " " + game.get('ampm')
 	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
 	t = timedelta(hours=1) #change depending on team, 0 for east, 1 for central, 2 for mountain, 3 for west coast
@@ -87,8 +92,8 @@ def generateheader(files):
 	date_object = date_object - t
 	weather = files["plays"].get('data').get('game').get('weather')
 	subreddits = getsubreddits(game.get('home_team_name'),game.get('away_team_name'))
-	header = header + "###" + game.get('away_team_city') + " " + game.get('away_team_name')
-	header = header + " @ " + game.get('home_team_city') + " " + game.get('home_team_name') + "\n"
+	header = header + "###" + ogame.get('away_fname')
+	header = header + " @ " + ogame.get('home_fname') + "\n"
 	header = header + "First Pitch|Media||Feed|Channel|Subreddits\n"
 	header = header + ":--|:--|:--:|:--|:--|:--\n"
 	root = files["gamecenter"].getroot()
@@ -230,7 +235,7 @@ def generatescoringplays(files):
 		elif s.get("home") > s.get("away"):
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " " + game.get("home_team_name")
 		else:
-			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " TIED"
+			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " Tied"
 		scoringplays = scoringplays + "\n"
 	scoringplays = scoringplays + "\n"
 	return scoringplays
