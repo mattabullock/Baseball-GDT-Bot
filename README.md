@@ -19,8 +19,13 @@ To set up a bot for your own sub, there are three spots in the code you
 	be your team's code. Search through [this page](http://gd2.mlb.com/components/game/mlb/year_2013/month_06/day_19/) and you can
 	probably find it. Second place to change is line 91 of editor.py.
 	You need to change the number to match your time zone, so 0 is ET,
-	1 is CT, 2 is MT, and 3 is PT. Right under that is the last place
+	1 is CT, 2 is MT, and 3 is PT. Right under that is the third place
 	to change, and you just need to change what time zone it displays.
+	Next you'll need to go back to main.py and change the first parameter
+	in line 45 to the sub you want to post to (just the name, like 
+	minnesotatwins, not /r/minnesotatwins). Lastly, make sure you type
+	in your login credentials to line 11.
+	
 	
 This was written in Python 2.7, so beware if you are running Python 3 or
 	above that it may not work correctly. Also make sure you install
