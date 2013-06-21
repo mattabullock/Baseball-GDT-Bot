@@ -14,6 +14,18 @@ The point of this project is to create a bot that will generate a
 Version 1.0 was written in a mix of Python and Java, and has been
 	completely ported to Python for v2.0 (this version).
 	
+To set up a bot for your own sub, there are three spots in the code you 
+	need to change things. First is line 34 of main.py, change it to
+	be your team's code. Search through [this page](http://gd2.mlb.com/components/game/mlb/year_2013/month_06/day_19/) and you can
+	probably find it. Second place to change is line 91 of editor.py.
+	You need to change the number to match your time zone, so 0 is ET,
+	1 is CT, 2 is MT, and 3 is PT. Right under that is the last place
+	to change, and you just need to change what time zone it displays.
+	
+This was written in Python 2.7, so beware if you are running Python 3 or
+	above that it may not work correctly. Also make sure you install
+	praw and simplejson before running!
+	
 Modules being used:
 
 	praw - interfacing reddit
