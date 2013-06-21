@@ -13,7 +13,11 @@ The point of this project is to create a bot that will generate a
 	
 Version 1.0 was written in a mix of Python and Java, and has been
 	completely ported to Python for v2.0 (this version).
-	
+
+---
+
+####SET UP YOUR OWN BOT!
+
 To set up a bot for your own sub, there are a few spots in the code you 
 	need to change things. 
 	
@@ -32,6 +36,8 @@ Next, make sure you type in your login credentials to line 11 of main.py.
 Lastly, in timecheck.py, search for the number 5400 and change it to 9000 for MT,
 	1800 for ET, and 12600 for PT. Keep it the same for CT.
 	
+---	
+
 If something doesn't seem right, feel free to message me or post it as a bug here.
 	
 This was written in Python 2.7, so beware if you are running Python 3 or
