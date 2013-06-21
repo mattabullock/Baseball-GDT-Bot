@@ -1,5 +1,6 @@
 import player, editor
 from datetime import datetime
+import time
 
 import praw
 import urllib2
@@ -23,8 +24,9 @@ for v in html:
 		v = v[v.index("\"")+1:len(v)]
 		v = v[0:v.index("\"")]
 		directories.append(url + v)
-# for v in directories:
-	# generatecode(v)
-# r.submit('test', 'test', editor.generatecode(directories[0]))
-sub = r.get_submission(submission_id='1gmia3')
-sub.edit(editor.generatecode(directories[0]))
+title = editor.generatetitle(directories[0]);
+r.submit('test', title, editor.generatecode(directories[0]))
+# sub = r.get_submission(submission_id='1gmia3')
+while True:
+	sub.edit(editor.generatecode(directories[0]))
+	time.sleep(10)
