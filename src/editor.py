@@ -265,7 +265,7 @@ def getsubreddits(homename, awayname):
 		"Cubs" : "/r/Cubs",
 		"Brewers" : "/r/Brewers",
 		"Giants" : "/r/SFGiants",
-		"Diamondbacks" : "/r/azdiamondbacks",
+		"D-backs" : "/r/azdiamondbacks",
 		"Rockies" : "/r/ColoradoRockies",
 		"Dodgers" : "/r/Dodgers",
 		"Padres" : "/r/Padres",
