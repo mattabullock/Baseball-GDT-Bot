@@ -1,7 +1,7 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-####Current Version: 2.0.2
+####Current Version: 2.0.3
 
 This project was originally written by Matt Bullock,
 	A.K.A. /u/DetectiveWoofles on reddit and Woofles on GitHub.
