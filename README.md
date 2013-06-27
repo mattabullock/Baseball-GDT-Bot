@@ -55,6 +55,7 @@ Modules being used:
 
 ####v2.0.3
 * Fixed the Diamondbacks' subreddit not working properly.
+* Fixed crash related to scoring plays.
 
 ####v2.0.2
 
