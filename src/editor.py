@@ -207,7 +207,7 @@ def generateboxscore(files):
 	return boxscore
 	
 def generatescoringplays(files):
-	scoringplays = "Inning|Play|Score\n"
+	scoringplays = "###Scoring Plays\nInning|Play|Score\n"
 	scoringplays = scoringplays + ":--:|:--|:--:\n"
 	root = files["scores"].getroot()
 	game = files["linescore"].get('data').get('game')
