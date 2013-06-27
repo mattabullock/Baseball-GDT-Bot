@@ -226,6 +226,8 @@ def generatescoringplays(files):
 		else:
 			scoringplays = scoringplays + " |"
 		if s.get("pbp") == "":
+			scoringplays = scoringplays + s.find('atbat').get('des')
+		elif "scores" not in s.get("pbp"):
 			actions = s.findall("action")
 			scoringplays = scoringplays + actions[len(actions)-1].get("des")
 		else:
