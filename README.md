@@ -34,7 +34,9 @@ Second place to change is line 91 of editor.py.
 Next, make sure you type in your login credentials to line 11 of main.py.
 
 Lastly, in timecheck.py, search for the number 5400 and change it to 9000 for MT,
-	1800 for ET, and 12600 for PT. Keep it the same for CT.
+	1800 for ET, and 12600 for PT. Keep it the same for CT. **This is for the
+	timezone the computer containing the bot is located in, not the timezone
+	the team is in!**
 	
 ---	
 
