@@ -99,10 +99,22 @@ def generateheader(files):
 	header = header + ":--|:--|:--:|:--|:--|:--\n"
 	root = files["gamecenter"].getroot()
 	broadcast = root.find('broadcast')
-	header = header + date_object.strftime("%I:%M %p") + " " + timezone + "|**Audio**||" + game.get('home_name_abbrev') + "|" + broadcast[0][0].text + "|" + subreddits[0] + "\n"
-	header = header + "**Weather**| ||" + game.get('away_name_abbrev') + "|" + broadcast[1][0].text + "|" + subreddits[1] + "\n"
-	header = header + weather.get('condition') + " " + weather.get('temp') + " F|**Video**||" + game.get('home_name_abbrev') + "|" + broadcast[0][1].text + "| **Location**\n"
-	header = header + weather.get('wind') + " |||" + game.get('away_name_abbrev') + "|" + broadcast[1][1].text + "|" + game.get('venue') + "\n"
+	header = header + date_object.strftime("%I:%M %p") + " " + timezone + "|**Audio**||" + game.get('home_name_abbrev') + "|" 
+	if not isinstance(broadcast[0][0].text, type(None)):
+		header = header + broadcast[0][0].text
+	header = header + "|" + subreddits[0] + "\n"
+	header = header + "**Weather**| ||" + game.get('away_name_abbrev') + "|"
+	if not isinstance(broadcast[1][0].text, type(None)):
+		header = header + broadcast[1][0].text
+	header = header + "|" + subreddits[1] + "\n"
+	header = header + weather.get('condition') + " " + weather.get('temp') + " F|**Video**||" + game.get('home_name_abbrev') + "|" 
+	if not isinstance(broadcast[0][1].text, type(None)):
+		header = header + broadcast[0][1].text 
+	header = header + "| **Location**\n"
+	header = header + weather.get('wind') + " |||" + game.get('away_name_abbrev') + "|" 
+	if not isinstance(broadcast[1][1].text, type(None)):
+		header = header + broadcast[1][1].text 
+	header = header + "|" + game.get('venue') + "\n"
 	header = header + "\n---\n"
 	return header
 	
@@ -227,7 +239,7 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + " |"
 		if s.get("pbp") == "":
 			scoringplays = scoringplays + s.find('atbat').get('des')
-		elif "scores" not in s.get("pbp"):
+		elif "scores" not in s.get("pbp") and len(s.findall("action")) > 0:
 			actions = s.findall("action")
 			scoringplays = scoringplays + actions[len(actions)-1].get("des")
 		else:
