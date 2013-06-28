@@ -1,7 +1,7 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-####Current Version: 2.0.3
+####Current Version: 2.0.4
 
 This project was originally written by Matt Bullock,
 	A.K.A. /u/DetectiveWoofles on reddit and Woofles on GitHub.
@@ -55,13 +55,17 @@ Modules being used:
 
 ###Updates
 
+####v2.0.4
+* Fixed crash caused by game not being aired on TV.
+* Fixed another crash related to scoring plays.
+
 ####v2.0.3
 * Fixed the Diamondbacks' subreddit not working properly.
 * Fixed crash related to scoring plays.
 
 ####v2.0.2
 
-* Fixed random crashing
+* Fixed random crashing.
 * Fixed bug where some teams names were not displayed correctly. (Though Chi White Sox White Sox is a great name...)
 
 ####v2.0.1
