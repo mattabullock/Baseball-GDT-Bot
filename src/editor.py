@@ -51,9 +51,9 @@ def generatecode(dir):
 	if files["linescore"].get('data').get('game').get('status') == "Final":
 		s = files["linescore"].get('data').get('game')
 		code = code + "###FINAL "
-		if s.get("home_team_runs") < s.get("away_team_runs"):
+		if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
 			code = code + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get("away_team_name")
-		elif s.get("home_team_runs") > s.get("away_team_runs"):
+		elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
 			code = code + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get("home_team_name")
 		else:
 			code = code + "SOMETHING WENT HORRIBLY WRONG"
@@ -237,7 +237,10 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + currinning
 		else:
 			scoringplays = scoringplays + " |"
-		if s.get("pbp") == "":
+		if "scores" not in s.find('atbat').get('des') and s.get("pbp") == "":
+			actions = s.findall("action")
+			scoringplays = scoringplays + actions[len(actions)-1].get("des")
+		elif s.get("pbp") == "" :
 			scoringplays = scoringplays + s.find('atbat').get('des')
 		elif "scores" not in s.get("pbp") and len(s.findall("action")) > 0:
 			actions = s.findall("action")
@@ -245,9 +248,9 @@ def generatescoringplays(files):
 		else:
 			scoringplays = scoringplays + s.get("pbp")
 		scoringplays = scoringplays + "|"
-		if s.get("home") < s.get("away"):
+		if int(s.get("home")) < int(s.get("away")):
 			scoringplays = scoringplays + s.get("away") + "-" + s.get("home") + " " + game.get("away_team_name")
-		elif s.get("home") > s.get("away"):
+		elif int(s.get("home")) > int(s.get("away")):
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " " + game.get("home_team_name")
 		else:
 			scoringplays = scoringplays + s.get("home") + "-" + s.get("away") + " Tied"
@@ -287,7 +290,9 @@ def getsubreddits(homename, awayname):
 		"Mets" : "/r/NewYorkMets",
 		"Marlins" : "/r/letsgofish",
 		"Nationals" : "/r/Nationals",
-		"Braves" : "/r/Braves"
+		"Braves" : "/r/Braves",
+		"National" : "/r/baseball",
+		"American" : "/r/baseball"
 	}
 	subreddits.append(options[homename])
 	subreddits.append(options[awayname])
