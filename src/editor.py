@@ -89,7 +89,7 @@ def generateheader(files):
 	timestring = game.get('time_date') + " " + game.get('ampm')
 	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
 	t = timedelta(hours=1) #change depending on team, 0 for east, 1 for central, 2 for mountain, 3 for west coast
-	timezone = "CST" #change this based on team too
+	timezone = "CT" #change this based on team too
 	date_object = date_object - t
 	weather = files["plays"].get('data').get('game').get('weather')
 	subreddits = getsubreddits(game.get('home_team_name'),game.get('away_team_name'))
@@ -99,7 +99,7 @@ def generateheader(files):
 	header = header + ":--|:--|:--:|:--|:--|:--\n"
 	root = files["gamecenter"].getroot()
 	broadcast = root.find('broadcast')
-	header = header + date_object.strftime("%I:%M %p") + " " + timezone + "|**Audio**||" + game.get('home_name_abbrev') + "|" 
+	header = header + date_object.strftime("%I:%M %p") + " " + timezone + "|**Video**||" + game.get('home_name_abbrev') + "|" 
 	if not isinstance(broadcast[0][0].text, type(None)):
 		header = header + broadcast[0][0].text
 	header = header + "|" + subreddits[0] + "\n"
@@ -107,7 +107,7 @@ def generateheader(files):
 	if not isinstance(broadcast[1][0].text, type(None)):
 		header = header + broadcast[1][0].text
 	header = header + "|" + subreddits[1] + "\n"
-	header = header + weather.get('condition') + " " + weather.get('temp') + " F|**Video**||" + game.get('home_name_abbrev') + "|" 
+	header = header + weather.get('condition') + " " + weather.get('temp') + " F|**Audio**||" + game.get('home_name_abbrev') + "|" 
 	if not isinstance(broadcast[0][1].text, type(None)):
 		header = header + broadcast[0][1].text 
 	header = header + "| **Location**\n"
@@ -237,16 +237,23 @@ def generatescoringplays(files):
 			scoringplays = scoringplays + currinning
 		else:
 			scoringplays = scoringplays + " |"
-		if "scores" not in s.find('atbat').get('des') and s.get("pbp") == "":
-			actions = s.findall("action")
-			scoringplays = scoringplays + actions[len(actions)-1].get("des")
-		elif s.get("pbp") == "" :
-			scoringplays = scoringplays + s.find('atbat').get('des')
-		elif "scores" not in s.get("pbp") and len(s.findall("action")) > 0:
-			actions = s.findall("action")
-			scoringplays = scoringplays + actions[len(actions)-1].get("des")
-		else:
-			scoringplays = scoringplays + s.get("pbp")
+		actions = s.findall("action")   
+		if s.find('atbat').get('score') == "T":
+			while True:
+				try:
+					scoringplays = scoringplays + s.find('atbat').get('des')
+					break
+				except:
+					scoringplays = scoringplays + "No description currently available"
+					break
+		elif actions[len(actions)-1].get("score") == "T":   
+			while True:
+				try:
+					scoringplays = scoringplays + actions[len(actions)-1].get("des")
+					break
+				except:
+					scoringplays = scoringplays + "No description currently available"
+					break
 		scoringplays = scoringplays + "|"
 		if int(s.get("home")) < int(s.get("away")):
 			scoringplays = scoringplays + s.get("away") + "-" + s.get("home") + " " + game.get("away_team_name")
@@ -272,7 +279,7 @@ def getsubreddits(homename, awayname):
 		"Angels" : "/r/AngelsBaseball",
 		"Mariners" : "/r/Mariners",
 		"Red Sox" : "/r/RedSox",
-		"Yankees" : "/r/Yankees",
+		"Yankees" : "/r/NYYankees",
 		"Blue Jays" : "/r/TorontoBlueJays",
 		"Rays" : "/r/TampaBayRays",
 		"Orioles" : "/r/Orioles",
@@ -290,9 +297,7 @@ def getsubreddits(homename, awayname):
 		"Mets" : "/r/NewYorkMets",
 		"Marlins" : "/r/letsgofish",
 		"Nationals" : "/r/Nationals",
-		"Braves" : "/r/Braves",
-		"National" : "/r/baseball",
-		"American" : "/r/baseball"
+		"Braves" : "/r/Braves"
 	}
 	subreddits.append(options[homename])
 	subreddits.append(options[awayname])

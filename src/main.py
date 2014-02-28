@@ -19,7 +19,7 @@ while True:
 	
 	# UNCOMMENT FOR TESTING PURPOSES ONLY
 	# url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_11/"
-
+	
 	response = ""
 	while not response:
 		try:
@@ -42,7 +42,7 @@ while True:
 		if not timecheck.ppcheck(d):
 			while True:
 				try:
-					sub = r.submit('test', title, editor.generatecode(d))
+					sub = r.submit('minnesotatwins', title, editor.generatecode(d))
 					break
 				except Exception, err:
 					print err

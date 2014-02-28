@@ -13,20 +13,18 @@ r.login('*****', '*****')
 d = datetime.today()
 url = "http://gd2.mlb.com/components/game/mlb/"
 url = url + "year_" + d.strftime("%Y") + "/month_" + d.strftime("%m") + "/day_" + d.strftime("%d") + "/"
-# url = url + "year_" + d.strftime("%Y") + "/month_" + d.strftime("%m") + "/day_24/"
+# url = url + "year_" + d.strftime("%Y") + "/month_" + d.strftime("%m") + "/day_19/"
 
 reponse = urllib2.urlopen(url)
 html = reponse.readlines()
 directories = []
-# print html
 for v in html:
-	if "phimlb" in v:
+	if "minmlb" in v:
 		v = v[v.index("\"")+1:len(v)]
 		v = v[0:v.index("\"")]
 		directories.append(url + v)
-title = editor.generatetitle(directories[0]);
-sub = r.submit('test', title, editor.generatecode(directories[0]))
-# sub = r.get_submission(submission_id='1gmia3')
+# r.submit('test', 'test', editor.generatecode(directories[0]))
+sub = r.get_submission(submission_id='1krk9f')
 while True:
 	sub.edit(editor.generatecode(directories[0]))
 	time.sleep(10)

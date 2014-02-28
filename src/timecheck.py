@@ -28,6 +28,7 @@ def gamecheck(dir):
 	game = jsonfile.get('data').get('game')
 	timestring = game.get('time_date') + " " + game.get('ampm')
 	date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+	print "The game starts at: " + date_object.strftime("%I:%M %p")
 	while True:
 		check = datetime.today()
 		if (date_object - check).seconds <= 5400:
