@@ -44,10 +44,18 @@ def generatecode(dir):
 	files = downloadfiles(dirs)
 	
 	#generate post
-	code = code + generateheader(files)
-	code = code + generatelinescore(files)
-	code = code + generateboxscore(files)
-	code = code + generatescoringplays(files)
+	temp = generateheader(files)
+	if temp is not None:
+		code = code + temp
+	temp = generatelinescore(files)
+	if temp is not None:
+		code = code + temp
+	temp = generateboxscore(files)
+	if temp is not None:
+		code = code + temp
+	temp = generatescoringplays(files)
+	if temp is not None:
+		code = code + temp
 	if files["linescore"].get('data').get('game').get('status') == "Final":
 		s = files["linescore"].get('data').get('game')
 		code = code + "###FINAL "
@@ -122,6 +130,8 @@ def generatelinescore(files):
 	linescore = "###Line Score\n"
 	game = files["linescore"].get('data').get('game')
 	lineinfo = game.get('linescore')
+	if lineinfo is None:
+		return None
 	innings = len(lineinfo) if len(lineinfo) > 9 else 9
 	curinning = len(lineinfo)
 	linescore = linescore + " |"
@@ -238,6 +248,10 @@ def generatescoringplays(files):
 		else:
 			scoringplays = scoringplays + " |"
 		actions = s.findall("action")   
+		if s is None:
+			return None
+		elif s.find('atbat') is None:
+			return None
 		if s.find('atbat').get('score') == "T":
 			while True:
 				try:

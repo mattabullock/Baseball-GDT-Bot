@@ -42,24 +42,31 @@ while True:
 		if not timecheck.ppcheck(d):
 			while True:
 				try:
-					sub = r.submit('minnesotatwins', title, editor.generatecode(d))
-					break
+					post = editor.generatecode(d)
+					if post is not None:
+						sub = r.submit('minnesotatwins', title, post)
+						break
+					else:
+						time.sleep(60)
 				except Exception, err:
 					print err
-					time.sleep(300)
+					time.sleep(60)
 			while True:
 				str = editor.generatecode(d)
-				while True:
-					try:
-						sub.edit(str)
+				if str is not None:
+					while True:
+						try:
+							sub.edit(str)
+							break
+						except Exception, err:
+							print "Couldn't submit edits, trying again..."
+							time.sleep(10)
+					if "###FINAL" in str:
 						break
-					except Exception, err:
-						print "Couldn't submit edits, trying again..."
-						time.sleep(10)
-				if "###FINAL" in str:
-					break
-				elif "###POSTPONED" in str:
-					break
+					elif "###POSTPONED" in str:
+						break
+				else:
+					print "error occurred, trying again"
 				time.sleep(10)
 	if datetime.today().day == today.day:
 		timecheck.endofdaycheck()
