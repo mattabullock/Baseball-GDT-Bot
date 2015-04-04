@@ -73,7 +73,7 @@ class Bot:
             return
 
         r = praw.Reddit(user_agent='GDTBot')
-        r.login(USERNAME, PASSWORD)
+        r.login(self.USERNAME, self.PASSWORD)
 
         if self.TIME_ZONE == 'ET':
             time_info = (self.TIME_ZONE,0)
