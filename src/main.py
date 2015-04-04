@@ -75,14 +75,14 @@ class Bot:
         r = praw.Reddit(user_agent='GDTBot')
         r.login(self.USERNAME, self.PASSWORD)
 
-        if self.TIME_ZONE == 'ET':
-            time_info = (self.TIME_ZONE,0)
-        elif self.TIME_ZONE == 'CT':
-            time_info = (self.TIME_ZONE,1)
-        elif self.TIME_ZONE == 'MT':
-            time_info = (self.TIME_ZONE,2)
-        elif self.TIME_ZONE == 'PT':
-            time_info = (self.TIME_ZONE,3)
+        if self.TEAM_TIME_ZONE == 'ET':
+            time_info = (self.TEAM_TIME_ZONE,0)
+        elif self.TEAM_TIME_ZONE == 'CT':
+            time_info = (self.TEAM_TIME_ZONE,1)
+        elif self.TEAM_TIME_ZONE == 'MT':
+            time_info = (self.TEAM_TIME_ZONE,2)
+        elif self.TEAM_TIME_ZONE == 'PT':
+            time_info = (self.TEAM_TIME_ZONE,3)
         else:
             print "Invalid time zone settings."
             return
