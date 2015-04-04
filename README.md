@@ -13,7 +13,7 @@ The point of this project is to create a bot that will generate a
 	updated throughout the game.
 	
 Version 1.0 was written in a mix of Python and Java, and has been
-	completely ported to Python for v2.0 (this version).
+	completely ported to Python for v2.0 and v3.0 (this version).
 
 ---
 
