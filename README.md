@@ -19,7 +19,7 @@ Version 1.0 was written in a mix of Python and Java, and has been
 
 ####SET UP YOUR OWN BOT!
 
-All you need to do is edit settings.json with the following information!
+All you need to do is edit sample_settings.json with the following information, rename it to settings.json, and copy it into the src folder!
 
 BOT_TIME_ZONE - time zone of the computer running the bot, uncomment the line that you want to use
 TIME_ZONE - time zone of the team. uncomment the line that you want to use
