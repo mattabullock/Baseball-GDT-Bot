@@ -200,6 +200,7 @@ class Bot:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generateposttitle(d)
                                 sub = r.submit(self.SUBREDDIT, posttitle, edit.generatecode(d))
+                                if self.STICKY: sub.sticky()
                                 print "Postgame thread submitted..."
                             break
                         time.sleep(10)
