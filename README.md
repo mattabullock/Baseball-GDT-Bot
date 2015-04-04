@@ -1,10 +1,11 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-####Current Version: 2.0.4
+####Current Version: 3.0.0
 
 This project was originally written by Matt Bullock,
 	A.K.A. /u/DetectiveWoofles on reddit and Woofles on GitHub.
+	User avery-crudeman is the only other contributor.
 	
 The point of this project is to create a bot that will generate a
 	game discussion thread that contains live linescore and boxscore,
@@ -18,25 +19,17 @@ Version 1.0 was written in a mix of Python and Java, and has been
 
 ####SET UP YOUR OWN BOT!
 
-To set up a bot for your own sub, there are a few spots in the code you 
-	need to change things. 
-	
-First is line 34 of main.py, change it to be your team's code. Search through [this page](http://gd2.mlb.com/components/game/mlb/year_2013/month_06/day_19/) and you can probably find it. 
-	
-Second place to change is line 91 of editor.py.
-	You need to change the number to match your time zone, so 0 is ET,
-	1 is CT, 2 is MT, and 3 is PT. Right under that is the third place
-	to change, and you just need to change what time zone it displays.
-	Next you'll need to go back to main.py and change the first parameter
-	in line 45 to the sub you want to post to (just the name, like 
-	minnesotatwins, not /r/minnesotatwins). 
-	
-Next, make sure you type in your login credentials to line 11 of main.py.
+All you need to do is edit settings.json with the following information!
 
-Lastly, in timecheck.py, search for the number 5400 and change it to 9000 for MT,
-	1800 for ET, and 12600 for PT. Keep it the same for CT. **This is for the
-	timezone the computer containing the bot is located in, not the timezone
-	the team is in!**
+BOT_TIME_ZONE - time zone of the computer running the bot, uncomment the line that you want to use
+TIME_ZONE - time zone of the team. uncomment the line that you want to use
+POST_TIME - bot posts the thread POST_TIME hours before the game
+USERNAME - reddit username
+PASSWORD - reddit password
+SUBREDDIT - subreddit that you want the threads posted to
+TEAM_CODE - three letter code that represents team, look this up
+POST_GAME_THREAD - do you want a post game thread?
+STICKY - do you want the thread stickied?
 	
 ---	
 
@@ -54,6 +47,10 @@ Modules being used:
 	ElementTree - XML parsing
 
 ###Updates
+
+####v3.0.0
+* Modular - If you want a certain feature, just change a variable at the top!
+* Easier to read - Cleaned up some code, started using more OOP.
 
 ####v2.0.4
 * Fixed crash caused by game not being aired on TV.

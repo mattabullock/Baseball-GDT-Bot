@@ -1,0 +1,11 @@
+{
+    "BOT_TIME_ZONE": "CT",
+    "TEAM_TIME_ZONE": "CT",
+    "POST_TIME": 1,
+    "USERNAME": "default",
+    "PASSWORD": "default",
+    "SUBREDDIT": "test",
+    "TEAM_CODE": "XXX",
+    "POST_GAME_THREAD": false,
+    "STICKY": false
+}
