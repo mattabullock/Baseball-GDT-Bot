@@ -30,6 +30,7 @@ class Bot:
         self.TEAM_CODE = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
+        self.POST_SETTINGS = None
 
     def read_settings(self):
         with open('settings.json') as data:
@@ -62,6 +63,12 @@ class Bot:
             self.STICKY = settings.get('STICKY')
             if self.STICKY == None: return "Missing STICKY"
 
+            temp_settings = settings.get('POST_SETTINGS')
+            self.POST_SETTINGS = (temp_settings.get('HEADER'),temp_settings.get('BOX_SCORE'),
+                                    temp_settings.get('LINE_SCORE'),temp_settings.get('SCORING_PLAYS'),
+                                    temp_settings.get('HIGHLIGHTS'))
+            if self.POST_SETTINGS == None: return "Missing POST_SETTINGS"
+
         return 0
 
     def run(self):
@@ -87,7 +94,7 @@ class Bot:
             print "Invalid time zone settings."
             return
 
-        edit = editor.Editor(time_info)
+        edit = editor.Editor(time_info, self.POST_SETTINGS)
 
         if self.BOT_TIME_ZONE == 'ET':
             time_before = self.POST_TIME * 60 * 60
@@ -111,7 +118,7 @@ class Bot:
             url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
 
             # UNCOMMENT FOR TESTING PURPOSES ONLY
-            #url = url + "year_2014" + "/month_03" + "/day_31/"
+            # url = url + "year_2015" + "/month_04" + "/day_03/"
 
             response = ""
             while not response:
@@ -142,7 +149,7 @@ class Bot:
                             print "Game thread submitted..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(check, "%d %I:%M %p")
-                            time.sleep(120)
+                            time.sleep(5)
                             break
                         except Exception, err:
                             print err
@@ -189,7 +196,7 @@ class Bot:
                             print "Game cancelled..."
                             pgt_submit = True
                         if pgt_submit:
-                            if POST_GAME_THREAD:
+                            if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generateposttitle(d)
                                 sub = r.submit(self.SUBREDDIT, posttitle, edit.generatecode(d))

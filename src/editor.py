@@ -10,8 +10,11 @@ import time
 
 class Editor:
 
-    def __init__(self,time_info):
+    def __init__(self,time_info,post_settings):
         (self.time_zone,self.time_change,) = time_info
+        (self.header, self.box_score,
+         self.line_score, self.scoring_plays,
+         self.highlights) = post_settings
 
     def generatetitle(self,dir):
         title = "GAME THREAD: "
@@ -104,13 +107,13 @@ class Editor:
         dirs.append(dir + "plays.json")
         dirs.append(dir + "/inning/inning_Scores.xml")
         dirs.append(dir + "/media/highlights.xml")
-        files = downloadfiles(dirs)
-        code = code + generateheader(files)
-        code = code + generateboxscore(files)
-        code = code + generatelinescore(files)
-        code = code + generatescoringplays(files)
-        code = code + generatehighlights(files)
-        code = code + generatestatus(files)
+        files = self.downloadfiles(dirs)
+        if self.header: code = code + self.generateheader(files)
+        if self.box_score: code = code + self.generateboxscore(files)
+        if self.line_score: code = code + self.generatelinescore(files)
+        if self.scoring_plays: code = code + self.generatescoringplays(files)
+        if self.highlights: code = code + self.generatehighlights(files)
+        code = code + self.generatestatus(files)
         print "Returning all code..."
         return code
 
@@ -150,7 +153,7 @@ class Editor:
                 weather = files["plays"].get('data').get('game').get('weather')
                 root = files["gamecenter"].getroot()
                 broadcast = root.find('broadcast')
-                notes = getnotes(game.get('home_team_name'), game.get('away_team_name'))
+                notes = self.getnotes(game.get('home_team_name'), game.get('away_team_name'))
                 header = "[](/hellobaseballbot)\n\n"
                 header = header + "|Game Info|Links|\n"
                 header = header + "|:--|:--|\n"
@@ -167,7 +170,6 @@ class Editor:
                     header = header + "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime(
                         "%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime(
                         "%Y") + ")|\n"
-
                 header = header + "|**TV:** "
                 if not isinstance(broadcast[0][0].text, type(None)):
                     header = header + broadcast[0][0].text
@@ -289,7 +291,7 @@ class Editor:
         while True:
             try:
                 game = files["linescore"].get('data').get('game')
-                subreddits = getsubreddits(game.get('home_team_name'), game.get('away_team_name'))
+                subreddits = self.getsubreddits(game.get('home_team_name'), game.get('away_team_name'))
                 lineinfo = game.get('linescore')
                 innings = len(lineinfo) if len(lineinfo) > 9 else 9
                 linescore = linescore + "Linescore|"
@@ -415,7 +417,7 @@ class Editor:
                 awaypitchers = []
                 game = files["boxscore"].get('data').get('boxscore')
                 team = files["linescore"].get('data').get('game')
-                subreddits = getsubreddits(team.get('home_team_name'), team.get('away_team_name'))
+                subreddits = self.getsubreddits(team.get('home_team_name'), team.get('away_team_name'))
                 pitching = game.get('pitching')
                 for i in range(0, len(pitching)):
                     players = pitching[i].get('pitcher')
@@ -463,14 +465,14 @@ class Editor:
                     if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
                         status = status + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get(
                             "away_team_name") + "\n"
-                        status = status + generatedecisions(files)
+                        status = status + self.generatedecisions(files)
                         print "Returning status..."
                         return status
                         break
                     elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
                         status = status + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get(
                             "home_team_name") + "\n"
-                        status = status + generatedecisions(files)
+                        status = status + self.generatedecisions(files)
                         print "Returning status..."
                         return status
                         break

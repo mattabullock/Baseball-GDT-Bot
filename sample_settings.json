@@ -6,6 +6,13 @@
     "PASSWORD": "default",
     "SUBREDDIT": "test",
     "TEAM_CODE": "XXX",
-    "POST_GAME_THREAD": false,
-    "STICKY": false
+    "POST_GAME_THREAD": true,
+    "STICKY": false,
+    "POST_SETTINGS": {
+        "HEADER": true,
+        "BOX_SCORE": true,
+        "LINE_SCORE": true,
+        "SCORING_PLAYS": true,
+        "HIGHLIGHTS": true
+    }
 }
