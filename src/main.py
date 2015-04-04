@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 '''
 
 BASEBALL GAME THREAD BOT
