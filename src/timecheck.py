@@ -10,7 +10,7 @@ class TimeCheck:
 	def __init__(self,time_before):
 		self.time_before = time_before
 
-	def endofdaycheck():
+	def endofdaycheck(self):
 	    today = datetime.today()
 	    while True:
 	        check = datetime.today()
@@ -23,7 +23,7 @@ class TimeCheck:
 	            time.sleep(600)
 
 
-	def gamecheck(dir):
+	def gamecheck(self,dir):
 	    while True:
 	        try:
 	            response = urllib2.urlopen(dir + "linescore.json")
@@ -39,14 +39,14 @@ class TimeCheck:
 	    date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
 	    while True:
 	        check = datetime.today()
-	        if (date_object - check).seconds <= time_before:
+	        if (date_object - check).seconds <= self.time_before:
 	            return
 	        else:
 	            print "Last game check: " + datetime.strftime(check, "%d %I:%M %p")
 	            time.sleep(600)
 
 
-	def ppcheck(dir):
+	def ppcheck(self,dir):
 	    try:
 	        response = urllib2.urlopen(dir + "linescore.json")
 	    except:

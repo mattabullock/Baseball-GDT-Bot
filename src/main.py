@@ -72,7 +72,7 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit(user_agent='GDTBot')
+        r = praw.Reddit(user_agent='Baseball-GDT')
         r.login(self.USERNAME, self.PASSWORD)
 
         if self.TEAM_TIME_ZONE == 'ET':
@@ -124,7 +124,7 @@ class Bot:
             html = response.readlines()
             directories = []
             for v in html:
-                if TEAM_CODE in v:
+                if self.TEAM_CODE in v:
                     v = v[v.index("\"") + 1:len(v)]
                     v = v[0:v.index("\"")]
                     directories.append(url + v)
