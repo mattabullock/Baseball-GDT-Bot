@@ -30,10 +30,10 @@ class Editor:
         timestring = game.get('time_date') + " " + game.get('ampm')
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         title = title + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
-            title = title + " @ "
-            title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
-            title = title + " - "
-            title = title + date_object.strftime("%B %d, %Y")
+        title = title + " @ "
+        title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
+        title = title + " - "
+        title = title + date_object.strftime("%B %d, %Y")
         print "Returning title..."
         return title
 
@@ -52,10 +52,10 @@ class Editor:
         timestring = game.get('time_date') + " " + game.get('ampm')
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         title = title + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
-            title = title + " @ "
-            title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
-            title = title + " - "
-            title = title + date_object.strftime("%B %d, %Y")
+        title = title + " @ "
+        title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
+        title = title + " - "
+        title = title + date_object.strftime("%B %d, %Y")
         print "Returning title..."
         return title
 
