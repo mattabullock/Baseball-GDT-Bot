@@ -30,6 +30,7 @@ class Bot:
         self.TEAM_CODE = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
+        self.MESSAGE = None
         self.POST_SETTINGS = None
 
     def read_settings(self):
