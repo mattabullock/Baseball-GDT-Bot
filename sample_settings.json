@@ -8,6 +8,7 @@
     "TEAM_CODE": "XXX",
     "POST_GAME_THREAD": true,
     "STICKY": false,
+    "MESSAGE": false,
     "POST_SETTINGS": {
         "HEADER": true,
         "BOX_SCORE": true,
