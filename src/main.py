@@ -62,6 +62,9 @@ class Bot:
 
             self.STICKY = settings.get('STICKY')
             if self.STICKY == None: return "Missing STICKY"
+            
+            self.MESSAGE = settings.get('MESSAGE')
+            if self.MESSAGE == None: return "Missing MESSAGE"
 
             temp_settings = settings.get('POST_SETTINGS')
             self.POST_SETTINGS = (temp_settings.get('HEADER'),temp_settings.get('BOX_SCORE'),
@@ -145,8 +148,15 @@ class Bot:
                         try:
                             print "Submitting game thread..."
                             sub = r.submit(self.SUBREDDIT, title, edit.generatecode(d))
-                            if self.STICKY: sub.sticky()
                             print "Game thread submitted..."
+                            if self.STICKY:
+                                print "Stickying submission..." 
+                                sub.sticky()
+                                print "Submission stickied..."
+                            if self.MESSAGE:
+                                print "Messaging Baseballbot..."
+                                r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
+                                print "Baseballbot messaged..."    
                             print "Sleeping for two minutes..."
                             print datetime.strftime(check, "%d %I:%M %p")
                             time.sleep(5)
@@ -200,8 +210,11 @@ class Bot:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generateposttitle(d)
                                 sub = r.submit(self.SUBREDDIT, posttitle, edit.generatecode(d))
-                                if self.STICKY: sub.sticky()
                                 print "Postgame thread submitted..."
+                                if self.STICKY:
+                                    print "Stickying submission..." 
+                                    sub.sticky()
+                                    print "Submission stickied..."
                             break
                         time.sleep(10)
             if datetime.today().day == today.day:
