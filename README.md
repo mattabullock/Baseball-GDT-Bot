@@ -30,6 +30,7 @@ SUBREDDIT - subreddit that you want the threads posted to
 TEAM_CODE - three letter code that represents team, look this up
 POST_GAME_THREAD - do you want a post game thread?
 STICKY - do you want the thread stickied?
+MESSAGE - send submission shortlink to /u/baseballbot
 	
 ---	
 
