@@ -116,8 +116,7 @@ class Editor:
                 root = files["gamecenter"].getroot()
                 broadcast = root.find('broadcast')
                 notes = self.getnotes(game.get('home_team_name'), game.get('away_team_name'))
-                header = "[](/hellobaseballbot)\n\n"
-                header = header + "|Game Info|Links|\n"
+                header = "|Game Info|Links|\n"
                 header = header + "|:--|:--|\n"
                 header = header + "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game.get(
                     'venue') + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get(
@@ -152,8 +151,7 @@ class Editor:
                 return header
                 break
             except:
-                print "Missing data for header, returning first pitch time and baseballbot link..."
-                header = header + "[](/hellobaseballbot)\n\n"
+                print "Missing data for header, returning first pitch time..."
                 return header
                 break
 
