@@ -110,6 +110,7 @@ class Editor:
         timezone = self.time_zone
         date_object = date_object - t
         header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
+        header = header + "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")\n"
         while True:
             try:
                 weather = files["plays"].get('data').get('game').get('weather')
