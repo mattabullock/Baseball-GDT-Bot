@@ -322,12 +322,10 @@ class Editor:
                     try:
                         if s.find('atbat').get('score') == "T":
                             scoringplays = scoringplays + s.find('atbat').get('des')
-
-                        elif actions[len(actions) - 1].get("score") == "T":
-                            scoringplays = scoringplays + actions[len(actions) - 1].get("des")
-
+                        elif s.find('action').get("score") == "T":
+                            scoringplays = scoringplays + s.find('action').get('des')
                         else:
-                            scoringplays = scoringplays + s.get("pbp")
+                            scoringplays = scoringplays + s.get('pbp')
                     except:
                         scoringplays = scoringplays + "Scoring play description currently unavailable."
 
@@ -442,6 +440,27 @@ class Editor:
                         print "Returning status..."
                         return status
                         break
+                elif game.get('status') == "Completed Early":
+                    status = status + "##COMPLETED EARLY: "
+                    if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
+                        status = status + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get(
+                            "away_team_name") + "\n"
+                        status = status + self.generatedecisions(files)
+                        print "Returning status..."
+                        return status
+                        break
+                    elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
+                        status = status + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get(
+                            "home_team_name") + "\n"
+                        status = status + self.generatedecisions(files)
+                        print "Returning status..."
+                        return status
+                        break
+                    elif int(s.get("home_team_runs")) == int(s.get("away_team_runs")):
+                        status = status + "TIE"
+                        print "Returning status..."
+                        return status
+                        break 
                 elif game.get('status') == "Postponed":
                     status = status + "##POSTPONED\n\n"
                     print "Returning status..."
