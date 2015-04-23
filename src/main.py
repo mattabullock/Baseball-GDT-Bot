@@ -186,6 +186,11 @@ class Bot:
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game final..."
                             pgt_submit = True
+                        elif "##COMPLETED EARLY" in str:
+                            check = datetime.today()
+                            print datetime.strftime(check, "%d %I:%M %p")
+                            print "Completed Early..."
+                            pgt_submit = True 
                         elif "##FINAL: TIE" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
