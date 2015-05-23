@@ -14,7 +14,7 @@ class Editor:
         (self.time_zone,self.time_change,) = time_info
         (self.header, self.box_score,
          self.line_score, self.scoring_plays,
-         self.highlights) = post_settings
+         self.highlights, self.footer) = post_settings
 
     def generatetitle(self,dir):
         title = "GAME THREAD: "
@@ -75,6 +75,7 @@ class Editor:
         if self.line_score: code = code + self.generatelinescore(files)
         if self.scoring_plays: code = code + self.generatescoringplays(files)
         if self.highlights: code = code + self.generatehighlights(files)
+        if self.footer: code = code + self.generatefooter()
         code = code + self.generatestatus(files)
         print "Returning all code..."
         return code
@@ -485,6 +486,11 @@ class Editor:
                 return status
                 break
 
+    def generatefooter(self):
+        footer = ""
+        footer += "**Remember to sort by new to keep up!**"
+        return footer
+
 
     def getsubreddits(self, homename, awayname):
         subreddits = []
@@ -507,7 +513,7 @@ class Editor:
             "Cardinals": "/r/Cardinals",
             "Reds": "/r/Reds",
             "Pirates": "/r/Buccos",
-            "Cubs": "/r/Cubs",
+            "Cubs": "/r/CHICubs",
             "Brewers": "/r/Brewers",
             "Giants": "/r/SFGiants",
             "Diamondbacks": "/r/azdiamondbacks",
