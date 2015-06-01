@@ -18,7 +18,7 @@ class Editor:
          self.thread_tag) = post_settings
 
     def generatetitle(self,dir):
-        title = self.thread_tag
+        title = self.thread_tag + " "
         while True:
             try:
                 response = urllib2.urlopen(dir + "linescore.json")
