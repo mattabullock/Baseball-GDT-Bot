@@ -15,6 +15,7 @@
         "LINE_SCORE": true,
         "SCORING_PLAYS": true,
         "HIGHLIGHTS": true,
-        "FOOTER": false
+        "FOOTER": false,
+        "THREAD_TAG": "GAME THREAD:"
     }
 }

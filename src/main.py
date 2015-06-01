@@ -70,7 +70,8 @@ class Bot:
             temp_settings = settings.get('POST_SETTINGS')
             self.POST_SETTINGS = (temp_settings.get('HEADER'),temp_settings.get('BOX_SCORE'),
                                     temp_settings.get('LINE_SCORE'),temp_settings.get('SCORING_PLAYS'),
-                                    temp_settings.get('HIGHLIGHTS'), temp_settings.get('FOOTER'))
+                                    temp_settings.get('HIGHLIGHTS'), temp_settings.get('FOOTER'),
+                                    temp_settings.get('THREAD_TAG'))
             if self.POST_SETTINGS == None: return "Missing POST_SETTINGS"
 
         return 0

@@ -14,10 +14,11 @@ class Editor:
         (self.time_zone,self.time_change,) = time_info
         (self.header, self.box_score,
          self.line_score, self.scoring_plays,
-         self.highlights, self.footer) = post_settings
+         self.highlights, self.footer,
+         self.thread_tag) = post_settings
 
     def generatetitle(self,dir):
-        title = "GAME THREAD: "
+        title = self.thread_tag
         while True:
             try:
                 response = urllib2.urlopen(dir + "linescore.json")
