@@ -10,15 +10,28 @@ import time
 
 class Editor:
 
-    def __init__(self,time_info,post_settings):
+    def __init__(self,time_info,pre_thread_settings,thread_settings,
+            post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
-        (self.header, self.box_score,
-         self.line_score, self.scoring_plays,
-         self.highlights, self.footer,
-         self.thread_tag) = post_settings
+        (self.pre_thread_tag, self.pre_thread_time,
+            (self.pre_probables)
+        ) = pre_thread_settings
+        (self.thread_tag, 
+            (self.header, self.box_score, 
+             self.line_score, self.scoring_plays,
+             self.highlights, self.footer)
+        ) = thread_settings
+        (self.post_thread_tag, 
+            (self.post_header, self.post_box_score, 
+             self.post_line_score, self.post_scoring_plays,
+             self.post_highlights, self.post_footer)
+        ) = post_thread_settings
 
-    def generatetitle(self,dir):
-        title = self.thread_tag + " "
+
+    def generate_title(self,dir,thread):
+        if thread == "pre": title = self.pre_thread_tag + " "
+        elif thread == "game": title = self.thread_tag + " "
+        elif thread == "post": title = self.post_thread_tag + " "
         while True:
             try:
                 response = urllib2.urlopen(dir + "linescore.json")
@@ -38,30 +51,65 @@ class Editor:
         print "Returning title..."
         return title
 
+    def generate_pre_code(self,dirs):
+        code = ""
+        for d in dirs:
+            temp_dirs = []
+            temp_dirs.append(d + "linescore.json")
+            temp_dirs.append(d + "gamecenter.xml")
+            files = self.download_pre_files(temp_dirs)
+            if self.pre_probables: code = code + self.generate_pre_probables(files)
+            code = code + "\n\n"
+        print "Returning all code..."
+        return code
 
-    def generateposttitle(self,dir):
-        title = "POST GAME THREAD: "
-        while True:
-            try:
-                response = urllib2.urlopen(dir + "linescore.json")
-                break
-            except:
-                print "Couldn't find linescore.json for title, trying again..."
-                time.sleep(20)
-        filething = json.load(response)
-        game = filething.get('data').get('game')
-        timestring = game.get('time_date') + " " + game.get('ampm')
-        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-        title = title + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
-        title = title + " @ "
-        title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
-        title = title + " - "
-        title = title + date_object.strftime("%B %d, %Y")
-        print "Returning title..."
-        return title
+    def download_pre_files(self,dirs):
+        files = dict()
+        response = urllib2.urlopen(dirs[0])
+        files["linescore"] = json.load(response)
+        response = urllib2.urlopen(dirs[1])
+        files["gamecenter"] = ET.parse(response)
+        return files
 
 
-    def generatecode(self,dir):
+    def generate_pre_probables(self,files):
+        game = files["linescore"].get('data').get('game')
+        subs = self.get_subreddits(game.get('home_team_name'), game.get('away_team_name'))
+
+        root = files["gamecenter"].getroot()
+        broadcast = root.find('broadcast')
+
+        if not isinstance(broadcast[0][0].text, type(None)):
+            home_tv_broadcast = broadcast[0][0].text
+        if not isinstance(broadcast[1][0].text, type(None)):
+            away_tv_broadcast = broadcast[1][0].text
+        if not isinstance(broadcast[0][1].text, type(None)):
+            home_radio_broadcast = broadcast[0][1].text
+        if not isinstance(broadcast[1][1].text, type(None)):
+            away_radio_broadcast = broadcast[1][1].text
+
+        away_pitcher_obj = game.get('away_probable_pitcher')
+        home_pitcher_obj = game.get('home_probable_pitcher')
+
+        away_pitcher = away_pitcher_obj.get('first_name') + " " + away_pitcher_obj.get('last_name')
+        away_pitcher = "[" + away_pitcher + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + away_pitcher_obj.get('id') + ")"
+        away_pitcher += " (" + away_pitcher_obj.get('wins') + "-" + away_pitcher_obj.get('losses') + ", " + away_pitcher_obj.get('era') + ")"
+        home_pitcher = home_pitcher_obj.get('first_name') + " " + home_pitcher_obj.get('last_name')
+        home_pitcher = "[" + home_pitcher + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + home_pitcher_obj.get('id') + ")"
+        home_pitcher += " (" + home_pitcher_obj.get('wins') + "-" + home_pitcher_obj.get('losses') + ", " + home_pitcher_obj.get('era') + ")"
+
+        away_preview = "[Link](http://mlb.com" + game.get('away_preview_link') + ")"
+        home_preview = "[Link](http://mlb.com" + game.get('home_preview_link') + ")"
+
+        probables  = " |Pitcher|TV|Radio|Preview\n"
+        probables += "-|-|-|-|-\n"
+        probables += "[" + game.get('away_team_name') + "](" + subs[1] + ")|" + away_pitcher + "|" + away_tv_broadcast + "|" + away_radio_broadcast + "|" + away_preview + "\n"
+        probables += "[" + game.get('home_team_name') + "](" + subs[0] + ")|" + home_pitcher + "|" + home_tv_broadcast + "|" + home_radio_broadcast + "|" + home_preview + "\n"
+
+        return probables
+
+
+    def generate_code(self,dir,thread):
         code = ""
         dirs = []
         dirs.append(dir + "linescore.json")
@@ -70,41 +118,44 @@ class Editor:
         dirs.append(dir + "plays.json")
         dirs.append(dir + "/inning/inning_Scores.xml")
         dirs.append(dir + "/media/highlights.xml")
-        files = self.downloadfiles(dirs)
-        if self.header: code = code + self.generateheader(files)
-        if self.box_score: code = code + self.generateboxscore(files)
-        if self.line_score: code = code + self.generatelinescore(files)
-        if self.scoring_plays: code = code + self.generatescoringplays(files)
-        if self.highlights: code = code + self.generatehighlights(files)
-        if self.footer: code = code + self.generatefooter()
-        code = code + self.generatestatus(files)
+        files = self.download_files(dirs)
+        if thread == "game":
+            if self.header: code = code + self.generate_header(files)
+            if self.box_score: code = code + self.generate_boxscore(files)
+            if self.line_score: code = code + self.generate_linescore(files)
+            if self.scoring_plays: code = code + self.generate_scoring_plays(files)
+            if self.highlights: code = code + self.generate_highlights(files)
+            if self.footer: code = code + self.generate_footer()
+        elif thread == "post":
+            if self.post_header: code = code + self.generate_header(files)
+            if self.post_box_score: code = code + self.generate_boxscore(files)
+            if self.post_line_score: code = code + self.generate_linescore(files)
+            if self.post_scoring_plays: code = code + self.generate_scoring_plays(files)
+            if self.post_highlights: code = code + self.generate_highlights(files)
+            if self.post_footer: code = code + self.generate_footer()
+        code = code + self.generate_status(files)
         print "Returning all code..."
         return code
 
 
-    def downloadfiles(self,dirs):
+    def download_files(self,dirs):
         files = dict()
-        while True:
-            try:
-                response = urllib2.urlopen(dirs[0])
-                files["linescore"] = json.load(response)
-                response = urllib2.urlopen(dirs[1])
-                files["boxscore"] = json.load(response)
-                response = urllib2.urlopen(dirs[2])
-                files["gamecenter"] = ET.parse(response)
-                response = urllib2.urlopen(dirs[3])
-                files["plays"] = json.load(response)
-                response = urllib2.urlopen(dirs[4])
-                files["scores"] = ET.parse(response)
-                response = urllib2.urlopen(dirs[5])
-                files["highlights"] = ET.parse(response)
-                break
-            except:
-                break
+        response = urllib2.urlopen(dirs[0])
+        files["linescore"] = json.load(response)
+        response = urllib2.urlopen(dirs[1])
+        files["boxscore"] = json.load(response)
+        response = urllib2.urlopen(dirs[2])
+        files["gamecenter"] = ET.parse(response)
+        response = urllib2.urlopen(dirs[3])
+        files["plays"] = json.load(response)
+        response = urllib2.urlopen(dirs[4])
+        files["scores"] = ET.parse(response)
+        response = urllib2.urlopen(dirs[5])
+        files["highlights"] = ET.parse(response)
         return files
 
 
-    def generateheader(self,files):
+    def generate_header(self,files):
         game = files["linescore"].get('data').get('game')
         timestring = game.get('time_date') + " " + game.get('ampm')
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
@@ -118,7 +169,7 @@ class Editor:
                 weather = files["plays"].get('data').get('game').get('weather')
                 root = files["gamecenter"].getroot()
                 broadcast = root.find('broadcast')
-                notes = self.getnotes(game.get('home_team_name'), game.get('away_team_name'))
+                notes = self.get_notes(game.get('home_team_name'), game.get('away_team_name'))
                 header = "|Game Info|Links|\n"
                 header = header + "|:--|:--|\n"
                 header = header + "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game.get(
@@ -159,7 +210,7 @@ class Editor:
                 break
 
 
-    def generateboxscore(self,files):
+    def generate_boxscore(self,files):
         boxscore = ""
         while True:
             try:
@@ -249,12 +300,12 @@ class Editor:
                 break
 
 
-    def generatelinescore(self,files):
+    def generate_linescore(self,files):
         linescore = ""
         while True:
             try:
                 game = files["linescore"].get('data').get('game')
-                subreddits = self.getsubreddits(game.get('home_team_name'), game.get('away_team_name'))
+                subreddits = self.get_subreddits(game.get('home_team_name'), game.get('away_team_name'))
                 lineinfo = game.get('linescore')
                 innings = len(lineinfo) if len(lineinfo) > 9 else 9
                 linescore = linescore + "Linescore|"
@@ -299,7 +350,7 @@ class Editor:
                 break
 
 
-    def generatescoringplays(self,files):
+    def generate_scoring_plays(self,files):
         scoringplays = ""
         while True:
             try:
@@ -349,7 +400,7 @@ class Editor:
                 break
 
 
-    def generatehighlights(self,files):
+    def generate_highlights(self,files):
         highlight = ""
         while True:
             try:
@@ -370,7 +421,7 @@ class Editor:
                 break
 
 
-    def generatedecisions(self,files):
+    def generate_decisions(self,files):
         decisions = ""
         while True:
             try:
@@ -378,7 +429,7 @@ class Editor:
                 awaypitchers = []
                 game = files["boxscore"].get('data').get('boxscore')
                 team = files["linescore"].get('data').get('game')
-                subreddits = self.getsubreddits(team.get('home_team_name'), team.get('away_team_name'))
+                subreddits = self.get_subreddits(team.get('home_team_name'), team.get('away_team_name'))
                 pitching = game.get('pitching')
                 for i in range(0, len(pitching)):
                     players = pitching[i].get('pitcher')
@@ -415,7 +466,7 @@ class Editor:
                 break
 
 
-    def generatestatus(self,files):
+    def generate_status(self,files):
         status = ""
         while True:
             try:
@@ -487,13 +538,13 @@ class Editor:
                 return status
                 break
 
-    def generatefooter(self):
+    def generate_footer(self):
         footer = ""
         footer += "**Remember to sort by new to keep up!**"
         return footer
 
 
-    def getsubreddits(self, homename, awayname):
+    def get_subreddits(self, homename, awayname):
         subreddits = []
         options = {
             "Twins": "/r/minnesotatwins",
@@ -533,7 +584,7 @@ class Editor:
         return subreddits
 
 
-    def getnotes(self, homename, awayname):
+    def get_notes(self, homename, awayname):
         notes = []
         options = {
             "Twins": "min",
