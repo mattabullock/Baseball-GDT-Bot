@@ -28,10 +28,13 @@ class Bot:
         self.PASSWORD = None
         self.SUBREDDIT = None
         self.TEAM_CODE = None
+        self.PREGAME_THREAD = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
         self.MESSAGE = None
-        self.POST_SETTINGS = None
+        self.PRE_THREAD_SETTINGS = None
+        self.THREAD_SETTINGS = None
+        self.POST_THREAD_SETTINGS = None
 
     def read_settings(self):
         with open('settings.json') as data:
@@ -58,6 +61,9 @@ class Bot:
             self.TEAM_CODE = settings.get('TEAM_CODE')
             if self.TEAM_CODE == None: return "Missing TEAM_CODE"
 
+            self.PREGAME_THREAD = settings.get('PREGAME_THREAD')
+            if self.PREGAME_THREAD == None: return "Missing PREGAME_THREAD"
+
             self.POST_GAME_THREAD = settings.get('POST_GAME_THREAD')
             if self.POST_GAME_THREAD == None: return "Missing POST_GAME_THREAD"
 
@@ -76,12 +82,12 @@ class Bot:
 
             temp_settings = settings.get('THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
-            self.POST_SETTINGS = (temp_settings.get('THREAD_TAG'),
+            self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'), 
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'), 
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
                                  )
-            if self.POST_SETTINGS == None: return "Missing THREAD_SETTINGS"
+            if self.THREAD_SETTINGS == None: return "Missing THREAD_SETTINGS"
 
             temp_settings = settings.get('POST_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
@@ -89,7 +95,7 @@ class Bot:
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'), 
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'), 
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
-                                 ))
+                                 )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
 
         return 0
@@ -117,7 +123,8 @@ class Bot:
             print "Invalid time zone settings."
             return
 
-        edit = editor.Editor(time_info, self.POST_SETTINGS)
+        edit = editor.Editor(time_info, self.PRE_THREAD_SETTINGS,
+                self.THREAD_SETTINGS, self.POST_THREAD_SETTINGS)
 
         if self.BOT_TIME_ZONE == 'ET':
             time_before = self.POST_TIME * 60 * 60
@@ -139,9 +146,6 @@ class Bot:
             url = "http://gd2.mlb.com/components/game/mlb/"
             url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
 
-            # UNCOMMENT FOR TESTING PURPOSES ONLY
-            # url = url + "year_2015" + "/month_04" + "/day_03/"
-
             response = ""
             while not response:
                 try:
@@ -157,6 +161,26 @@ class Bot:
                     v = v[v.index("\"") + 1:len(v)]
                     v = v[0:v.index("\"")]
                     directories.append(url + v)
+
+            if self.PREGAME_THREAD and len(directories) > 0:
+                timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
+                title = edit.generate_title(directories[0],"pre")
+                while True:
+                    try:
+                        print "Submitting pregame thread..."
+                        sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
+                        print "Pregame thread submitted..."
+                        if self.STICKY:
+                            print "Stickying submission..." 
+                            sub.sticky()
+                            print "Submission stickied..."  
+                        print "Sleeping for two minutes..."
+                        print datetime.strftime(datetime.today(), "%d %I:%M %p")
+                        time.sleep(5)
+                        break
+                    except Exception, err:
+                        print err
+                        time.sleep(300)
 
             for d in directories:
                 timechecker.gamecheck(d)

@@ -57,3 +57,13 @@ class TimeCheck:
         jsonfile = json.load(response)
         game = jsonfile.get('data').get('game')
         return (game.get('status') == "Postponed")
+
+    def pregamecheck(self,pre_time):
+        date_object = datetime.strptime(pre_time, "%I%p")
+        while True:
+            check = datetime.today()
+            if date_object.hour <= check.hour:
+                return
+            else:
+                print "Last pre-game check: " + datetime.strftime(check, "%d %I:%M %p")
+                time.sleep(600)

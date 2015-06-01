@@ -13,7 +13,7 @@ class Editor:
     def __init__(self,time_info,pre_thread_settings,thread_settings,
             post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
-        (self.pre_thread_time, self.pre_thread_tag,
+        (self.pre_thread_tag, self.pre_thread_time,
             (self.pre_probables)
         ) = pre_thread_settings
         (self.thread_tag, 
@@ -51,19 +51,61 @@ class Editor:
         print "Returning title..."
         return title
 
-    def generate_pre_code(self,dir):
+    def generate_pre_code(self,dirs):
         code = ""
-        dirs = []
-        dirs.append(dir + "linescore.json")
-        files = self.download_files(dirs)
-        if self.pre_probables: code = code + generate_pre_probables(files)
+        for d in dirs:
+            temp_dirs = []
+            temp_dirs.append(d + "linescore.json")
+            temp_dirs.append(d + "gamecenter.xml")
+            files = self.download_pre_files(temp_dirs)
+            if self.pre_probables: code = code + self.generate_pre_probables(files)
+            code = code + "\n\n"
         print "Returning all code..."
         return code
+
+    def download_pre_files(self,dirs):
+        files = dict()
+        response = urllib2.urlopen(dirs[0])
+        files["linescore"] = json.load(response)
+        response = urllib2.urlopen(dirs[1])
+        files["gamecenter"] = ET.parse(response)
+        return files
 
 
     def generate_pre_probables(self,files):
         game = files["linescore"].get('data').get('game')
-        probables = ""
+        subs = self.get_subreddits(game.get('home_team_name'), game.get('away_team_name'))
+
+        root = files["gamecenter"].getroot()
+        broadcast = root.find('broadcast')
+
+        if not isinstance(broadcast[0][0].text, type(None)):
+            home_tv_broadcast = broadcast[0][0].text
+        if not isinstance(broadcast[1][0].text, type(None)):
+            away_tv_broadcast = broadcast[1][0].text
+        if not isinstance(broadcast[0][1].text, type(None)):
+            home_radio_broadcast = broadcast[0][1].text
+        if not isinstance(broadcast[1][1].text, type(None)):
+            away_radio_broadcast = broadcast[1][1].text
+
+        away_pitcher_obj = game.get('away_probable_pitcher')
+        home_pitcher_obj = game.get('home_probable_pitcher')
+
+        away_pitcher = away_pitcher_obj.get('first_name') + " " + away_pitcher_obj.get('last_name')
+        away_pitcher = "[" + away_pitcher + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + away_pitcher_obj.get('id') + ")"
+        away_pitcher += " (" + away_pitcher_obj.get('wins') + "-" + away_pitcher_obj.get('losses') + ", " + away_pitcher_obj.get('era') + ")"
+        home_pitcher = home_pitcher_obj.get('first_name') + " " + home_pitcher_obj.get('last_name')
+        home_pitcher = "[" + home_pitcher + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + home_pitcher_obj.get('id') + ")"
+        home_pitcher += " (" + home_pitcher_obj.get('wins') + "-" + home_pitcher_obj.get('losses') + ", " + home_pitcher_obj.get('era') + ")"
+
+        away_preview = "[Link](http://mlb.com" + game.get('away_preview_link') + ")"
+        home_preview = "[Link](http://mlb.com" + game.get('home_preview_link') + ")"
+
+        probables  = " |Pitcher|TV|Radio|Preview\n"
+        probables += "-|-|-|-|-\n"
+        probables += "[" + game.get('away_team_name') + "](" + subs[1] + ")|" + away_pitcher + "|" + away_tv_broadcast + "|" + away_radio_broadcast + "|" + away_preview + "\n"
+        probables += "[" + game.get('home_team_name') + "](" + subs[0] + ")|" + home_pitcher + "|" + home_tv_broadcast + "|" + home_radio_broadcast + "|" + home_preview + "\n"
+
         return probables
 
 
@@ -98,23 +140,18 @@ class Editor:
 
     def download_files(self,dirs):
         files = dict()
-        while True:
-            try:
-                response = urllib2.urlopen(dirs[0])
-                files["linescore"] = json.load(response)
-                response = urllib2.urlopen(dirs[1])
-                files["boxscore"] = json.load(response)
-                response = urllib2.urlopen(dirs[2])
-                files["gamecenter"] = ET.parse(response)
-                response = urllib2.urlopen(dirs[3])
-                files["plays"] = json.load(response)
-                response = urllib2.urlopen(dirs[4])
-                files["scores"] = ET.parse(response)
-                response = urllib2.urlopen(dirs[5])
-                files["highlights"] = ET.parse(response)
-                break
-            except:
-                break
+        response = urllib2.urlopen(dirs[0])
+        files["linescore"] = json.load(response)
+        response = urllib2.urlopen(dirs[1])
+        files["boxscore"] = json.load(response)
+        response = urllib2.urlopen(dirs[2])
+        files["gamecenter"] = ET.parse(response)
+        response = urllib2.urlopen(dirs[3])
+        files["plays"] = json.load(response)
+        response = urllib2.urlopen(dirs[4])
+        files["scores"] = ET.parse(response)
+        response = urllib2.urlopen(dirs[5])
+        files["highlights"] = ET.parse(response)
         return files
 
 
