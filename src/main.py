@@ -67,12 +67,30 @@ class Bot:
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
 
-            temp_settings = settings.get('POST_SETTINGS')
-            self.POST_SETTINGS = (temp_settings.get('HEADER'),temp_settings.get('BOX_SCORE'),
-                                    temp_settings.get('LINE_SCORE'),temp_settings.get('SCORING_PLAYS'),
-                                    temp_settings.get('HIGHLIGHTS'), temp_settings.get('FOOTER'),
-                                    temp_settings.get('THREAD_TAG'))
-            if self.POST_SETTINGS == None: return "Missing POST_SETTINGS"
+            temp_settings = settings.get('PRE_THREAD_SETTINGS')
+            content_settings = temp_settings.get('CONTENT')
+            self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
+                                            (content_settings.get('PROBABLES'))
+                                       )
+            if self.PRE_THREAD_SETTINGS == None: return "Missing PRE_THREAD_SETTINGS"
+
+            temp_settings = settings.get('THREAD_SETTINGS')
+            content_settings = temp_settings.get('CONTENT')
+            self.POST_SETTINGS = (temp_settings.get('THREAD_TAG'),
+                                    (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'), 
+                                     content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'), 
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                 )
+            if self.POST_SETTINGS == None: return "Missing THREAD_SETTINGS"
+
+            temp_settings = settings.get('POST_THREAD_SETTINGS')
+            content_settings = temp_settings.get('CONTENT')
+            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'),
+                                    (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'), 
+                                     content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'), 
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                 ))
+            if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
 
         return 0
 
@@ -142,13 +160,13 @@ class Bot:
 
             for d in directories:
                 timechecker.gamecheck(d)
-                title = edit.generatetitle(d)
+                title = edit.generate_title(d,"game")
                 if not timechecker.ppcheck(d):
                     while True:
                         check = datetime.today()
                         try:
                             print "Submitting game thread..."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generatecode(d))
+                            sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
                             print "Game thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..." 
@@ -168,7 +186,7 @@ class Bot:
                     pgt_submit = False
                     while True:
                         check = datetime.today()
-                        str = edit.generatecode(d)
+                        str = edit.generate_code(d,"game")
                         while True:
                             try:
                                 sub.edit(str)
@@ -214,8 +232,8 @@ class Bot:
                         if pgt_submit:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
-                                posttitle = edit.generateposttitle(d)
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generatecode(d))
+                                posttitle = edit.generate_title(d,"post")
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..." 

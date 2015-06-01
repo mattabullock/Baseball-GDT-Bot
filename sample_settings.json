@@ -6,16 +6,37 @@
     "PASSWORD": "default",
     "SUBREDDIT": "test",
     "TEAM_CODE": "XXX",
+    "PREGAME_THREAD": false,
     "POST_GAME_THREAD": true,
     "STICKY": false,
     "MESSAGE": false,
-    "POST_SETTINGS": {
-        "HEADER": true,
-        "BOX_SCORE": true,
-        "LINE_SCORE": true,
-        "SCORING_PLAYS": true,
-        "HIGHLIGHTS": true,
-        "FOOTER": false,
-        "THREAD_TAG": "GAME THREAD:"
+    "PRE_THREAD_SETTINGS": {
+        "PRE_THREAD_TAG": "PREGAME THREAD:",
+        "PRE_THREAD_TIME": "9AM",
+        "CONTENT": {
+            "PROBABLES": true
+        }
+    },
+    "THREAD_SETTINGS": {
+        "THREAD_TAG": "GAME THREAD:",
+        "CONTENT": {
+            "HEADER": true,
+            "BOX_SCORE": true,
+            "LINE_SCORE": true,
+            "SCORING_PLAYS": true,
+            "HIGHLIGHTS": true,
+            "FOOTER": false
+        }
+    },
+    "POST_THREAD_SETTINGS": {
+        "POST_THREAD_TAG": "POST GAME THREAD:",
+        "CONTENT": {
+            "HEADER": true,
+            "BOX_SCORE": true,
+            "LINE_SCORE": true,
+            "SCORING_PLAYS": true,
+            "HIGHLIGHTS": true,
+            "FOOTER": false
+        }
     }
 }
