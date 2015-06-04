@@ -145,18 +145,22 @@ class Editor:
 
     def download_files(self,dirs):
         files = dict()
-        response = urllib2.urlopen(dirs[0])
-        files["linescore"] = json.load(response)
-        response = urllib2.urlopen(dirs[1])
-        files["boxscore"] = json.load(response)
-        response = urllib2.urlopen(dirs[2])
-        files["gamecenter"] = ET.parse(response)
-        response = urllib2.urlopen(dirs[3])
-        files["plays"] = json.load(response)
-        response = urllib2.urlopen(dirs[4])
-        files["scores"] = ET.parse(response)
-        response = urllib2.urlopen(dirs[5])
-        files["highlights"] = ET.parse(response)
+        try:
+            response = urllib2.urlopen(dirs[0])
+            files["linescore"] = json.load(response)
+            response = urllib2.urlopen(dirs[1])
+            files["boxscore"] = json.load(response)
+            response = urllib2.urlopen(dirs[2])
+            files["gamecenter"] = ET.parse(response)
+            response = urllib2.urlopen(dirs[3])
+            files["plays"] = json.load(response)
+            response = urllib2.urlopen(dirs[4])
+            files["scores"] = ET.parse(response)
+            response = urllib2.urlopen(dirs[5])
+            files["highlights"] = ET.parse(response)
+        except Exception as e:
+            print e
+
         return files
 
 
