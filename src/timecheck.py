@@ -39,12 +39,14 @@ class TimeCheck:
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         while True:
             check = datetime.today()
-            if (date_object - check).seconds <= self.time_before:
-                return
+            if date_object >= check:
+                if (date_object - check).seconds <= self.time_before:
+                    return
+                else:
+                    print "Last game check: " + datetime.strftime(check, "%d %I:%M %p")
+                    time.sleep(600)
             else:
-                print "Last game check: " + datetime.strftime(check, "%d %I:%M %p")
-                time.sleep(600)
-
+                return
 
     def ppcheck(self,dir):
         try:

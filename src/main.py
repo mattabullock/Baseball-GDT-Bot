@@ -69,7 +69,7 @@ class Bot:
 
             self.STICKY = settings.get('STICKY')
             if self.STICKY == None: return "Missing STICKY"
-            
+
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
 
@@ -83,8 +83,8 @@ class Bot:
             temp_settings = settings.get('THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),
-                                    (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'), 
-                                     content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'), 
+                                    (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
+                                     content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
                                  )
             if self.THREAD_SETTINGS == None: return "Missing THREAD_SETTINGS"
@@ -92,8 +92,8 @@ class Bot:
             temp_settings = settings.get('POST_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'),
-                                    (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'), 
-                                     content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'), 
+                                    (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
+                                     content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
                                  )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
@@ -171,9 +171,9 @@ class Bot:
                         sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
                         print "Pregame thread submitted..."
                         if self.STICKY:
-                            print "Stickying submission..." 
+                            print "Stickying submission..."
                             sub.sticky()
-                            print "Submission stickied..."  
+                            print "Submission stickied..."
                         print "Sleeping for two minutes..."
                         print datetime.strftime(datetime.today(), "%d %I:%M %p")
                         time.sleep(5)
@@ -189,17 +189,26 @@ class Bot:
                     while True:
                         check = datetime.today()
                         try:
-                            print "Submitting game thread..."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
-                            print "Game thread submitted..."
-                            if self.STICKY:
-                                print "Stickying submission..." 
-                                sub.sticky()
-                                print "Submission stickied..."
-                            if self.MESSAGE:
-                                print "Messaging Baseballbot..."
-                                r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
-                                print "Baseballbot messaged..."    
+                            posted = False
+                            subreddit = r.get_subreddit(self.SUBREDDIT)
+                            for submission in subreddit.get_new():
+                                if submission.title == title:
+                                    print "Thread already posted, getting submission..."
+                                    sub = submission
+                                    posted = True
+                                    break
+                            if not posted:
+                                print "Submitting game thread..."
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
+                                print "Game thread submitted..."
+                                if self.STICKY:
+                                    print "Stickying submission..."
+                                    sub.sticky()
+                                    print "Submission stickied..."
+                                if self.MESSAGE:
+                                    print "Messaging Baseballbot..."
+                                    r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
+                                    print "Baseballbot messaged..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(check, "%d %I:%M %p")
                             time.sleep(5)
@@ -232,7 +241,7 @@ class Bot:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Completed Early..."
-                            pgt_submit = True 
+                            pgt_submit = True
                         elif "##FINAL: TIE" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
@@ -260,7 +269,7 @@ class Bot:
                                 sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
-                                    print "Stickying submission..." 
+                                    print "Stickying submission..."
                                     sub.sticky()
                                     print "Submission stickied..."
                             break
