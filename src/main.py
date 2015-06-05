@@ -197,7 +197,6 @@ class Bot:
                                     sub = submission
                                     posted = True
                                     break
-                            sub = r.get_submission(submission_id="38kbgl")
                             posted = True
                             if not posted:
                                 print "Submitting game thread..."
