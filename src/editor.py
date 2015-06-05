@@ -419,7 +419,7 @@ class Editor:
     def generate_decisions(self,files):
         decisions = ""
         try:
-            homepitchers = [];
+            homepitchers = []
             awaypitchers = []
             game = files["boxscore"].get('data').get('boxscore')
             team = files["linescore"].get('data').get('game')
@@ -468,13 +468,13 @@ class Editor:
                 if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
                     status = status + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get(
                         "away_team_name") + "\n"
-                    status = status + self.generatedecisions(files)
+                    status = status + self.generate_decisions(files)
                     print "Returning status..."
                     return status
                 elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
                     status = status + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get(
                         "home_team_name") + "\n"
-                    status = status + self.generatedecisions(files)
+                    status = status + self.generate_decisions(files)
                     print "Returning status..."
                     return status
                 elif int(s.get("home_team_runs")) == int(s.get("away_team_runs")):
@@ -486,13 +486,13 @@ class Editor:
                 if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
                     status = status + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get(
                         "away_team_name") + "\n"
-                    status = status + self.generatedecisions(files)
+                    status = status + self.generate_decisions(files)
                     print "Returning status..."
                     return status
                 elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
                     status = status + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get(
                         "home_team_name") + "\n"
-                    status = status + self.generatedecisions(files)
+                    status = status + self.generate_decisions(files)
                     print "Returning status..."
                     return status
                 elif int(s.get("home_team_runs")) == int(s.get("away_team_runs")):
