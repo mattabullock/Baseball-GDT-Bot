@@ -197,7 +197,6 @@ class Bot:
                                     sub = submission
                                     posted = True
                                     break
-                            posted = True
                             if not posted:
                                 print "Submitting game thread..."
                                 sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
