@@ -31,7 +31,7 @@ class Bot:
         self.PREGAME_THREAD = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
-	self.SUGGESTED_SORT = None
+        self.SUGGESTED_SORT = None
         self.MESSAGE = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
