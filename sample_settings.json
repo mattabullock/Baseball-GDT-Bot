@@ -9,6 +9,7 @@
     "PREGAME_THREAD": false,
     "POST_GAME_THREAD": true,
     "STICKY": false,
+    "SUGGESTED_SORT": "blank",
     "MESSAGE": false,
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",

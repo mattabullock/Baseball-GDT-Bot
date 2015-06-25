@@ -31,6 +31,7 @@ class Bot:
         self.PREGAME_THREAD = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
+	self.SUGGESTED_SORT = None
         self.MESSAGE = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
@@ -69,6 +70,9 @@ class Bot:
 
             self.STICKY = settings.get('STICKY')
             if self.STICKY == None: return "Missing STICKY"
+
+	    self.SUGGESTED_SORT = settings.get('SUGGESTED_SORT')
+	    if self.SUGGESTED_SORT == None: return "Missing SUGGESTED_SORT"
 
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
@@ -205,6 +209,10 @@ class Bot:
                                     print "Stickying submission..."
                                     sub.sticky()
                                     print "Submission stickied..."
+				if self.SUGGESTED_SORT != None:
+				    print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+				    sub.set_suggested_sort(self.SUGGESTED_SORT)
+				    print "Suggested sort set..."
                                 if self.MESSAGE:
                                     print "Messaging Baseballbot..."
                                     r.send_message('baseballbot', 'Gamethread posted', sub.short_link)

@@ -462,7 +462,7 @@ class Editor:
         status = ""
         try:
             game = files["linescore"].get('data').get('game')
-            if game.get('status') == "Final":
+            if game.get('status') == "Game Over" or game.get('status') == "Final":
                 s = files["linescore"].get('data').get('game')
                 status = status + "##FINAL: "
                 if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
