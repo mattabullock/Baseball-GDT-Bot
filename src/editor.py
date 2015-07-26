@@ -108,6 +108,15 @@ class Editor:
             probables += "[" + game.get('away_team_name') + "](" + subs[1] + ")|" + away_pitcher + "|" + away_tv_broadcast + "|" + away_radio_broadcast + "|" + away_preview + "\n"
             probables += "[" + game.get('home_team_name') + "](" + subs[0] + ")|" + home_pitcher + "|" + home_tv_broadcast + "|" + home_radio_broadcast + "|" + home_preview + "\n"
 
+            probables += "\n"
+            
+            timestring = game.get('time_date') + " " + game.get('ampm')
+            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+            t = timedelta(hours=self.time_change)
+            timezone = self.time_zone
+            date_object = date_object - t
+            header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
+
             return probables
         except:
             print "Missing data for probables, returning empty string..."

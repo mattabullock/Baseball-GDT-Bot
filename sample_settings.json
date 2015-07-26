@@ -15,7 +15,8 @@
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
         "CONTENT": {
-            "PROBABLES": true
+            "PROBABLES": true,
+            "FIRST_PITCH": true
         }
     },
     "THREAD_SETTINGS": {

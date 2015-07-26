@@ -80,7 +80,7 @@ class Bot:
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
-                                            (content_settings.get('PROBABLES'))
+                                            (content_settings.get('PROBABLES'),content_settings.get('FIRST_PITCH'))
                                        )
             if self.PRE_THREAD_SETTINGS == None: return "Missing PRE_THREAD_SETTINGS"
 
