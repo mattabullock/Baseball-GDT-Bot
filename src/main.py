@@ -171,17 +171,26 @@ class Bot:
                 title = edit.generate_title(directories[0],"pre")
                 while True:
                     try:
-                        print "Submitting pregame thread..."
-                        sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
-                        print "Pregame thread submitted..."
-                        if self.STICKY:
-                            print "Stickying submission..."
-                            sub.sticky()
-                            print "Submission stickied..."
-                        print "Sleeping for two minutes..."
-                        print datetime.strftime(datetime.today(), "%d %I:%M %p")
-                        time.sleep(5)
-                        break
+                        posted = False
+                            subreddit = r.get_subreddit(self.SUBREDDIT)
+                            for submission in subreddit.get_new():
+                                if submission.title == title:
+                                    print "Pregame thread already posted, getting submission..."
+                                    submission.edit(edit.generate_pre_code(directories))
+                                    posted = True
+                                    break
+                        if not posted:
+                            print "Submitting pregame thread..."
+                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
+                            print "Pregame thread submitted..."
+                            if self.STICKY:
+                                print "Stickying submission..."
+                                sub.sticky()
+                                print "Submission stickied..."
+                            print "Sleeping for two minutes..."
+                            print datetime.strftime(datetime.today(), "%d %I:%M %p")
+                            time.sleep(5)
+                            break
                     except Exception, err:
                         print err
                         time.sleep(300)

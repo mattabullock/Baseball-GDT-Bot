@@ -126,7 +126,7 @@ class Editor:
             t = timedelta(hours=self.time_change)
             timezone = self.time_zone
             date_object = date_object - t
-            header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
+            first_pitch = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
 
             return first_pitch
         except:
