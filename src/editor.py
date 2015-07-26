@@ -14,7 +14,7 @@ class Editor:
             post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
         (self.pre_thread_tag, self.pre_thread_time,
-            (self.pre_probables)
+            (self.pre_probables, self.pre_first_pitch)
         ) = pre_thread_settings
         (self.thread_tag, 
             (self.header, self.box_score, 
@@ -59,6 +59,7 @@ class Editor:
             temp_dirs.append(d + "gamecenter.xml")
             files = self.download_pre_files(temp_dirs)
             if self.pre_probables: code = code + self.generate_pre_probables(files)
+            if self.pre_first_pitch: code = code + self.generate_pre_first_pitch(files)
             code = code + "\n\n"
         print "Returning all code..."
         return code
@@ -110,6 +111,16 @@ class Editor:
 
             probables += "\n"
             
+            return probables
+        except:
+            print "Missing data for probables, returning empty string..."
+            return probables
+
+    def generate_pre_first_pitch(self,files):
+        first_pitch = ""
+        try:
+            game = files["linescore"].get('data').get('game')
+
             timestring = game.get('time_date') + " " + game.get('ampm')
             date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
             t = timedelta(hours=self.time_change)
@@ -117,10 +128,10 @@ class Editor:
             date_object = date_object - t
             header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
 
-            return probables
+            return first_pitch
         except:
-            print "Missing data for probables, returning empty string..."
-            return probables
+            print "Missing data for first_pitch, returning empty string..."
+            return first_pitch
 
 
     def generate_code(self,dir,thread):
