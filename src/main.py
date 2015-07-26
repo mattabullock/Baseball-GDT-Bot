@@ -172,13 +172,13 @@ class Bot:
                 while True:
                     try:
                         posted = False
-                            subreddit = r.get_subreddit(self.SUBREDDIT)
-                            for submission in subreddit.get_new():
-                                if submission.title == title:
-                                    print "Pregame thread already posted, getting submission..."
-                                    submission.edit(edit.generate_pre_code(directories))
-                                    posted = True
-                                    break
+                        subreddit = r.get_subreddit(self.SUBREDDIT)
+                        for submission in subreddit.get_new():
+                            if submission.title == title:
+                                print "Pregame thread already posted, getting submission..."
+                                submission.edit(edit.generate_pre_code(directories))
+                                posted = True
+                                break
                         if not posted:
                             print "Submitting pregame thread..."
                             sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
