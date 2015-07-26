@@ -3,3 +3,4 @@
 settings.json
 *.sh
 *.out
+*-main.py
