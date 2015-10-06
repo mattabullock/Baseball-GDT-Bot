@@ -23,11 +23,11 @@ Go to reddit.com’s app page, click on the “are you a developer? create an ap
 
 Next, open setup.py, fill in the client_id, client_secret and redirect_uri fields and run the script. Your browser will open. Click allow on the displayed web page. Enter the uniqueKey&code from the URL and into the console, wrapped in single quotes and the access information will be printed, which includes the refresh token.
 
-Finally, fill in the CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and REFRESH_TOKEN fields in the settings.json file. 
+Finally, Copy sample_settings.json to the src folder and rename it to settings.json. Fill in the CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and REFRESH_TOKEN fields in the settings.json file. 
 
 ####SET UP THE REST OF THE BOT!
 
-All you need to do is edit sample_settings.json with the following information, rename it to settings.json, and copy it into the src folder!
+Edit settings.json with the following information:
 
 BOT_TIME_ZONE - time zone of the computer running the bot, uncomment the line that you want to use
 TIME_ZONE - time zone of the team. uncomment the line that you want to use
