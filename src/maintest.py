@@ -15,13 +15,30 @@ class Bot:
         self.PASSWORD = None
         self.SUBREDDIT = None
         self.TEAM_CODE = None
+        self.PREGAME_THREAD = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
-        self.POST_SETTINGS = None
+        self.SUGGESTED_SORT = None
+        self.MESSAGE = None
+        self.PRE_THREAD_SETTINGS = None
+        self.THREAD_SETTINGS = None
+        self.POST_THREAD_SETTINGS = None
 
     def read_settings(self):
         with open('settings.json') as data:
             settings = json.load(data)
+
+            self.CLIENT_ID = settings.get('CLIENT_ID')
+            if self.CLIENT_ID == None: return "Missing CLIENT_ID"
+
+            self.CLIENT_SECRET = settings.get('CLIENT_SECRET')
+            if self.CLIENT_SECRET == None: return "Missing CLIENT_SECRET"
+
+            self.REDIRECT_URI = settings.get('REDIRECT_URI')
+            if self.REDIRECT_URI == None: return "Missing REDIRECT_URI"
+
+            self.REFRESH_TOKEN = settings.get('REFRESH_TOKEN')
+            if self.REFRESH_TOKEN == None: return "Missing REFRESH_TOKEN"  
 
             self.BOT_TIME_ZONE = settings.get('BOT_TIME_ZONE')
             if self.BOT_TIME_ZONE == None: return "Missing BOT_TIME_ZONE"
@@ -66,8 +83,12 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit(user_agent='Baseball-GDT')
-        r.login(self.USERNAME, self.PASSWORD)
+        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.0'
+                        'https://github.com/mattabullock/Baseball-GDT-Bot')
+        r.set_oauth_app_info(client_id=self.CLIENT_ID,
+                            client_secret=self.CLIENT_SECRET,
+                            redirect_uri=self.REDIRECT_URI)        
+        r.refresh_access_information(self.REFRESH_TOKEN)   
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
