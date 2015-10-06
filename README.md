@@ -17,15 +17,21 @@ Version 1.0 was written in a mix of Python and Java, and has been
 
 ---
 
-####SET UP YOUR OWN BOT!
+####SET UP OAuth!
+
+Go to reddit.com’s app page, click on the “are you a developer? create an app” button. Fill out the name, description and about url. Name must be filled out, but the rest doesn’t. Write whatever you please. For redirect uri set it to http://127.0.0.1:65010/authorize_callback. All four variables can be changed later.
+
+Next, open setup.py, fill in the client_id, client_secret and redirect_uri fields and run the script. Your browser will open. Click allow on the displayed web page. Enter the uniqueKey&code from the URL and into the console, wrapped in single quotes and the access information will be printed, which includes the refresh token.
+
+Finally, fill in the CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and REFRESH_TOKEN fields in the settings.json file. 
+
+####SET UP THE REST OF THE BOT!
 
 All you need to do is edit sample_settings.json with the following information, rename it to settings.json, and copy it into the src folder!
 
 BOT_TIME_ZONE - time zone of the computer running the bot, uncomment the line that you want to use
 TIME_ZONE - time zone of the team. uncomment the line that you want to use
 POST_TIME - bot posts the thread POST_TIME hours before the game
-USERNAME - reddit username
-PASSWORD - reddit password
 SUBREDDIT - subreddit that you want the threads posted to
 TEAM_CODE - three letter code that represents team, look this up
 POST_GAME_THREAD - do you want a post game thread?
@@ -48,6 +54,9 @@ Modules being used:
 	ElementTree - XML parsing
 
 ###Updates
+
+####v3.0.1
+* Now uses OAuth!
 
 ####v3.0.0
 * Modular - If you want a certain feature, just change a variable at the top!
