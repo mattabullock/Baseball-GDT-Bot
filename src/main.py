@@ -158,8 +158,7 @@ class Bot:
             today = datetime.today()
 
             url = "http://gd2.mlb.com/components/game/mlb/"
-            #url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
-            url = url + "year_2015/month_09/day_07/"
+            url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
 
             response = ""
             while not response:
