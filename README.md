@@ -5,7 +5,7 @@ Baseball GDT Bot by Matt Bullock
 
 This project was originally written by Matt Bullock,
 	A.K.A. /u/DetectiveWoofles on reddit and Woofles on GitHub.
-	User avery-crudeman is the only other contributor.
+	User avery_crudeman is the only other contributor.
 	
 The point of this project is to create a bot that will generate a
 	game discussion thread that contains live linescore and boxscore,
