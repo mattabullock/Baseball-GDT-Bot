@@ -41,6 +41,18 @@ class Bot:
         with open('settings.json') as data:
             settings = json.load(data)
 
+            self.CLIENT_ID = settings.get('CLIENT_ID')
+            if self.CLIENT_ID == None: return "Missing CLIENT_ID"
+
+            self.CLIENT_SECRET = settings.get('CLIENT_SECRET')
+            if self.CLIENT_SECRET == None: return "Missing CLIENT_SECRET"
+
+            self.REDIRECT_URI = settings.get('REDIRECT_URI')
+            if self.REDIRECT_URI == None: return "Missing REDIRECT_URI"
+
+            self.REFRESH_TOKEN = settings.get('REFRESH_TOKEN')
+            if self.REFRESH_TOKEN == None: return "Missing REFRESH_TOKEN"             
+
             self.BOT_TIME_ZONE = settings.get('BOT_TIME_ZONE')
             if self.BOT_TIME_ZONE == None: return "Missing BOT_TIME_ZONE"
 
@@ -49,12 +61,6 @@ class Bot:
 
             self.POST_TIME = settings.get('POST_TIME')
             if self.POST_TIME == None: return "Missing POST_TIME"
-
-            self.USERNAME = settings.get('USERNAME')
-            if self.USERNAME == None: return "Missing USERNAME"
-
-            self.PASSWORD = settings.get('PASSWORD')
-            if self.PASSWORD == None: return "Missing PASSWORD"
 
             self.SUBREDDIT = settings.get('SUBREDDIT')
             if self.SUBREDDIT == None: return "Missing SUBREDDIT"
@@ -112,8 +118,12 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit(user_agent='Baseball-GDT')
-        r.login(self.USERNAME, self.PASSWORD)
+        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.0'
+                        'https://github.com/mattabullock/Baseball-GDT-Bot')
+        r.set_oauth_app_info(client_id=self.CLIENT_ID,
+                            client_secret=self.CLIENT_SECRET,
+                            redirect_uri=self.REDIRECT_URI)        
+        r.refresh_access_information(self.REFRESH_TOKEN)        
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
@@ -148,7 +158,8 @@ class Bot:
             today = datetime.today()
 
             url = "http://gd2.mlb.com/components/game/mlb/"
-            url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
+            #url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d") + "/"
+            url = url + "year_2015/month_09/day_07/"
 
             response = ""
             while not response:
