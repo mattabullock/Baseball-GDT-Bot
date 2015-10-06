@@ -423,12 +423,16 @@ class Editor:
         try:
             root = files["highlights"].getroot()
             video = root.findall("media")
-            highlight = highlight + "|Highlight|Description\n"
-            highlight = highlight + "|:-|:-|\n"
+            highlight = highlight + "|Team|Highlight|\n"
+            highlight = highlight + "|:--|:--|\n"
             for v in video:
-                if v.get('type') == "video":
-                    highlight = highlight + "|[" + v.find("duration").text + "](" + v.find("url").text + ")|" + v.find(
-                        "headline").text + "|\n"
+                if v.get('type') == "video" and v.get('media-type') == "T":              
+                    try:
+                        team = self.get_team(v.get('team_id'))
+                        highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                   
+                    except:
+                        highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                     
+            highlight = highlight + "\n\n"
             print "Returning highlight..."
             return highlight
         except:
@@ -540,7 +544,7 @@ class Editor:
 
     def generate_footer(self):
         footer = ""
-        footer += "**Remember to sort by new to keep up!**"
+        footer += "**Remember to sort by new to keep up!**\n\n"
         return footer
 
 
@@ -622,3 +626,41 @@ class Editor:
         notes.append(options[homename])
         notes.append(options[awayname])
         return notes
+        
+        
+    def get_team(self, team_id):
+        team = []
+        options = {
+            "142": "[MIN](/r/minnesotatwins)",
+            "145": "[CWS](/r/WhiteSox)",
+            "116": "[DET](/r/MotorCityKitties)",
+            "118": "[KCR](/r/KCRoyals)",
+            "114": "[CLE](/r/WahoosTipi)",
+            "140": "[TEX](/r/TexasRangers)",
+            "117": "[HOU](/r/Astros)",
+            "133": "[OAK](/r/OaklandAthletics)",
+            "108": "[LAA](/r/AngelsBaseball)",
+            "136": "[SEA](/r/Mariners)",
+            "111": "[BOS](/r/RedSox)",
+            "147": "[NYY](/r/NYYankees)",
+            "141": "[TOR](/r/TorontoBlueJays)",
+            "139": "[TBR](/r/TampaBayRays)",
+            "110": "[BAL](/r/Orioles)",
+            "138": "[STL](/r/Cardinals)",
+            "113": "[CIN](/r/Reds)",
+            "134": "[PIT](/r/Buccos)",
+            "112": "[CHC](/r/CHICubs)",
+            "158": "[MIL](/r/Brewers)",
+            "137": "[SFG](/r/SFGiants)",
+            "109": "[ARI](/r/azdiamondbacks)",
+            "115": "[COL](/r/ColoradoRockies)",
+            "108": "[LAD](/r/Dodgers)",
+            "135": "[SDP](/r/Padres)",
+            "143": "[PHI](/r/Phillies)",
+            "120": "[NYM](/r/NewYorkMets)",
+            "146": "[MIA](/r/letsgofish)",
+            "121": "[WSH](/r/Nationals)",
+            "144": "[ATL](/r/Braves)"
+        }
+        team.append(options[team_id])
+        return team        
