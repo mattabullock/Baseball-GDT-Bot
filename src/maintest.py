@@ -39,7 +39,6 @@ class Bot:
 
     def read_settings(self):
         with open('settings.json') as data:        
-        #with open('test.json') as data:
             settings = json.load(data)
 
             self.CLIENT_ID = settings.get('CLIENT_ID')
