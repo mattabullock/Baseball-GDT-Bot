@@ -151,7 +151,9 @@ class Bot:
         else:
             print "Invalid bot time zone settings."
             return
-
+        
+-        timechecker = timecheck.TimeCheck(time_before)		
+-
         while True:
             today = datetime.today()
 
