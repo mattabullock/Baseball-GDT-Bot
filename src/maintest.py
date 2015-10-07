@@ -38,7 +38,8 @@ class Bot:
         self.POST_THREAD_SETTINGS = None
 
     def read_settings(self):
-        with open('settings.json') as data:
+        with open('settings.json') as data:        
+        #with open('test.json') as data:
             settings = json.load(data)
 
             self.CLIENT_ID = settings.get('CLIENT_ID')
@@ -118,7 +119,7 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.0'
+        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1'
                         'https://github.com/mattabullock/Baseball-GDT-Bot')
         r.set_oauth_app_info(client_id=self.CLIENT_ID,
                             client_secret=self.CLIENT_SECRET,
@@ -158,7 +159,7 @@ class Bot:
             today = datetime.today()
 
             url = "http://gd2.mlb.com/components/game/mlb/"
-            url = url + "year_2015/month_09/day_07/"
+            url = url + "year_2015/month_10/day_03/"
 
             response = ""
             while not response:
@@ -177,7 +178,6 @@ class Bot:
                     directories.append(url + v)
 
             if self.PREGAME_THREAD and len(directories) > 0:
-                timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
                 title = edit.generate_title(directories[0],"pre")
                 while True:
                     try:
@@ -206,101 +206,99 @@ class Bot:
                         time.sleep(300)
 
             for d in directories:
-                timechecker.gamecheck(d)
                 title = edit.generate_title(d,"game")
-                if not timechecker.ppcheck(d):
+                while True:
+                    check = datetime.today()
+                    try:
+                        posted = False
+                        subreddit = r.get_subreddit(self.SUBREDDIT)
+                        for submission in subreddit.get_new():
+                            if submission.title == title:
+                                print "Thread already posted, getting submission..."
+                                sub = submission
+                                posted = True
+                                break
+                        if not posted:
+                            print "Submitting game thread..."
+                            sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
+                            print "Game thread submitted..."
+                            if self.STICKY:
+                                print "Stickying submission..."
+                                sub.sticky()
+                                print "Submission stickied..."
+                            if self.SUGGESTED_SORT != None:
+                                print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                print "Suggested sort set..."
+                            if self.MESSAGE:
+                                print "Messaging Baseballbot..."
+                                r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
+                                print "Baseballbot messaged..."
+                        print "Sleeping for two minutes..."
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        time.sleep(5)
+                        break
+                    except Exception, err:
+                        print err
+                        time.sleep(300)
+                pgt_submit = False
+                while True:
+                    check = datetime.today()
+                    str = edit.generate_code(d,"game")
                     while True:
-                        check = datetime.today()
                         try:
-                            posted = False
-                            subreddit = r.get_subreddit(self.SUBREDDIT)
-                            for submission in subreddit.get_new():
-                                if submission.title == title:
-                                    print "Thread already posted, getting submission..."
-                                    sub = submission
-                                    posted = True
-                                    break
-                            if not posted:
-                                print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
-                                print "Game thread submitted..."
-                                if self.STICKY:
-                                    print "Stickying submission..."
-                                    sub.sticky()
-                                    print "Submission stickied..."
-                                if self.SUGGESTED_SORT != None:
-                                    print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
-                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
-                                    print "Suggested sort set..."
-                                if self.MESSAGE:
-                                    print "Messaging Baseballbot..."
-                                    r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
-                                    print "Baseballbot messaged..."
+                            sub.edit(str)
+                            print "Edits submitted..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(check, "%d %I:%M %p")
-                            time.sleep(5)
+                            time.sleep(120)
                             break
                         except Exception, err:
-                            print err
-                            time.sleep(300)
-                    pgt_submit = False
-                    while True:
+                            print "Couldn't submit edits, trying again..."
+                            print datetime.strftime(check, "%d %I:%M %p")
+                            time.sleep(10)
+                    if "|Decisions|" in str:
                         check = datetime.today()
-                        str = edit.generate_code(d,"game")
-                        while True:
-                            try:
-                                sub.edit(str)
-                                print "Edits submitted..."
-                                print "Sleeping for two minutes..."
-                                print datetime.strftime(check, "%d %I:%M %p")
-                                time.sleep(120)
-                                break
-                            except Exception, err:
-                                print "Couldn't submit edits, trying again..."
-                                print datetime.strftime(check, "%d %I:%M %p")
-                                time.sleep(10)
-                        if "|Decisions|" in str:
-                            check = datetime.today()
-                            print datetime.strftime(check, "%d %I:%M %p")
-                            print "Game final..."
-                            pgt_submit = True
-                        elif "##COMPLETED EARLY" in str:
-                            check = datetime.today()
-                            print datetime.strftime(check, "%d %I:%M %p")
-                            print "Completed Early..."
-                            pgt_submit = True
-                        elif "##FINAL: TIE" in str:
-                            check = datetime.today()
-                            print datetime.strftime(check, "%d %I:%M %p")
-                            print "Game final (tie)..."
-                            pgt_submit = True
-                        elif "##POSTPONED" in str:
-                            check = datetime.today()
-                            print datetime.strftime(check, "%d %I:%M %p")
-                            print "Game postponed..."
-                            pgt_submit = True
-                        elif "##SUSPENDED" in str:
-                            check = datetime.today()
-                            print datetime.strftime(check, "%d %I:%M %p")
-                            print "Game suspended..."
-                            pgt_submit = True
-                        elif "##CANCELLED" in str:
-                            check = datetime.today()
-                            print datetime.strftime(check, "%d %I:%M %p")
-                            print "Game cancelled..."
-                            pgt_submit = True
-                        if pgt_submit:
-                            if self.POST_GAME_THREAD:
-                                print "Submitting postgame thread..."
-                                posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
-                                print "Postgame thread submitted..."
-                                if self.STICKY:
-                                    print "Stickying submission..."
-                                    sub.sticky()
-                                    print "Submission stickied..."
-                            break
-                        time.sleep(10)
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        print "Game final..."
+                        pgt_submit = True
+                    elif "##COMPLETED EARLY" in str:
+                        check = datetime.today()
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        print "Completed Early..."
+                        pgt_submit = True
+                    elif "##FINAL: TIE" in str:
+                        check = datetime.today()
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        print "Game final (tie)..."
+                        pgt_submit = True
+                    elif "##POSTPONED" in str:
+                        check = datetime.today()
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        print "Game postponed..."
+                        pgt_submit = True
+                    elif "##SUSPENDED" in str:
+                        check = datetime.today()
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        print "Game suspended..."
+                        pgt_submit = True
+                    elif "##CANCELLED" in str:
+                        check = datetime.today()
+                        print datetime.strftime(check, "%d %I:%M %p")
+                        print "Game cancelled..."
+                        pgt_submit = True
+                    if pgt_submit:
+                        if self.POST_GAME_THREAD:
+                            print "Submitting postgame thread..."
+                            posttitle = edit.generate_title(d,"post")
+                            sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
+                            print "Postgame thread submitted..."
+                            if self.STICKY:
+                                print "Stickying submission..."
+                                sub.sticky()
+                                print "Submission stickied..."
+                        break
+                    time.sleep(10)
             if datetime.today().day == today.day:
                 timechecker.endofdaycheck()
 
