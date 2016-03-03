@@ -11,3 +11,4 @@ webbrowser.open(url)
 var_input = input("Enter uniqueKey&code: ")
 access_information = r.get_access_information(var_input)
 print access_information
+raw_input()
