@@ -4,7 +4,7 @@ r.set_oauth_app_info(client_id='xxx',
                     client_secret='xxx',
                     redirect_uri='http://127.0.0.1:65010/authorize_callback')
 								   
-url = r.get_authorize_url('uniqueKey', 'submit edit read modposts', True)
+url = r.get_authorize_url('uniqueKey', 'submit edit read modposts privatemessages', True)
 import webbrowser
 webbrowser.open(url)
 
