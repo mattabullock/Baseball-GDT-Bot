@@ -32,13 +32,30 @@ Finally, Copy sample_settings.json to the src folder and rename it to settings.j
 Edit settings.json with the following information:
 
 BOT_TIME_ZONE - time zone of the computer running the bot, uncomment the line that you want to use
+
 TIME_ZONE - time zone of the team. uncomment the line that you want to use
+
 POST_TIME - bot posts the thread POST_TIME hours before the game
+
 SUBREDDIT - subreddit that you want the threads posted to
+
 TEAM_CODE - three letter code that represents team, look this up
+
+PREGAME_THREAD - do you want a pre game thread?
+
 POST_GAME_THREAD - do you want a post game thread?
-STICKY - do you want the thread stickied?
+
+SUGGESTED_SORT - what do you want the suggested sort to be? ("confidence", "top", "new", "controversial", "old", "random", "qa", "")
+
+STICKY - do you want the thread stickied? (mod only)
+
 MESSAGE - send submission shortlink to /u/baseballbot
+
+PRE_THREAD_SETTINGS - what to include in the pregame threads
+
+THREAD_SETTINGS - what to include in game threads
+
+POST_THREAD_SETTINGS - what to include in postgame threads
 	
 ---	
 
