@@ -142,7 +142,7 @@ class Editor:
         dirs.append(dir + "gamecenter.xml")
         dirs.append(dir + "plays.json")
         dirs.append(dir + "/inning/inning_Scores.xml")
-        dirs.append(dir + "/media/highlights.xml")
+        dirs.append(dir + "/media/mobile.xml")
         files = self.download_files(dirs)
         if thread == "game":
             if self.header: code = code + self.generate_header(files)
