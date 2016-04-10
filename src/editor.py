@@ -657,9 +657,9 @@ class Editor:
             "108": "[LAD](/r/Dodgers)",
             "135": "[SDP](/r/Padres)",
             "143": "[PHI](/r/Phillies)",
-            "120": "[NYM](/r/NewYorkMets)",
+            "121": "[NYM](/r/NewYorkMets)",
             "146": "[MIA](/r/letsgofish)",
-            "121": "[WSH](/r/Nationals)",
+            "120": "[WSH](/r/Nationals)",
             "144": "[ATL](/r/Braves)"
         }
         team.append(options[team_id])
