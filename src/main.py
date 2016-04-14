@@ -122,8 +122,7 @@ class Bot:
             return
 
         r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1 '
-                        'https://github.com/mattabullock/Baseball-GDT-Bot '
-                        'Forked by /u/toddrob')
+                        'https://github.com/mattabullock/Baseball-GDT-Bot')
         r.set_oauth_app_info(client_id=self.CLIENT_ID,
                             client_secret=self.CLIENT_SECRET,
                             redirect_uri=self.REDIRECT_URI)        
