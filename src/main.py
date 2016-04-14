@@ -83,6 +83,9 @@ class Bot:
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
 
+            self.INBOXREPLIES = settings.get('INBOXREPLIES')
+            if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
+            
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
@@ -118,7 +121,7 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1'
+        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1 '
                         'https://github.com/mattabullock/Baseball-GDT-Bot')
         r.set_oauth_app_info(client_id=self.CLIENT_ID,
                             client_secret=self.CLIENT_SECRET,
@@ -191,7 +194,7 @@ class Bot:
                                 break
                         if not posted:
                             print "Submitting pregame thread..."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
+                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
@@ -222,7 +225,7 @@ class Bot:
                                     break
                             if not posted:
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
@@ -293,7 +296,7 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."

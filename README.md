@@ -1,4 +1,4 @@
-Baseball GDT Bot by Matt Bullock
+﻿Baseball GDT Bot by Matt Bullock
 =====================================
 
 ####Current Version: 3.0.1
@@ -50,6 +50,8 @@ SUGGESTED_SORT - what do you want the suggested sort to be? ("confidence", "top"
 STICKY - do you want the thread stickied? (mod only)
 
 MESSAGE - send submission shortlink to /u/baseballbot
+
+INBOXREPLIES - do you want to receive thread replies in the bot's inbox?
 
 PRE_THREAD_SETTINGS - what to include in the pregame threads
 
