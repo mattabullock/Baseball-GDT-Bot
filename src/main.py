@@ -33,6 +33,7 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
+        self.INBOXREPLIES = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
