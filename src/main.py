@@ -122,7 +122,7 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1'
+        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1 '
                         'https://github.com/mattabullock/Baseball-GDT-Bot')
         r.set_oauth_app_info(client_id=self.CLIENT_ID,
                             client_secret=self.CLIENT_SECRET,
