@@ -51,6 +51,8 @@ STICKY - do you want the thread stickied? (mod only)
 
 MESSAGE - send submission shortlink to /u/baseballbot
 
+INBOXREPLIES - do you want to receive thread replies in the bot's inbox?
+
 PRE_THREAD_SETTINGS - what to include in the pregame threads
 
 THREAD_SETTINGS - what to include in game threads
