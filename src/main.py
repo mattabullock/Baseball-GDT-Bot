@@ -195,7 +195,7 @@ class Bot:
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
-                                sub.sticky()
+                                sub.sticky(bottom=False)
                                 print "Submission stickied..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
@@ -226,7 +226,7 @@ class Bot:
                                 print "Game thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.sticky(bottom=False)
                                     print "Submission stickied..."
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
@@ -297,7 +297,7 @@ class Bot:
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.sticky(bottom=False)
                                     print "Submission stickied..."
                             break
                         time.sleep(10)
