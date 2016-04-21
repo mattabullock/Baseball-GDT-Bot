@@ -33,6 +33,7 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
+        self.INBOXREPLIES = None
         self.WINLOSS_POST_THREAD_TAGS = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
@@ -83,6 +84,9 @@ class Bot:
 
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
+
+            self.INBOXREPLIES = settings.get('INBOXREPLIES')
+            if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
 
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
@@ -195,12 +199,16 @@ class Bot:
                                 break
                         if not posted:
                             print "Submitting pregame thread..."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
+                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
                                 sub.sticky()
                                 print "Submission stickied..."
+                            if self.SUGGESTED_SORT != None:
+                                print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                print "Suggested sort set..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
                             time.sleep(5)
@@ -226,7 +234,7 @@ class Bot:
                                     break
                             if not posted:
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
@@ -297,12 +305,16 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post",self.WINLOSS_POST_THREAD_TAGS,self.TEAM_CODE)
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
                                     sub.sticky()
                                     print "Submission stickied..."
+                                if self.SUGGESTED_SORT != None:
+                                    print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                    print "Suggested sort set..."
                             break
                         time.sleep(10)
             if datetime.today().day == today.day:

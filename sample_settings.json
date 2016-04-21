@@ -13,7 +13,9 @@
     "STICKY": true,
     "SUGGESTED_SORT": "new",
     "MESSAGE": false,
+    "INBOXREPLIES": false,
     "WINLOSS_POST_THREAD_TAGS": false,
+
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
