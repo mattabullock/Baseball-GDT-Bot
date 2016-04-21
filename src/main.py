@@ -33,6 +33,7 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
+        self.WINLOSS_POST_THREAD_TAGS = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
@@ -101,12 +102,15 @@ class Bot:
 
             temp_settings = settings.get('POST_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
-            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'),
+            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'), temp_settings.get('POST_THREAD_WIN_TAG'), temp_settings.get('POST_THREAD_LOSS_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
                                  )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
+
+            self.WINLOSS_POST_THREAD_TAGS = settings.get('WINLOSS_POST_THREAD_TAGS')
+            if self.WINLOSS_POST_THREAD_TAGS == None: return "Missing WINLOSS_POST_THREAD_TAGS"
 
         return 0
 
@@ -292,7 +296,7 @@ class Bot:
                         if pgt_submit:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
-                                posttitle = edit.generate_title(d,"post")
+                                posttitle = edit.generate_title(d,"post",self.WINLOSS_POST_THREAD_TAGS,self.TEAM_CODE)
                                 sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
