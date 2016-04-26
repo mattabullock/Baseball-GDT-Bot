@@ -11,6 +11,7 @@
     "PREGAME_THREAD": false,
     "POST_GAME_THREAD": false,
     "STICKY": true,
+    "FORCETOPSTICKYSLOT": false,
     "SUGGESTED_SORT": "new",
     "MESSAGE": false,
     "INBOXREPLIES": false,

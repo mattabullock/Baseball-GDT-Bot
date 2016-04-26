@@ -49,6 +49,8 @@ SUGGESTED_SORT - what do you want the suggested sort to be? ("confidence", "top"
 
 STICKY - do you want the thread stickied? (mod only)
 
+FORCETOPSTICKYSLOT - if using STICKY, do you want to force the sticky into the top sticky slot? otherwise it will default to the bottom sticky slot and could leave an old GDT in the top sticky slot until manually unstickied. 
+
 MESSAGE - send submission shortlink to /u/baseballbot
 
 INBOXREPLIES - do you want to receive thread replies in the bot's inbox?
