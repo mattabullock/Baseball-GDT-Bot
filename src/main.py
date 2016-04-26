@@ -80,8 +80,6 @@ class Bot:
             
             self.FORCETOPSTICKYSLOT = settings.get('FORCETOPSTICKYSLOT')
             if self.FORCETOPSTICKYSLOT == None: return "Missing FORCETOPSTICKYSLOT"
-            if self.FORCETOPSTICKYSLOT: self.BOTTOMSTICKY = "bottom=False"
-            else: self.BOTTOMSTICKY = ""
 
             self.SUGGESTED_SORT = settings.get('SUGGESTED_SORT')
             if self.SUGGESTED_SORT == None: return "Missing SUGGESTED_SORT"
@@ -201,7 +199,8 @@ class Bot:
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
-                                sub.sticky(self.BOTTOMSTICKY)
+                                if self.FORCETOPSTICKYSLOT: sub.sticky(bottom=False)
+                                else: sub.sticky()
                                 print "Submission stickied..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
@@ -232,7 +231,8 @@ class Bot:
                                 print "Game thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky(self.BOTTOMSTICKY)
+                                    if self.FORCETOPSTICKYSLOT: sub.sticky(bottom=False)
+                                    else: sub.sticky()
                                     print "Submission stickied..."
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
@@ -303,7 +303,8 @@ class Bot:
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky(self.BOTTOMSTICKY)
+                                    if self.FORCETOPSTICKYSLOT: sub.sticky(bottom=False)
+                                    else: sub.sticky()
                                     print "Submission stickied..."
                             break
                         time.sleep(10)
