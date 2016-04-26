@@ -31,6 +31,7 @@ class Bot:
         self.PREGAME_THREAD = None
         self.POST_GAME_THREAD = None
         self.STICKY = None
+        self.FORCETOPSTICKYSLOT = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
         self.PRE_THREAD_SETTINGS = None
@@ -76,6 +77,11 @@ class Bot:
 
             self.STICKY = settings.get('STICKY')
             if self.STICKY == None: return "Missing STICKY"
+            
+            self.FORCETOPSTICKYSLOT = settings.get('FORCETOPSTICKYSLOT')
+            if self.FORCETOPSTICKYSLOT == None: return "Missing FORCETOPSTICKYSLOT"
+            if self.FORCETOPSTICKYSLOT: self.BOTTOMSTICKY = "bottom=False"
+            else: self.BOTTOMSTICKY = ""
 
             self.SUGGESTED_SORT = settings.get('SUGGESTED_SORT')
             if self.SUGGESTED_SORT == None: return "Missing SUGGESTED_SORT"
@@ -195,7 +201,7 @@ class Bot:
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
-                                sub.sticky(bottom=False)
+                                sub.sticky(self.BOTTOMSTICKY)
                                 print "Submission stickied..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
@@ -226,7 +232,7 @@ class Bot:
                                 print "Game thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky(bottom=False)
+                                    sub.sticky(self.BOTTOMSTICKY)
                                     print "Submission stickied..."
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
@@ -297,7 +303,7 @@ class Bot:
                                 print "Postgame thread submitted..."
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky(bottom=False)
+                                    sub.sticky(self.BOTTOMSTICKY)
                                     print "Submission stickied..."
                             break
                         time.sleep(10)
