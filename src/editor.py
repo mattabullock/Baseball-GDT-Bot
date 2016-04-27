@@ -654,7 +654,7 @@ class Editor:
             "137": "[SFG](/r/SFGiants)",
             "109": "[ARI](/r/azdiamondbacks)",
             "115": "[COL](/r/ColoradoRockies)",
-            "108": "[LAD](/r/Dodgers)",
+            "119": "[LAD](/r/Dodgers)",
             "135": "[SDP](/r/Padres)",
             "143": "[PHI](/r/Phillies)",
             "121": "[NYM](/r/NewYorkMets)",
