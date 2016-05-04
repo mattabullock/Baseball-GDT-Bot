@@ -253,7 +253,6 @@ class Bot:
                                 print "Edits submitted..."
                                 print "Sleeping for two minutes..."
                                 print datetime.strftime(check, "%d %I:%M %p")
-                                time.sleep(120)
                                 break
                             except Exception, err:
                                 print "Couldn't submit edits, trying again..."
@@ -300,6 +299,7 @@ class Bot:
                                     sub.sticky()
                                     print "Submission stickied..."
                             break
+                        else: time.sleep(120)
                         time.sleep(10)
             if datetime.today().day == today.day:
                 timechecker.endofdaycheck()
