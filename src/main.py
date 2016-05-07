@@ -41,7 +41,9 @@ class Bot:
         self.POST_THREAD_SETTINGS = None
 
     def read_settings(self):
-        with open('settings.json') as data:
+        import os
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        with open(cwd + '/settings.json') as data:
             settings = json.load(data)
 
             self.CLIENT_ID = settings.get('CLIENT_ID')
