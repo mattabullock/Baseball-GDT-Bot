@@ -195,7 +195,7 @@ class Bot:
                                 break
                         if not posted:
                             print "Submitting pregame thread..."
-                            if self.STICKY and sub:
+                            if self.STICKY and 'sub' in locals():
                                 sub.unsticky()
                             sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
                             print "Pregame thread submitted..."
@@ -227,7 +227,7 @@ class Bot:
                                     posted = True
                                     break
                             if not posted:
-                                if self.STICKY and sub:
+                                if self.STICKY and 'sub' in locals():
                                     sub.unsticky()
 
                                 print "Submitting game thread..."
@@ -306,7 +306,7 @@ class Bot:
                             print "Game cancelled..."
                             pgt_submit = True
                         if pgt_submit:
-                            if self.STICKY and sub:
+                            if self.STICKY and 'sub' in locals():
                                 sub.unsticky()
 
                             if self.POST_GAME_THREAD:
