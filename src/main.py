@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
 
 BASEBALL GAME THREAD BOT
@@ -38,7 +40,9 @@ class Bot:
         self.POST_THREAD_SETTINGS = None
 
     def read_settings(self):
-        with open('settings.json') as data:
+        import os
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        with open(cwd + '/settings.json') as data:
             settings = json.load(data)
 
             self.CLIENT_ID = settings.get('CLIENT_ID')
@@ -51,7 +55,7 @@ class Bot:
             if self.REDIRECT_URI == None: return "Missing REDIRECT_URI"
 
             self.REFRESH_TOKEN = settings.get('REFRESH_TOKEN')
-            if self.REFRESH_TOKEN == None: return "Missing REFRESH_TOKEN"             
+            if self.REFRESH_TOKEN == None: return "Missing REFRESH_TOKEN"
 
             self.BOT_TIME_ZONE = settings.get('BOT_TIME_ZONE')
             if self.BOT_TIME_ZONE == None: return "Missing BOT_TIME_ZONE"
@@ -122,8 +126,8 @@ class Bot:
                         'https://github.com/mattabullock/Baseball-GDT-Bot')
         r.set_oauth_app_info(client_id=self.CLIENT_ID,
                             client_secret=self.CLIENT_SECRET,
-                            redirect_uri=self.REDIRECT_URI)        
-        r.refresh_access_information(self.REFRESH_TOKEN)        
+                            redirect_uri=self.REDIRECT_URI)
+        r.refresh_access_information(self.REFRESH_TOKEN)
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
@@ -191,6 +195,8 @@ class Bot:
                                 break
                         if not posted:
                             print "Submitting pregame thread..."
+                            if self.STICKY and 'sub' in locals():
+                                sub.unsticky()
                             sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
                             print "Pregame thread submitted..."
                             if self.STICKY:
@@ -221,21 +227,28 @@ class Bot:
                                     posted = True
                                     break
                             if not posted:
+                                if self.STICKY and 'sub' in locals():
+                                    sub.unsticky()
+
                                 print "Submitting game thread..."
                                 sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
                                 print "Game thread submitted..."
+
                                 if self.STICKY:
                                     print "Stickying submission..."
                                     sub.sticky()
                                     print "Submission stickied..."
+
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
                                     sub.set_suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
+
                                 if self.MESSAGE:
                                     print "Messaging Baseballbot..."
                                     r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
                                     print "Baseballbot messaged..."
+
                             print "Sleeping for two minutes..."
                             print datetime.strftime(check, "%d %I:%M %p")
                             time.sleep(5)
@@ -243,7 +256,9 @@ class Bot:
                         except Exception, err:
                             print err
                             time.sleep(300)
+
                     pgt_submit = False
+
                     while True:
                         check = datetime.today()
                         str = edit.generate_code(d,"game")
@@ -259,6 +274,7 @@ class Bot:
                                 print "Couldn't submit edits, trying again..."
                                 print datetime.strftime(check, "%d %I:%M %p")
                                 time.sleep(10)
+
                         if "|Decisions|" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
@@ -290,11 +306,15 @@ class Bot:
                             print "Game cancelled..."
                             pgt_submit = True
                         if pgt_submit:
+                            if self.STICKY and 'sub' in locals():
+                                sub.unsticky()
+
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
                                 sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
                                 print "Postgame thread submitted..."
+
                                 if self.STICKY:
                                     print "Stickying submission..."
                                     sub.sticky()
