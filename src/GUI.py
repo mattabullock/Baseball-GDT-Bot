@@ -3,12 +3,10 @@ import json
 from sys import executable, exit
 from subprocess import Popen, CREATE_NEW_CONSOLE
 
-
 def GUI():
-
     root = Tk()
     root.title("Baseball GDT Bot 3.0.2")
-    root.geometry('605x605')
+    root.geometry('605x625')
     def quit():
         root.quit()
 
@@ -54,7 +52,6 @@ def GUI():
             PRE_THREAD_TIME = prethread_settings.get('PRE_THREAD_TIME')
             PROBABLES = precontent_settings.get('PROBABLES')
             FIRST_PITCH = precontent_settings.get('FIRST_PITCH')
-
 
         def SaveSettings():
             data = {
@@ -118,7 +115,7 @@ def GUI():
 
         #Controls
         group = LabelFrame(root, text="Controls", padx=5, pady=5)
-        group.place(x=0,y=400,height=200,width=300)
+        group.place(x=0,y=400,height=225,width=300)
 
         f = Frame(group)
 
@@ -272,7 +269,7 @@ def GUI():
         
         #GameThreadSettings
         group = LabelFrame(root, text="Game Thread Settings", padx=5, pady=5)
-        group.place(x=305,y=200,height=225,width=300) 
+        group.place(x=305,y=200,height=250,width=300) 
 
         l = Label(group, text="Game Thread Tag")
         l.pack(anchor=W)
@@ -447,7 +444,7 @@ def GUI():
 
         #Postgame settings
         group = LabelFrame(root, text="Postgame Thread Settings", padx=5, pady=5)
-        group.place(x=305,y=425,height=175,width=300)
+        group.place(x=305,y=450,height=175,width=300)
             
         PostgameThreadVar = IntVar()
         PostgameThread = Checkbutton(group, text="Toggle Postgame Thread", variable=PostgameThreadVar)
@@ -527,7 +524,5 @@ def GUI():
         f.pack(side=RIGHT, anchor=N)        			
 
         root.mainloop()
-
-
 
 GUI()
