@@ -235,7 +235,7 @@ class Bot:
                                     sub.unsticky()
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game",self.THEATER_LINK))
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game",self.TEAM_CODE,self.THEATER_LINK))
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
@@ -265,7 +265,7 @@ class Bot:
 
                     while True:
                         check = datetime.today()
-                        str = edit.generate_code(d,"game",self.THEATER_LINK)
+                        str = edit.generate_code(d,"game",self.TEAM_CODE,self.THEATER_LINK)
                         while True:
                             try:
                                 sub.edit(str)
@@ -316,7 +316,7 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post",self.THEATER_LINK))
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post",self.TEAM_CODE,self.THEATER_LINK))
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
