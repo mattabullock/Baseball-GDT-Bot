@@ -134,7 +134,7 @@ class Editor:
             return first_pitch
 
 
-    def generate_code(self,dir,thread):
+    def generate_code(self,dir,thread,theater_link=False):
         code = ""
         dirs = []
         dirs.append(dir + "linescore.json")
@@ -149,14 +149,14 @@ class Editor:
             if self.box_score: code = code + self.generate_boxscore(files)
             if self.line_score: code = code + self.generate_linescore(files)
             if self.scoring_plays: code = code + self.generate_scoring_plays(files)
-            if self.highlights: code = code + self.generate_highlights(files)
+            if self.highlights: code = code + self.generate_highlights(files,theater_link)
             if self.footer: code = code + self.generate_footer()
         elif thread == "post":
             if self.post_header: code = code + self.generate_header(files)
             if self.post_box_score: code = code + self.generate_boxscore(files)
             if self.post_line_score: code = code + self.generate_linescore(files)
             if self.post_scoring_plays: code = code + self.generate_scoring_plays(files)
-            if self.post_highlights: code = code + self.generate_highlights(files)
+            if self.post_highlights: code = code + self.generate_highlights(files,theater_link)
             if self.post_footer: code = code + self.generate_footer()
         code = code + self.generate_status(files)
         print "Returning all code..."
@@ -418,7 +418,7 @@ class Editor:
             return scoringplays
 
 
-    def generate_highlights(self,files):
+    def generate_highlights(self,files,theater_link=False):
         highlight = ""
         try:
             root = files["highlights"].getroot()
@@ -432,6 +432,7 @@ class Editor:
                         highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                   
                     except:
                         highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                     
+            if theater_link: highlight = highlight + "See more at [Baseball.Theater](http://baseball.theater)\n"
             highlight = highlight + "\n\n"
             print "Returning highlight..."
             return highlight
