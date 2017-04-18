@@ -35,6 +35,7 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
+        self.THEATER_LINK = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
@@ -87,6 +88,9 @@ class Bot:
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
 
+            self.THEATER_LINK = settings.get('THEATER_LINK')
+            if self.THEATER_LINK == None: return "Missing THEATER_LINK"
+            
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
