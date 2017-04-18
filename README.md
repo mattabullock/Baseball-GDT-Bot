@@ -1,7 +1,7 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-####Current Version: 3.0.1
+####Current Version: 3.0.2
 
 This project was originally written by Matt Bullock,
 	A.K.A. /u/DetectiveWoofles on reddit and Woofles on GitHub.
@@ -73,6 +73,9 @@ Modules being used:
 	ElementTree - XML parsing
 
 ###Updates
+
+####v3.0.2
+* GUI added. 
 
 ####v3.0.1
 * Now uses OAuth!
