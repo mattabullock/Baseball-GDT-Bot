@@ -432,7 +432,7 @@ class Editor:
                         highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                   
                     except:
                         highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                     
-            if theater_link: highlight = highlight + "|:--|See more at [Baseball.Theater](http://baseball.theater/team/" + v.get('team_id')/ + "game/" + datetime.datetime.today().strftime('%Y%m%d') + ")|\n"
+            if theater_link: highlight = highlight + "|:--|See more at [Baseball.Theater](http://baseball.theater/team/" + v.get('team_id') + "/game/" + datetime.datetime.today().strftime('%Y%m%d') + ")|\n"
             highlight = highlight + "\n\n"
             print "Returning highlight..."
             return highlight
