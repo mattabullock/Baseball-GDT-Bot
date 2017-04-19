@@ -13,8 +13,6 @@
     "STICKY": true,
     "SUGGESTED_SORT": "new",
     "MESSAGE": false,
-    "THEATER_LINK_GAME": false,
-    "THEATER_LINK_POST": false,
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
@@ -31,6 +29,7 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
+            "THEATER_LINK_GAME": false,
             "FOOTER": false
         }
     },
@@ -42,6 +41,7 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
+            "THEATER_LINK_POST": false,
             "FOOTER": false
         }
     }
