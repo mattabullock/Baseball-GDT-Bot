@@ -419,6 +419,7 @@ class Editor:
 
 
     def generate_highlights(self,files,myteam="",theater_link=False):
+        import datetime
         highlight = ""
         try:
             root = files["highlights"].getroot()
@@ -432,7 +433,7 @@ class Editor:
                         highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                   
                     except:
                         highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                     
-            if theater_link: highlight = highlight + "|:--|See all highlights at [Baseball.Theater](http://baseball.theater/team/" + myteam + "/game/" + datetime.datetime.today().strftime('%Y%m%d') + ")|\n"
+            if theater_link: highlight = highlight + "||See all highlights at [Baseball.Theater](http://baseball.theater/team/" + myteam + "/game/" + datetime.datetime.now().strftime('%Y%m%d') + ")|\n"
             highlight = highlight + "\n\n"
             print "Returning highlight..."
             return highlight
