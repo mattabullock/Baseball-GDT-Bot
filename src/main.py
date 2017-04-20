@@ -35,7 +35,6 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
-        self.THEATER_LINK = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
@@ -103,7 +102,7 @@ class Bot:
             self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.THREAD_SETTINGS == None: return "Missing THREAD_SETTINGS"
 
@@ -112,7 +111,7 @@ class Bot:
             self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
 
@@ -235,7 +234,7 @@ class Bot:
                                     sub.unsticky()
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game",self.TEAM_CODE,self.THEATER_LINK))
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game",self.TEAM_CODE))
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
@@ -265,7 +264,7 @@ class Bot:
 
                     while True:
                         check = datetime.today()
-                        str = edit.generate_code(d,"game",self.TEAM_CODE,self.THEATER_LINK)
+                        str = edit.generate_code(d,"game",self.TEAM_CODE)
                         while True:
                             try:
                                 sub.edit(str)
@@ -316,7 +315,7 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post",self.TEAM_CODE,self.THEATER_LINK))
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post",self.TEAM_CODE))
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
