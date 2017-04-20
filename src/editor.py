@@ -134,7 +134,7 @@ class Editor:
             return first_pitch
 
 
-    def generate_code(self,dir,thread,myteam="",theater_link=False):
+    def generate_code(self,dir,thread,myteam=""):
         code = ""
         dirs = []
         dirs.append(dir + "linescore.json")
