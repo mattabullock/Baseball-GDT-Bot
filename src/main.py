@@ -86,9 +86,6 @@ class Bot:
 
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
-
-            self.THEATER_LINK = settings.get('THEATER_LINK')
-            if self.THEATER_LINK == None: return "Missing THEATER_LINK"
             
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
