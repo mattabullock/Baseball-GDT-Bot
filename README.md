@@ -47,7 +47,13 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `STICKY` - do you want the thread stickied? (mod only)
 
+* `FORCETOPSTICKYSLOT` - if using STICKY, do you want to force the sticky into the top sticky slot? otherwise it will default to the bottom sticky slot and could leave an old GDT in the top sticky slot until manually unstickied. 
+
 * `MESSAGE` - send submission shortlink to /u/baseballbot
+
+* `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
+
+* `WINLOSS_POST_THREAD_TAGS` - do you want to use different postgame thread tags for wins and losses? (configure in POST_THREAD_SETTINGS)
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 
