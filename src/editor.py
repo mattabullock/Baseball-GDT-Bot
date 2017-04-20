@@ -53,7 +53,7 @@ class Editor:
 
     def generate_pre_code(self,dirs):
         code = ""
-	for d in dirs:
+        for d in dirs:
             temp_dirs = []
             temp_dirs.append(d + "linescore.json")
             temp_dirs.append(d + "gamecenter.xml")
