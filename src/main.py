@@ -86,7 +86,7 @@ class Bot:
 
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
-            
+
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
