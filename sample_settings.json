@@ -33,7 +33,8 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": false
+            "FOOTER": false,
+            "THEATER_LINK": false
         }
     },
     "POST_THREAD_SETTINGS": {
@@ -46,7 +47,8 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": false
+            "FOOTER": false,
+            "THEATER_LINK": false
         }
     }
 }

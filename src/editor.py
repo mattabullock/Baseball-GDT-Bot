@@ -19,12 +19,12 @@ class Editor:
         (self.thread_tag, 
             (self.header, self.box_score, 
              self.line_score, self.scoring_plays,
-             self.highlights, self.footer)
+             self.highlights, self.footer, self.theater_link)
         ) = thread_settings
         (self.post_thread_tag, self.post_thread_win_tag, self.post_thread_loss_tag,
             (self.post_header, self.post_box_score, 
              self.post_line_score, self.post_scoring_plays,
-             self.post_highlights, self.post_footer)
+             self.post_highlights, self.post_footer, self.post_theater_link)
         ) = post_thread_settings
 
 
@@ -144,7 +144,7 @@ class Editor:
             return first_pitch
 
 
-    def generate_code(self,dir,thread):
+    def generate_code(self,dir,thread,myteam=""):
         code = ""
         dirs = []
         dirs.append(dir + "linescore.json")
@@ -159,14 +159,14 @@ class Editor:
             if self.box_score: code = code + self.generate_boxscore(files)
             if self.line_score: code = code + self.generate_linescore(files)
             if self.scoring_plays: code = code + self.generate_scoring_plays(files)
-            if self.highlights: code = code + self.generate_highlights(files)
+            if self.highlights: code = code + self.generate_highlights(files,myteam,self.theater_link)
             if self.footer: code = code + self.generate_footer()
         elif thread == "post":
             if self.post_header: code = code + self.generate_header(files)
             if self.post_box_score: code = code + self.generate_boxscore(files)
             if self.post_line_score: code = code + self.generate_linescore(files)
             if self.post_scoring_plays: code = code + self.generate_scoring_plays(files)
-            if self.post_highlights: code = code + self.generate_highlights(files)
+            if self.post_highlights: code = code + self.generate_highlights(files,myteam,self.post_theater_link)
             if self.post_footer: code = code + self.generate_footer()
         code = code + self.generate_status(files)
         print "Returning all code..."
@@ -428,7 +428,8 @@ class Editor:
             return scoringplays
 
 
-    def generate_highlights(self,files):
+    def generate_highlights(self,files,myteam="",theater_link=False):
+        import datetime
         highlight = ""
         try:
             root = files["highlights"].getroot()
@@ -442,6 +443,7 @@ class Editor:
                         highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                   
                     except:
                         highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                     
+            if theater_link: highlight = highlight + "||See all highlights at [Baseball.Theater](http://baseball.theater/team/" + myteam + "/game/" + datetime.datetime.now().strftime('%Y%m%d') + ")|\n"
             highlight = highlight + "\n\n"
             print "Returning highlight..."
             return highlight

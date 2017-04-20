@@ -108,7 +108,7 @@ class Bot:
             self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.THREAD_SETTINGS == None: return "Missing THREAD_SETTINGS"
 
@@ -117,7 +117,7 @@ class Bot:
             self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'), temp_settings.get('POST_THREAD_WIN_TAG'), temp_settings.get('POST_THREAD_LOSS_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
 
@@ -248,7 +248,7 @@ class Bot:
                                     sub.unsticky()
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game",self.TEAM_CODE), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
@@ -279,7 +279,7 @@ class Bot:
 
                     while True:
                         check = datetime.today()
-                        str = edit.generate_code(d,"game")
+                        str = edit.generate_code(d,"game",self.TEAM_CODE)
                         while True:
                             try:
                                 sub.edit(str)
@@ -329,7 +329,7 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post",self.WINLOSS_POST_THREAD_TAGS,self.TEAM_CODE)
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post",self.TEAM_CODE), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
