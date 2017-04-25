@@ -284,8 +284,6 @@ class Bot:
                             try:
                                 sub.edit(str)
                                 print "Edits submitted..."
-                                print "Sleeping for two minutes..."
-                                print datetime.strftime(check, "%d %I:%M %p")
                                 break
                             except Exception, err:
                                 print "Couldn't submit edits, trying again..."
@@ -341,9 +339,12 @@ class Bot:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
                                     sub.set_suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
+                            time.sleep(10)
                             break
-                        else: time.sleep(120)
-                        time.sleep(10)
+                        else: 
+                            print "Sleeping for one minute..."
+                            print datetime.strftime(check, "%d %I:%M %p")
+                            time.sleep(60)
             if datetime.today().day == today.day:
                 timechecker.endofdaycheck()
 
