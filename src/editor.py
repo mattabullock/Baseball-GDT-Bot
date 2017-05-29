@@ -150,14 +150,14 @@ class Editor:
             if self.line_score: code = code + self.generate_linescore(files)
             if self.scoring_plays: code = code + self.generate_scoring_plays(files)
             if self.highlights: code = code + self.generate_highlights(files)
-            if self.footer: code = code + self.generate_footer()
+            if self.footer: code = code + self.footer
         elif thread == "post":
             if self.post_header: code = code + self.generate_header(files)
             if self.post_box_score: code = code + self.generate_boxscore(files)
             if self.post_line_score: code = code + self.generate_linescore(files)
             if self.post_scoring_plays: code = code + self.generate_scoring_plays(files)
             if self.post_highlights: code = code + self.generate_highlights(files)
-            if self.post_footer: code = code + self.generate_footer()
+            if self.post_footer: code = code + self.post_footer
         code = code + self.generate_status(files)
         print "Returning all code..."
         return code
@@ -194,7 +194,7 @@ class Editor:
             timezone = self.time_zone
             date_object = date_object - t
             header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
-            header = header + "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")\n"
+            header = header + "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")\n\n"
             weather = files["plays"].get('data').get('game').get('weather')
             root = files["gamecenter"].getroot()
             broadcast = root.find('broadcast')
@@ -541,12 +541,6 @@ class Editor:
         except:
             print "Missing data for status, returning blank text..."
             return status
-
-    def generate_footer(self):
-        footer = ""
-        footer += "**Remember to sort by new to keep up!**\n\n"
-        return footer
-
 
     def get_subreddits(self, homename, awayname):
         subreddits = []
