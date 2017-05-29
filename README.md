@@ -51,6 +51,8 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
 
+* `WINLOSS_POST_THREAD_TAGS` - do you want to use different postgame thread tags for wins and losses? (configure in POST_THREAD_SETTINGS)
+
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 
 * `THREAD_SETTINGS` - what to include in game threads; include two line breaks at the end of the footer text, e.g. "**Remember to sort by new to keep up!**\n\n"
