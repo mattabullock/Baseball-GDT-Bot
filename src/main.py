@@ -210,6 +210,10 @@ class Bot:
                                 print "Stickying submission..."
                                 sub.sticky()
                                 print "Submission stickied..."
+                            if self.SUGGESTED_SORT != None:
+                                print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                print "Suggested sort set..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
                             time.sleep(5)
@@ -329,6 +333,11 @@ class Bot:
                                     print "Stickying submission..."
                                     sub.sticky()
                                     print "Submission stickied..."
+                                
+                                if self.SUGGESTED_SORT != None:
+                                    print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                    print "Suggested sort set..."
                             time.sleep(10)
                             break
                         else: 
