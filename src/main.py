@@ -35,7 +35,6 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
-        self.INBOXREPLIES = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
@@ -88,9 +87,6 @@ class Bot:
             self.MESSAGE = settings.get('MESSAGE')
             if self.MESSAGE == None: return "Missing MESSAGE"
 
-            self.INBOXREPLIES = settings.get('INBOXREPLIES')
-            if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
-
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
@@ -103,7 +99,7 @@ class Bot:
             self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.THREAD_SETTINGS == None: return "Missing THREAD_SETTINGS"
 
@@ -112,7 +108,7 @@ class Bot:
             self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
 
@@ -201,7 +197,7 @@ class Bot:
                             print "Submitting pregame thread..."
                             if self.STICKY and 'sub' in locals():
                                 sub.unsticky()
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
+                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories))
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
@@ -235,7 +231,7 @@ class Bot:
                                     sub.unsticky()
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"))
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
@@ -313,7 +309,7 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"))
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
