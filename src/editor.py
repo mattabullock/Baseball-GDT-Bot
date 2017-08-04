@@ -14,7 +14,8 @@ class Editor:
             post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
         (self.pre_thread_tag, self.pre_thread_time,
-            (self.pre_probables, self.pre_first_pitch)
+            (self.pre_probables, self.pre_first_pitch),
+            self.pre_remove_when_game_starts
         ) = pre_thread_settings
         (self.thread_tag, 
             (self.header, self.box_score, 

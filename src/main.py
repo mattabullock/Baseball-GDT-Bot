@@ -102,7 +102,8 @@ class Bot:
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
             self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
-                                            (content_settings.get('PROBABLES'),content_settings.get('FIRST_PITCH'))
+                                            (content_settings.get('PROBABLES'),content_settings.get('FIRST_PITCH')),
+                                            temp_settings.get('REMOVE_WHEN_GAME_STARTS')
                                        )
             if self.PRE_THREAD_SETTINGS == None: return "Missing PRE_THREAD_SETTINGS"
 
@@ -260,6 +261,7 @@ class Bot:
                     while True:
                         check = datetime.today()
                         try:
+                            if self.PRE_THREAD_SETTINGS[3]: sub.remove()
                             posted = False
                             subreddit = r.get_subreddit(self.SUBREDDIT)
                             for submission in subreddit.get_new():
