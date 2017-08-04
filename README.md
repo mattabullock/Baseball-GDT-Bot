@@ -49,6 +49,8 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `MESSAGE` - send submission shortlink to /u/baseballbot
 
+* `WINLOSS_POST_THREAD_TAGS` - do you want to use different postgame thread tags for wins and losses? (configure in POST_THREAD_SETTINGS)
+
 * `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
