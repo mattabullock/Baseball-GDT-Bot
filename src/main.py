@@ -39,6 +39,7 @@ class Bot:
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
+        self.OFFDAY_THREAD_SETTINGS = None
 
     def read_settings(self):
         import os
@@ -73,6 +74,9 @@ class Bot:
             self.TEAM_CODE = settings.get('TEAM_CODE')
             if self.TEAM_CODE == None: return "Missing TEAM_CODE"
 
+            self.OFFDAY_THREAD = settings.get('OFFDAY_THREAD')
+            if self.OFFDAY_THREAD == None: return "Missing OFFDAY_THREAD"
+
             self.PREGAME_THREAD = settings.get('PREGAME_THREAD')
             if self.PREGAME_THREAD == None: return "Missing PREGAME_THREAD"
 
@@ -90,6 +94,10 @@ class Bot:
 
             self.INBOXREPLIES = settings.get('INBOXREPLIES')
             if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
+
+            temp_settings = settings.get('OFFDAY_THREAD_SETTINGS')
+            self.OFFDAY_THREAD_SETTINGS = (temp_settings.get('OFFDAY_THREAD_TAG'),temp_settings.get('OFFDAY_THREAD_TIME'))
+            if self.OFFDAY_THREAD_SETTINGS == None: return "Missing OFFDAY_THREAD_SETTINGS"
 
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
@@ -183,6 +191,36 @@ class Bot:
                     v = v[v.index("\"") + 1:len(v)]
                     v = v[0:v.index("\"")]
                     directories.append(url + v)
+
+            if self.OFFDAY_THREAD and not directories:
+                timechecker.pregamecheck(self.OFFDAY_THREAD_SETTINGS[1])
+                title = self.OFFDAY_THREAD_SETTINGS[0] + " " + datetime.strftime(datetime.today(), "%A, %B %d")
+                message = "who wants cookies?"
+                try:
+                    posted = False
+                    subreddit = r.get_subreddit(self.SUBREDDIT)
+                    for submission in subreddit.get_new():
+                        if submission.title == title:
+                            print "Offday thread already posted, sleeping..."
+                            posted = True
+                            break
+                    if not posted:
+                        print "Submitting offday thread..."
+                        if self.STICKY and 'sub' in locals():
+                            try:
+                                sub.unsticky()
+                            except Exception, err:
+                                print "Unsticky failed, continuing."
+                        sub = r.submit(self.SUBREDDIT, title, message, send_replies=self.INBOXREPLIES)
+
+                        print "Offday thread submitted..."
+                        if self.STICKY:
+                            print "Stickying submission..."
+                            sub.sticky()
+                            print "Submission stickied..."
+                        print datetime.strftime(datetime.today(), "%d %I:%M %p")
+                except Exception, err:
+                    print err
 
             if self.PREGAME_THREAD and len(directories) > 0:
                 timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
@@ -322,7 +360,7 @@ class Bot:
                                     print "Submission stickied..."
                             time.sleep(10)
                             break
-                        else: 
+                        else:
                             print "Sleeping for one minute..."
                             print datetime.strftime(check, "%d %I:%M %p")
                             time.sleep(60)

@@ -8,12 +8,17 @@
     "POST_TIME": 1,
     "SUBREDDIT": "XXX",
     "TEAM_CODE": "XXX",
+    "OFFDAY_THREAD": false,
     "PREGAME_THREAD": false,
     "POST_GAME_THREAD": false,
     "STICKY": true,
     "SUGGESTED_SORT": "new",
     "MESSAGE": false,
     "INBOXREPLIES": false,
+    "OFFDAY_THREAD_SETTINGS": {
+        "OFFDAY_THREAD_TAG": "OFFDAY THREAD:",
+        "OFFDAY_THREAD_TIME": "9AM"
+    },
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
