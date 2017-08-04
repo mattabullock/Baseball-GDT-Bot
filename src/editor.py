@@ -150,14 +150,14 @@ class Editor:
             if self.line_score: code = code + self.generate_linescore(files)
             if self.scoring_plays: code = code + self.generate_scoring_plays(files)
             if self.highlights: code = code + self.generate_highlights(files)
-            if self.footer: code = code + self.footer
+            if self.footer: code = code + self.footer + "\n\n"
         elif thread == "post":
             if self.post_header: code = code + self.generate_header(files)
             if self.post_box_score: code = code + self.generate_boxscore(files)
             if self.post_line_score: code = code + self.generate_linescore(files)
             if self.post_scoring_plays: code = code + self.generate_scoring_plays(files)
             if self.post_highlights: code = code + self.generate_highlights(files)
-            if self.post_footer: code = code + self.post_footer
+            if self.post_footer: code = code + self.post_footer + "\n\n"
         code = code + self.generate_status(files)
         print "Returning all code..."
         return code
