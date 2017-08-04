@@ -30,7 +30,7 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": false
+            "FOOTER": ""
         }
     },
     "POST_THREAD_SETTINGS": {
@@ -41,7 +41,7 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": false
+            "FOOTER": ""
         }
     }
 }
