@@ -200,7 +200,10 @@ class Bot:
                         if not posted:
                             print "Submitting pregame thread..."
                             if self.STICKY and 'sub' in locals():
-                                sub.unsticky()
+                                try:
+                                    sub.unsticky()
+                                except Exception, err:
+                                    print "Unsticky failed, continuing."
                             sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
@@ -232,7 +235,10 @@ class Bot:
                                     break
                             if not posted:
                                 if self.STICKY and 'sub' in locals():
-                                    sub.unsticky()
+                                    try:
+                                        sub.unsticky()
+                                    except Exception, err:
+                                        print "Unsticky failed, continuing."
 
                                 print "Submitting game thread..."
                                 sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
@@ -308,7 +314,10 @@ class Bot:
                             pgt_submit = True
                         if pgt_submit:
                             if self.STICKY and 'sub' in locals():
-                                sub.unsticky()
+                                try:
+                                    sub.unsticky()
+                                except Exception, err:
+                                    print "Unsticky failed, continuing."
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."

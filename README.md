@@ -53,9 +53,9 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 
-* `THREAD_SETTINGS` - what to include in game threads
+* `THREAD_SETTINGS` - what to include in game threads, example footer: "**Remember to sort by new to keep up!**"
 
-* `POST_THREAD_SETTINGS` - what to include in postgame threads
+* `POST_THREAD_SETTINGS` - what to include in postgame threads, example footer: "**Remember to sort by new to keep up!**"
 	
 ---	
 
