@@ -52,6 +52,9 @@ class Bot:
             self.CLIENT_SECRET = settings.get('CLIENT_SECRET')
             if self.CLIENT_SECRET == None: return "Missing CLIENT_SECRET"
 
+            self.USER_AGENT = settings.get('USER_AGENT')
+            if self.USER_AGENT == None: return "Missing USER_AGENT"
+
             self.REDIRECT_URI = settings.get('REDIRECT_URI')
             if self.REDIRECT_URI == None: return "Missing REDIRECT_URI"
 
@@ -126,12 +129,11 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1'
-                        'https://github.com/mattabullock/Baseball-GDT-Bot')
-        r.set_oauth_app_info(client_id=self.CLIENT_ID,
-                            client_secret=self.CLIENT_SECRET,
-                            redirect_uri=self.REDIRECT_URI)
-        r.refresh_access_information(self.REFRESH_TOKEN)
+        r = praw.Reddit(client_id=self.CLIENT_ID,
+                        client_secret=self.CLIENT_SECRET,
+                        refresh_token=self.REFRESH_TOKEN,
+                        user_agent=self.USER_AGENT)
+        print(r.auth.scopes())
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
@@ -190,8 +192,8 @@ class Bot:
                 while True:
                     try:
                         posted = False
-                        subreddit = r.get_subreddit(self.SUBREDDIT)
-                        for submission in subreddit.get_new():
+                        subreddit = r.subreddit(self.SUBREDDIT).new()
+                        for submission in subreddit:
                             if submission.title == title:
                                 print "Pregame thread already posted, getting submission..."
                                 submission.edit(edit.generate_pre_code(directories))
@@ -226,8 +228,8 @@ class Bot:
                         check = datetime.today()
                         try:
                             posted = False
-                            subreddit = r.get_subreddit(self.SUBREDDIT)
-                            for submission in subreddit.get_new():
+                            subreddit = r.subreddit(self.SUBREDDIT).new()
+                            for submission in subreddit:
                                 if submission.title == title:
                                     print "Thread already posted, getting submission..."
                                     sub = submission

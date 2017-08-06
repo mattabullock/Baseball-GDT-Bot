@@ -29,6 +29,8 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 #### Descriptions of Settings
 
+* `USER_AGENT` - user agent string to identify your bot to the Reddit API
+
 * `BOT_TIME_ZONE` - time zone of the computer running the bot, uncomment the line that you want to use
 
 * `TIME_ZONE` - time zone of the team. uncomment the line that you want to use
