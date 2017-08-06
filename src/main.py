@@ -192,8 +192,8 @@ class Bot:
                 while True:
                     try:
                         posted = False
-                        subreddit = r.subreddit(self.SUBREDDIT).new()
-                        for submission in subreddit:
+                        subreddit = r.subreddit(self.SUBREDDIT)
+                        for submission in subreddit.new():
                             if submission.title == title:
                                 print "Pregame thread already posted, getting submission..."
                                 submission.edit(edit.generate_pre_code(directories))
@@ -203,14 +203,14 @@ class Bot:
                             print "Submitting pregame thread..."
                             if self.STICKY and 'sub' in locals():
                                 try:
-                                    sub.unsticky()
+                                    sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
+                            sub = subreddit.submit(title, selftext=edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
-                                sub.sticky()
+                                sub.mod.sticky()
                                 print "Submission stickied..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
@@ -228,8 +228,8 @@ class Bot:
                         check = datetime.today()
                         try:
                             posted = False
-                            subreddit = r.subreddit(self.SUBREDDIT).new()
-                            for submission in subreddit:
+                            subreddit = r.subreddit(self.SUBREDDIT)
+                            for submission in subreddit.new():
                                 if submission.title == title:
                                     print "Thread already posted, getting submission..."
                                     sub = submission
@@ -238,22 +238,22 @@ class Bot:
                             if not posted:
                                 if self.STICKY and 'sub' in locals():
                                     try:
-                                        sub.unsticky()
+                                        sub.mod.sticky(state=False)
                                     except Exception, err:
                                         print "Unsticky failed, continuing."
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(title, selftext=edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.mod.sticky()
                                     print "Submission stickied..."
 
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
-                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                    sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
 
                                 if self.MESSAGE:
@@ -317,19 +317,19 @@ class Bot:
                         if pgt_submit:
                             if self.STICKY and 'sub' in locals():
                                 try:
-                                    sub.unsticky()
+                                    sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.mod.sticky()
                                     print "Submission stickied..."
                             time.sleep(10)
                             break
