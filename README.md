@@ -1,7 +1,7 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-### Current Version: 3.0.2
+### Current Version: 3.0.3
 	
 The point of this project is to create a bot that will generate a
 	game discussion thread that contains live linescore and boxscore,
@@ -76,7 +76,7 @@ Modules being used:
 
 ### Updates
 
-#### v3.0.2
+#### v3.0.3
 * Updated to support praw 5.0.1
 
 #### v3.0.2
