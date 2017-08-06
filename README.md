@@ -69,12 +69,15 @@ This was written in Python 2.7, so beware if you are running Python 3 or
 	
 Modules being used:
 
-	praw - interfacing reddit
+	praw 5.0.1 - interfacing reddit
 	simplejson - JSON parsing
 	urllib2 - pulling data from MLB servers
 	ElementTree - XML parsing
 
 ### Updates
+
+#### v3.0.2
+* Updated to support praw 5.0.1
 
 #### v3.0.2
 * GUI added. 
