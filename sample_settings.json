@@ -2,7 +2,7 @@
     "CLIENT_ID": "XXX",
     "CLIENT_SECRET": "XXX",
     "USER_AGENT": "OAuth Baseball-GDT-Bot V. 3.0.3 https://github.com/mattabullock/Baseball-GDT-Bot",
-    "REDIRECT_URI": "http://127.0.0.1:65010/authorize_callback",
+    "REDIRECT_URI": "http://localhost:8080",
     "REFRESH_TOKEN": "XXX",
     "BOT_TIME_ZONE": "ET",
     "TEAM_TIME_ZONE": "ET",

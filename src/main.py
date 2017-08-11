@@ -133,7 +133,6 @@ class Bot:
                         client_secret=self.CLIENT_SECRET,
                         refresh_token=self.REFRESH_TOKEN,
                         user_agent=self.USER_AGENT)
-        print(r.auth.scopes())
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
