@@ -1,6 +1,6 @@
 import praw
-r = praw.Reddit(client_id='Y9ii85xkpxdFdw',
-                client_secret='APUT0YMWILRisrdSk4YTNs41c10',
+r = praw.Reddit(client_id='XXX',
+                client_secret='XXX',
                 redirect_uri='http://localhost:8080',
                 user_agent='OAuth Baseball-GDT Ver. 3.0.3 Setup')
 
