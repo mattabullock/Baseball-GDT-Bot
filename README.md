@@ -1,7 +1,7 @@
 Baseball GDT Bot by Matt Bullock
 =====================================
 
-### Current Version: 3.0.2
+### Current Version: 3.0.3
 	
 The point of this project is to create a bot that will generate a
 	game discussion thread that contains live linescore and boxscore,
@@ -15,11 +15,11 @@ Version 1.0 was written in a mix of Python and Java, and has been
 
 ### Set Up OAuth
 
-Go to reddit.com’s app page, click on the “are you a developer? create an app” button. Fill out the name, description and about url. Name must be filled out, but the rest doesn’t. Write whatever you please. For redirect uri set it to `http://127.0.0.1:65010/authorize_callback`. All four variables can be changed later.
+Go to reddit.com’s app page (https://www.reddit.com/prefs/apps), click on the “are you a developer? create an app” button. Fill out the name, description and about url. Name must be filled out, but the rest doesn’t. Write whatever you please. For redirect uri set it to `http://localhost:8080`. All four variables can be changed later.
 
 Next, open setup.py, fill in the client_id, client_secret and redirect_uri fields and run the script. Your browser will open. Click allow on the displayed web page. 
 
-Enter the uniqueKey&code from the URL into the console -- wrapped in single quotes -- and the access information will be printed. This includes the final bit of info you need, the refresh token.
+Enter the code (everything after code=) from the URL in the browser address bar into the console -- wrapped in single quotes -- and the final bit of info you need will be displayed: the refresh token. Copy the refresh token for the next step.
 
 Finally, Copy sample_settings.json to the src folder and rename it to settings.json. Fill in the CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and REFRESH_TOKEN fields in the settings.json file and save. 
 
@@ -28,6 +28,8 @@ Finally, Copy sample_settings.json to the src folder and rename it to settings.j
 To use the default settings, copy `sample_settings.json` into `src/settings.json`.
 
 #### Descriptions of Settings
+
+* `USER_AGENT` - user agent string to identify your bot to the Reddit API
 
 * `BOT_TIME_ZONE` - time zone of the computer running the bot, uncomment the line that you want to use
 
@@ -69,12 +71,15 @@ This was written in Python 2.7, so beware if you are running Python 3 or
 	
 Modules being used:
 
-	praw - interfacing reddit
+	praw 5.0.1 - interfacing reddit
 	simplejson - JSON parsing
 	urllib2 - pulling data from MLB servers
 	ElementTree - XML parsing
 
 ### Updates
+
+#### v3.0.3
+* Updated to support praw 5.0.1
 
 #### v3.0.2
 * GUI added. 

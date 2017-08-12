@@ -53,6 +53,9 @@ class Bot:
             self.CLIENT_SECRET = settings.get('CLIENT_SECRET')
             if self.CLIENT_SECRET == None: return "Missing CLIENT_SECRET"
 
+            self.USER_AGENT = settings.get('USER_AGENT')
+            if self.USER_AGENT == None: return "Missing USER_AGENT"
+
             self.REDIRECT_URI = settings.get('REDIRECT_URI')
             if self.REDIRECT_URI == None: return "Missing REDIRECT_URI"
 
@@ -130,12 +133,10 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1'
-                        'https://github.com/mattabullock/Baseball-GDT-Bot')
-        r.set_oauth_app_info(client_id=self.CLIENT_ID,
-                            client_secret=self.CLIENT_SECRET,
-                            redirect_uri=self.REDIRECT_URI)
-        r.refresh_access_information(self.REFRESH_TOKEN)
+        r = praw.Reddit(client_id=self.CLIENT_ID,
+                        client_secret=self.CLIENT_SECRET,
+                        refresh_token=self.REFRESH_TOKEN,
+                        user_agent=self.USER_AGENT)
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
@@ -194,8 +195,8 @@ class Bot:
                 while True:
                     try:
                         posted = False
-                        subreddit = r.get_subreddit(self.SUBREDDIT)
-                        for submission in subreddit.get_new():
+                        subreddit = r.subreddit(self.SUBREDDIT)
+                        for submission in subreddit.new():
                             if submission.title == title:
                                 print "Pregame thread already posted, getting submission..."
                                 submission.edit(edit.generate_pre_code(directories))
@@ -205,14 +206,14 @@ class Bot:
                             print "Submitting pregame thread..."
                             if self.STICKY and 'sub' in locals():
                                 try:
-                                    sub.unsticky()
+                                    sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
+                            sub = subreddit.submit(title, selftext=edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
-                                sub.sticky()
+                                sub.mod.sticky()
                                 print "Submission stickied..."
                             if self.SUGGESTED_SORT != None:
                                 print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
@@ -234,8 +235,8 @@ class Bot:
                         check = datetime.today()
                         try:
                             posted = False
-                            subreddit = r.get_subreddit(self.SUBREDDIT)
-                            for submission in subreddit.get_new():
+                            subreddit = r.subreddit(self.SUBREDDIT)
+                            for submission in subreddit.new():
                                 if submission.title == title:
                                     print "Thread already posted, getting submission..."
                                     sub = submission
@@ -244,22 +245,22 @@ class Bot:
                             if not posted:
                                 if self.STICKY and 'sub' in locals():
                                     try:
-                                        sub.unsticky()
+                                        sub.mod.sticky(state=False)
                                     except Exception, err:
                                         print "Unsticky failed, continuing."
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(title, selftext=edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.mod.sticky()
                                     print "Submission stickied..."
 
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
-                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                    sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
 
                                 if self.MESSAGE:
@@ -323,19 +324,19 @@ class Bot:
                         if pgt_submit:
                             if self.STICKY and 'sub' in locals():
                                 try:
-                                    sub.unsticky()
+                                    sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post",self.WINLOSS_POST_THREAD_TAGS,self.TEAM_CODE)
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.mod.sticky()
                                     print "Submission stickied..."
                                 if self.SUGGESTED_SORT != None:
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
