@@ -45,13 +45,15 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `POST_GAME_THREAD` - do you want a post game thread?
 
-* `SUGGESTED_SORT` - what do you want the suggested sort to be? ("confidence", "top", "new", "controversial", "old", "random", "qa", "")
+* `SUGGESTED_SORT` - what do you want the suggested sort to be? set to "" if your bot user does not have mod rights ("confidence", "top", "new", "controversial", "old", "random", "qa", "")
 
 * `STICKY` - do you want the thread stickied? (mod only)
 
 * `MESSAGE` - send submission shortlink to /u/baseballbot
 
 * `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
+
+* `FLAIR_MODE` - do you want to set flair on pre/game/post threads as the thread submitter (sub settings must allow), using a mod command (bot user must have mod rights), or none? ("none", "submitter", "mod")
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 

@@ -13,15 +13,15 @@ class Editor:
     def __init__(self,time_info,pre_thread_settings,thread_settings,
             post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
-        (self.pre_thread_tag, self.pre_thread_time,
+        (self.pre_thread_tag, self.pre_thread_time, self.pre_thread_flair,
             (self.pre_probables, self.pre_first_pitch)
         ) = pre_thread_settings
-        (self.thread_tag, 
+        (self.thread_tag, self.thread_flair, 
             (self.header, self.box_score, 
              self.line_score, self.scoring_plays,
              self.highlights, self.footer)
         ) = thread_settings
-        (self.post_thread_tag, 
+        (self.post_thread_tag, self.post_thread_flair, 
             (self.post_header, self.post_box_score, 
              self.post_line_score, self.post_scoring_plays,
              self.post_highlights, self.post_footer)
