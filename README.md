@@ -53,7 +53,7 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
 
-* `FLAIR_MODE` - do you want to set flair on pre/game/post threads as the thread submitter (sub settings must allow), using a mod command (bot user must have mod rights), or none? ("none", "submitter", "mod")
+* `FLAIR_MODE` - do you want to set flair on pre/game/post threads as the thread submitter (sub settings must allow), using a mod command (bot user must have mod rights), or none? ("none", "submitter", "mod") NOTE: in order to use this, you may have to re-do the OAuth setup process described above to obtain a new refresh token that includes flair permissions.
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 
