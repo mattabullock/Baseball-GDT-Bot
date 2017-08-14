@@ -250,7 +250,7 @@ class Bot:
                                     sub.mod.sticky()
                                     print "Submission stickied..."
 
-                                if self.SUGGESTED_SORT != None:
+                                if self.SUGGESTED_SORT != "":
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
                                     sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
