@@ -45,7 +45,7 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `POST_GAME_THREAD` - do you want a post game thread?
 
-* `SUGGESTED_SORT` - what do you want the suggested sort to be? ("confidence", "top", "new", "controversial", "old", "random", "qa", "")
+* `SUGGESTED_SORT` - what do you want the suggested sort to be? set to "" if your bot user does not have mod rights ("confidence", "top", "new", "controversial", "old", "random", "qa", "")
 
 * `STICKY` - do you want the thread stickied? (mod only)
 
