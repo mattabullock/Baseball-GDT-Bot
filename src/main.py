@@ -35,6 +35,7 @@ class Bot:
         self.STICKY = None
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
+        self.WINLOSS_POST_THREAD_TAGS = None
         self.INBOXREPLIES = None
         self.FLAIR_MODE = None
         self.PRE_THREAD_SETTINGS = None
@@ -111,18 +112,21 @@ class Bot:
             self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),temp_settings.get('FLAIR'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.THREAD_SETTINGS == None: return "Missing THREAD_SETTINGS"
 
             temp_settings = settings.get('POST_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
-            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'),temp_settings.get('FLAIR'),
+            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'), temp_settings.get('FLAIR'), temp_settings.get('POST_THREAD_WIN_TAG'), temp_settings.get('POST_THREAD_LOSS_TAG'), 
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
-                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'))
+                                     content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
                                  )
             if self.POST_THREAD_SETTINGS == None: return "Missing POST_THREAD_SETTINGS"
+            
+            self.WINLOSS_POST_THREAD_TAGS = settings.get('WINLOSS_POST_THREAD_TAGS')
+            if self.WINLOSS_POST_THREAD_TAGS == None: return "Missing WINLOSS_POST_THREAD_TAGS"
 
         return 0
 
@@ -216,6 +220,7 @@ class Bot:
                                 print "Stickying submission..."
                                 sub.mod.sticky()
                                 print "Submission stickied..."
+
                             if self.FLAIR_MODE == 'submitter':
                                 print "Adding flair to submission as submitter..."
                                 choices = sub.flair.choices()
@@ -230,6 +235,12 @@ class Bot:
                                 print "Adding flair to submission as mod..."
                                 sub.mod.flair(self.PRE_THREAD_SETTINGS[2])
                                 print "Submission flaired..."
+
+                            if self.SUGGESTED_SORT != "":
+                                print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                sub.mod.suggested_sort(self.SUGGESTED_SORT)
+                                print "Suggested sort set..."
+
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
                             time.sleep(5)
@@ -356,7 +367,7 @@ class Bot:
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
-                                posttitle = edit.generate_title(d,"post")
+                                posttitle = edit.generate_title(d,"post",self.WINLOSS_POST_THREAD_TAGS,self.TEAM_CODE)
                                 sub = subreddit.submit(posttitle, selftext=edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
@@ -379,6 +390,11 @@ class Bot:
                                     print "Adding flair to submission as mod..."
                                     sub.mod.flair(self.POST_THREAD_SETTINGS[1])
                                     print "Submission flaired..."
+
+                                if self.SUGGESTED_SORT != "":
+                                    print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                                    sub.mod.suggested_sort(self.SUGGESTED_SORT)
+                                    print "Suggested sort set..."
 
                             time.sleep(10)
                             break

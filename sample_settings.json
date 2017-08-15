@@ -16,6 +16,7 @@
     "MESSAGE": false,
     "INBOXREPLIES": false,
     "FLAIR_MODE": "none",
+    "WINLOSS_POST_THREAD_TAGS": false,
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
@@ -34,19 +35,23 @@
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": ""
+            "FOOTER": "",
+            "THEATER_LINK": false
         }
     },
     "POST_THREAD_SETTINGS": {
         "POST_THREAD_TAG": "POST GAME THREAD:",
         "FLAIR": "",
+        "POST_THREAD_WIN_TAG": "OUR TEAM WON:",
+        "POST_THREAD_LOSS_TAG": "OUR TEAM LOST:",
         "CONTENT": {
             "HEADER": true,
             "BOX_SCORE": true,
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": ""
+            "FOOTER": "",
+            "THEATER_LINK": false
         }
     }
 }
