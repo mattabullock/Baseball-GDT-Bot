@@ -26,7 +26,6 @@
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
-        "FLAIR": "",
         "CONTENT": {
             "PROBABLES": true,
             "FIRST_PITCH": true
@@ -34,30 +33,24 @@
     },
     "THREAD_SETTINGS": {
         "THREAD_TAG": "GAME THREAD:",
-        "FLAIR": "",
         "CONTENT": {
             "HEADER": true,
             "BOX_SCORE": true,
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": "",
-            "THEATER_LINK": false
+            "FOOTER": ""
         }
     },
     "POST_THREAD_SETTINGS": {
         "POST_THREAD_TAG": "POST GAME THREAD:",
-        "FLAIR": "",
-        "POST_THREAD_WIN_TAG": "OUR TEAM WON:",
-        "POST_THREAD_LOSS_TAG": "OUR TEAM LOST:",
         "CONTENT": {
             "HEADER": true,
             "BOX_SCORE": true,
             "LINE_SCORE": true,
             "SCORING_PLAYS": true,
             "HIGHLIGHTS": true,
-            "FOOTER": "",
-            "THEATER_LINK": false
+            "FOOTER": ""
         }
     }
 }
