@@ -51,11 +51,11 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `MESSAGE` - send submission shortlink to /u/baseballbot
 
-* `WINLOSS_POST_THREAD_TAGS` - do you want to use different postgame thread tags for wins and losses? (configure in POST_THREAD_SETTINGS)
-
 * `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
 
 * `FLAIR_MODE` - do you want to set flair on pre/game/post threads as the thread submitter (sub settings must allow), using a mod command (bot user must have mod rights), or none? ("none", "submitter", "mod") NOTE: in order to use this, you may have to re-do the OAuth setup process described above to obtain a new refresh token that includes flair permissions.
+
+* `OFFDAY_THREAD_SETTINGS` - what to include in the offday threads
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 
