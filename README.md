@@ -82,6 +82,7 @@ Modules being used:
 
 #### v3.0.3
 * Updated to support praw 5.0.1
+* Added support for offday threads
 
 #### v3.0.2
 * GUI added. 
