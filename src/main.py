@@ -37,6 +37,7 @@ class Bot:
         self.MESSAGE = None
         self.WINLOSS_POST_THREAD_TAGS = None
         self.INBOXREPLIES = None
+        self.FLAIR_MODE = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
@@ -94,17 +95,21 @@ class Bot:
 
             self.INBOXREPLIES = settings.get('INBOXREPLIES')
             if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
+            
+            self.FLAIR_MODE = settings.get('FLAIR_MODE')
+            if self.FLAIR_MODE == None: return "Missing FLAIR_MODE"
+            if self.FLAIR_MODE not in ['', 'none', 'submitter', 'mod']: return "Invalid FLAIR_MODE ('none', 'submitter', 'mod')"
 
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
-            self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),
+            self.PRE_THREAD_SETTINGS = (temp_settings.get('PRE_THREAD_TAG'),temp_settings.get('PRE_THREAD_TIME'),temp_settings.get('FLAIR'),
                                             (content_settings.get('PROBABLES'),content_settings.get('FIRST_PITCH'))
                                        )
             if self.PRE_THREAD_SETTINGS == None: return "Missing PRE_THREAD_SETTINGS"
 
             temp_settings = settings.get('THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
-            self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),
+            self.THREAD_SETTINGS = (temp_settings.get('THREAD_TAG'),temp_settings.get('FLAIR'),
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
@@ -113,7 +118,7 @@ class Bot:
 
             temp_settings = settings.get('POST_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
-            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'), temp_settings.get('POST_THREAD_WIN_TAG'), temp_settings.get('POST_THREAD_LOSS_TAG'), 
+            self.POST_THREAD_SETTINGS = (temp_settings.get('POST_THREAD_TAG'), temp_settings.get('FLAIR'), temp_settings.get('POST_THREAD_WIN_TAG'), temp_settings.get('POST_THREAD_LOSS_TAG'), 
                                     (content_settings.get('HEADER'), content_settings.get('BOX_SCORE'),
                                      content_settings.get('LINE_SCORE'), content_settings.get('SCORING_PLAYS'),
                                      content_settings.get('HIGHLIGHTS'), content_settings.get('FOOTER'), content_settings.get('THEATER_LINK'))
@@ -215,10 +220,27 @@ class Bot:
                                 print "Stickying submission..."
                                 sub.mod.sticky()
                                 print "Submission stickied..."
-                            if self.SUGGESTED_SORT != None:
+
+                            if self.FLAIR_MODE == 'submitter':
+                                print "Adding flair to submission as submitter..."
+                                choices = sub.flair.choices()
+                                flairsuccess = False
+                                for p in choices:
+                                    if p['flair_text'] == self.PRE_THREAD_SETTINGS[2]:
+                                        sub.flair.select(p['flair_template_id'])
+                                        flairsuccess = True
+                                if flairsuccess: print "Submission flaired..."
+                                else: print "Flair not set: could not find flair in available choices"
+                            elif self.FLAIR_MODE == 'mod':
+                                print "Adding flair to submission as mod..."
+                                sub.mod.flair(self.PRE_THREAD_SETTINGS[2])
+                                print "Submission flaired..."
+
+                            if self.SUGGESTED_SORT != "":
                                 print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
                                 sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                 print "Suggested sort set..."
+
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
                             time.sleep(5)
@@ -258,7 +280,7 @@ class Bot:
                                     sub.mod.sticky()
                                     print "Submission stickied..."
 
-                                if self.SUGGESTED_SORT != None:
+                                if self.SUGGESTED_SORT != "":
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
                                     sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
@@ -267,6 +289,21 @@ class Bot:
                                     print "Messaging Baseballbot..."
                                     r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
                                     print "Baseballbot messaged..."
+
+                                if self.FLAIR_MODE == 'submitter':
+                                    print "Adding flair to submission as submitter..."
+                                    choices = sub.flair.choices()
+                                    flairsuccess = False
+                                    for p in choices:
+                                        if p['flair_text'] == self.THREAD_SETTINGS[1]:
+                                            sub.flair.select(p['flair_template_id'])
+                                            flairsuccess = True
+                                    if flairsuccess: print "Submission flaired..."
+                                    else: print "Flair not set: could not find flair in available choices"
+                                elif self.FLAIR_MODE == 'mod':
+                                    print "Adding flair to submission as mod..."
+                                    sub.mod.flair(self.THREAD_SETTINGS[1])
+                                    print "Submission flaired..."
 
                             print "Sleeping for two minutes..."
                             print datetime.strftime(check, "%d %I:%M %p")
@@ -338,10 +375,27 @@ class Bot:
                                     print "Stickying submission..."
                                     sub.mod.sticky()
                                     print "Submission stickied..."
-                                if self.SUGGESTED_SORT != None:
+
+                                if self.FLAIR_MODE == 'submitter':
+                                    print "Adding flair to submission as submitter..."
+                                    choices = sub.flair.choices()
+                                    flairsuccess = False
+                                    for p in choices:
+                                        if p['flair_text'] == self.POST_THREAD_SETTINGS[1]:
+                                            sub.flair.select(p['flair_template_id'])
+                                            flairsuccess = True
+                                    if flairsuccess: print "Submission flaired..."
+                                    else: print "Flair not set: could not find flair in available choices"
+                                elif self.FLAIR_MODE == 'mod':
+                                    print "Adding flair to submission as mod..."
+                                    sub.mod.flair(self.POST_THREAD_SETTINGS[1])
+                                    print "Submission flaired..."
+
+                                if self.SUGGESTED_SORT != "":
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
                                     sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
+
                             time.sleep(10)
                             break
                         else: 

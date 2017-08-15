@@ -15,10 +15,12 @@
     "SUGGESTED_SORT": "new",
     "MESSAGE": false,
     "INBOXREPLIES": false,
+    "FLAIR_MODE": "none",
     "WINLOSS_POST_THREAD_TAGS": false,
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
+        "FLAIR": "",
         "CONTENT": {
             "PROBABLES": true,
             "FIRST_PITCH": true
@@ -26,6 +28,7 @@
     },
     "THREAD_SETTINGS": {
         "THREAD_TAG": "GAME THREAD:",
+        "FLAIR": "",
         "CONTENT": {
             "HEADER": true,
             "BOX_SCORE": true,
@@ -38,6 +41,7 @@
     },
     "POST_THREAD_SETTINGS": {
         "POST_THREAD_TAG": "POST GAME THREAD:",
+        "FLAIR": "",
         "POST_THREAD_WIN_TAG": "OUR TEAM WON:",
         "POST_THREAD_LOSS_TAG": "OUR TEAM LOST:",
         "CONTENT": {
