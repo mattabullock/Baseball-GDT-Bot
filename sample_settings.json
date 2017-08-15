@@ -9,6 +9,7 @@
     "POST_TIME": 1,
     "SUBREDDIT": "XXX",
     "TEAM_CODE": "XXX",
+    "OFFDAY_THREAD": false,
     "PREGAME_THREAD": false,
     "POST_GAME_THREAD": false,
     "STICKY": true,
@@ -16,6 +17,12 @@
     "MESSAGE": false,
     "INBOXREPLIES": false,
     "FLAIR_MODE": "none",
+    "OFFDAY_THREAD_SETTINGS": {
+        "OFFDAY_THREAD_TAG": "OFFDAY THREAD:",
+        "OFFDAY_THREAD_TIME": "9AM",
+        "OFFDAY_THREAD_BODY": "who wants cookies?",
+        "OFFDAY_THREAD_FLAIR": ""
+    },
     "WINLOSS_POST_THREAD_TAGS": false,
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
