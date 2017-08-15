@@ -102,10 +102,6 @@ class Bot:
             self.FLAIR_MODE = settings.get('FLAIR_MODE')
             if self.FLAIR_MODE == None: return "Missing FLAIR_MODE"
             if self.FLAIR_MODE not in ['', 'none', 'submitter', 'mod']: return "Invalid FLAIR_MODE ('none', 'submitter', 'mod')"
-
-            self.FLAIR_MODE = settings.get('FLAIR_MODE')
-            if self.FLAIR_MODE == None: return "Missing FLAIR_MODE"
-            if self.FLAIR_MODE not in ['', 'none', 'submitter', 'mod']: return "Invalid FLAIR_MODE ('none', 'submitter', 'mod')"
             
             temp_settings = settings.get('OFFDAY_THREAD_SETTINGS')
             self.OFFDAY_THREAD_SETTINGS = (temp_settings.get('OFFDAY_THREAD_TAG'),temp_settings.get('OFFDAY_THREAD_TIME'),
