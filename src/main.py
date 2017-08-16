@@ -323,7 +323,7 @@ class Bot:
 
                                 if self.MESSAGE:
                                     print "Messaging Baseballbot..."
-                                    r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
+                                    r.redditor('baseballbot').message('Gamethread posted', sub.shortlink)
                                     print "Baseballbot messaged..."
 
                             print "Sleeping for two minutes..."
