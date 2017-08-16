@@ -36,9 +36,11 @@ class Bot:
         self.SUGGESTED_SORT = None
         self.MESSAGE = None
         self.INBOXREPLIES = None
+        self.FLAIR_MODE = None
         self.PRE_THREAD_SETTINGS = None
         self.THREAD_SETTINGS = None
         self.POST_THREAD_SETTINGS = None
+        self.OFFDAY_THREAD_SETTINGS = None
 
     def read_settings(self):
         import os
@@ -51,6 +53,9 @@ class Bot:
 
             self.CLIENT_SECRET = settings.get('CLIENT_SECRET')
             if self.CLIENT_SECRET == None: return "Missing CLIENT_SECRET"
+
+            self.USER_AGENT = settings.get('USER_AGENT')
+            if self.USER_AGENT == None: return "Missing USER_AGENT"
 
             self.REDIRECT_URI = settings.get('REDIRECT_URI')
             if self.REDIRECT_URI == None: return "Missing REDIRECT_URI"
@@ -72,6 +77,9 @@ class Bot:
 
             self.TEAM_CODE = settings.get('TEAM_CODE')
             if self.TEAM_CODE == None: return "Missing TEAM_CODE"
+            
+            self.OFFDAY_THREAD = settings.get('OFFDAY_THREAD')
+            if self.OFFDAY_THREAD == None: return "Missing OFFDAY_THREAD"
 
             self.PREGAME_THREAD = settings.get('PREGAME_THREAD')
             if self.PREGAME_THREAD == None: return "Missing PREGAME_THREAD"
@@ -90,6 +98,16 @@ class Bot:
 
             self.INBOXREPLIES = settings.get('INBOXREPLIES')
             if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
+            
+            self.FLAIR_MODE = settings.get('FLAIR_MODE')
+            if self.FLAIR_MODE == None: return "Missing FLAIR_MODE"
+            if self.FLAIR_MODE not in ['', 'none', 'submitter', 'mod']: return "Invalid FLAIR_MODE ('none', 'submitter', 'mod')"
+            
+            temp_settings = settings.get('OFFDAY_THREAD_SETTINGS')
+            self.OFFDAY_THREAD_SETTINGS = (temp_settings.get('OFFDAY_THREAD_TAG'),temp_settings.get('OFFDAY_THREAD_TIME'),
+                                            temp_settings.get('OFFDAY_THREAD_BODY'), temp_settings.get('OFFDAY_THREAD_FLAIR')
+                                        )
+            if self.OFFDAY_THREAD_SETTINGS == None: return "Missing OFFDAY_THREAD_SETTINGS"
 
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
@@ -126,12 +144,10 @@ class Bot:
             print error_msg
             return
 
-        r = praw.Reddit('OAuth Baseball-GDT-Bot V. 3.0.1'
-                        'https://github.com/mattabullock/Baseball-GDT-Bot')
-        r.set_oauth_app_info(client_id=self.CLIENT_ID,
-                            client_secret=self.CLIENT_SECRET,
-                            redirect_uri=self.REDIRECT_URI)
-        r.refresh_access_information(self.REFRESH_TOKEN)
+        r = praw.Reddit(client_id=self.CLIENT_ID,
+                        client_secret=self.CLIENT_SECRET,
+                        refresh_token=self.REFRESH_TOKEN,
+                        user_agent=self.USER_AGENT)
 
         if self.TEAM_TIME_ZONE == 'ET':
             time_info = (self.TEAM_TIME_ZONE,0)
@@ -184,14 +200,65 @@ class Bot:
                     v = v[0:v.index("\"")]
                     directories.append(url + v)
 
+            if self.OFFDAY_THREAD and not directories:
+                timechecker.pregamecheck(self.OFFDAY_THREAD_SETTINGS[1])
+                title = self.OFFDAY_THREAD_SETTINGS[0] + " " + datetime.strftime(datetime.today(), "%A, %B %d")
+                message = self.OFFDAY_THREAD_SETTINGS[2]
+                try:
+                    posted = False
+                    subreddit = r.subreddit(self.SUBREDDIT)
+                    for submission in subreddit.new():
+                        if submission.title == title:
+                            print "Offday thread already posted, sleeping..."
+                            posted = True
+                            break
+                    if not posted:
+                        print "Submitting offday thread..."
+                        if self.STICKY and 'sub' in locals():
+                            try:
+                                sub.unsticky()
+                            except Exception, err:
+                                print "Unsticky failed, continuing."
+                        sub = subreddit.submit(title, selftext=message, send_replies=self.INBOXREPLIES)
+                        print "Offday thread submitted..."
+
+                        if self.STICKY:
+                            print "Stickying submission..."
+                            sub.mod.sticky()
+                            print "Submission stickied..."
+
+                        if self.FLAIR_MODE == 'submitter':
+                            print "Adding flair to submission as submitter..."
+                            choices = sub.flair.choices()
+                            flairsuccess = False
+                            for p in choices:
+                                if p['flair_text'] == self.OFFDAY_THREAD_SETTINGS[3]:
+                                    sub.flair.select(p['flair_template_id'])
+                                    flairsuccess = True
+                            if flairsuccess: print "Submission flaired..."
+                            else: print "Flair not set: could not find flair in available choices"
+                        elif self.FLAIR_MODE == 'mod':
+                            print "Adding flair to submission as mod..."
+                            sub.mod.flair(self.OFFDAY_THREAD_SETTINGS[3])
+                            print "Submission flaired..."
+
+                        if self.SUGGESTED_SORT != "":
+                            print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
+                            sub.mod.suggested_sort(self.SUGGESTED_SORT)
+                            print "Suggested sort set..."
+
+                        print datetime.strftime(datetime.today(), "%d %I:%M %p")
+                except Exception, err:
+                    print err
+            
             if self.PREGAME_THREAD and len(directories) > 0:
                 timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
                 title = edit.generate_title(directories[0],"pre")
                 while True:
                     try:
                         posted = False
-                        subreddit = r.get_subreddit(self.SUBREDDIT)
-                        for submission in subreddit.get_new():
+                        subreddit = r.subreddit(self.SUBREDDIT)
+                        for submission in subreddit.new():
                             if submission.title == title:
                                 print "Pregame thread already posted, getting submission..."
                                 submission.edit(edit.generate_pre_code(directories))
@@ -201,14 +268,14 @@ class Bot:
                             print "Submitting pregame thread..."
                             if self.STICKY and 'sub' in locals():
                                 try:
-                                    sub.unsticky()
+                                    sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
-                            sub = r.submit(self.SUBREDDIT, title, edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
+                            sub = subreddit.submit(title, selftext=edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."
-                                sub.sticky()
+                                sub.mod.sticky()
                                 print "Submission stickied..."
                             print "Sleeping for two minutes..."
                             print datetime.strftime(datetime.today(), "%d %I:%M %p")
@@ -226,8 +293,8 @@ class Bot:
                         check = datetime.today()
                         try:
                             posted = False
-                            subreddit = r.get_subreddit(self.SUBREDDIT)
-                            for submission in subreddit.get_new():
+                            subreddit = r.subreddit(self.SUBREDDIT)
+                            for submission in subreddit.new():
                                 if submission.title == title:
                                     print "Thread already posted, getting submission..."
                                     sub = submission
@@ -236,27 +303,27 @@ class Bot:
                             if not posted:
                                 if self.STICKY and 'sub' in locals():
                                     try:
-                                        sub.unsticky()
+                                        sub.mod.sticky(state=False)
                                     except Exception, err:
                                         print "Unsticky failed, continuing."
 
                                 print "Submitting game thread..."
-                                sub = r.submit(self.SUBREDDIT, title, edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(title, selftext=edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.mod.sticky()
                                     print "Submission stickied..."
 
-                                if self.SUGGESTED_SORT != None:
+                                if self.SUGGESTED_SORT != "":
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
-                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                    sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
 
                                 if self.MESSAGE:
                                     print "Messaging Baseballbot..."
-                                    r.send_message('baseballbot', 'Gamethread posted', sub.short_link)
+                                    r.redditor('baseballbot').message('Gamethread posted', sub.shortlink)
                                     print "Baseballbot messaged..."
 
                             print "Sleeping for two minutes..."
@@ -315,19 +382,19 @@ class Bot:
                         if pgt_submit:
                             if self.STICKY and 'sub' in locals():
                                 try:
-                                    sub.unsticky()
+                                    sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = r.submit(self.SUBREDDIT, posttitle, edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
                                     print "Stickying submission..."
-                                    sub.sticky()
+                                    sub.mod.sticky()
                                     print "Submission stickied..."
                             time.sleep(10)
                             break
