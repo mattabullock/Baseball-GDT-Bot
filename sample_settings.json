@@ -1,7 +1,8 @@
 {
     "CLIENT_ID": "XXX",
     "CLIENT_SECRET": "XXX",
-    "REDIRECT_URI": "http://127.0.0.1:65010/authorize_callback",
+    "USER_AGENT": "OAuth Baseball-GDT-Bot V. 3.0.3 https://github.com/mattabullock/Baseball-GDT-Bot",
+    "REDIRECT_URI": "http://localhost:8080",
     "REFRESH_TOKEN": "XXX",
     "BOT_TIME_ZONE": "ET",
     "TEAM_TIME_ZONE": "ET",
@@ -14,9 +15,11 @@
     "SUGGESTED_SORT": "new",
     "MESSAGE": false,
     "INBOXREPLIES": false,
+    "FLAIR_MODE": "none",
     "PRE_THREAD_SETTINGS": {
         "PRE_THREAD_TAG": "PREGAME THREAD:",
         "PRE_THREAD_TIME": "9AM",
+        "FLAIR": "",
         "CONTENT": {
             "PROBABLES": true,
             "FIRST_PITCH": true
@@ -24,6 +27,7 @@
     },
     "THREAD_SETTINGS": {
         "THREAD_TAG": "GAME THREAD:",
+        "FLAIR": "",
         "CONTENT": {
             "HEADER": true,
             "BOX_SCORE": true,
@@ -35,6 +39,7 @@
     },
     "POST_THREAD_SETTINGS": {
         "POST_THREAD_TAG": "POST GAME THREAD:",
+        "FLAIR": "",
         "CONTENT": {
             "HEADER": true,
             "BOX_SCORE": true,
