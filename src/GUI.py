@@ -58,7 +58,7 @@ def GUI():
                 "CLIENT_ID": ClientID.get(),
                 "CLIENT_SECRET": ClientSecret.get(),
                 "REDIRECT_URI": RedirectURI.get(),
-                "REFRESH_TOKEN": RefreshToken.get(),        
+                "REFRESH_TOKEN": RefreshToken.get(),
                 "BOT_TIME_ZONE": BotTimeZoneVar.get(),
                 "TEAM_TIME_ZONE": TeamTimeZoneVar.get(),
                 "POST_TIME": int(PostTimeVar.get()),
@@ -69,7 +69,7 @@ def GUI():
                 "POST_GAME_THREAD": PostgameThreadVar.get(),
                 "SUGGESTED_SORT": SuggestedSortVar.get(),
                 "MESSAGE": MessageVar.get(),
-                "STICKY": StickyVar.get(),        
+                "STICKY": StickyVar.get(),
                 "PRE_THREAD_SETTINGS": {
                     "PRE_THREAD_TAG": PregameThreadTag.get(),
                     "PRE_THREAD_TIME": PreThreadTimeVar.get(),
@@ -100,7 +100,7 @@ def GUI():
                         "FOOTER": PostFooterVar.get()
                     }
                 }
-            }        
+            }
             with open("settings.json","w") as f:
                 json.dump(data, f, indent=4, sort_keys=True)
 
@@ -143,14 +143,14 @@ def GUI():
         ReloadSettingsButton.pack(anchor=W,padx=1,pady=2)
 
         f.pack(side=RIGHT,anchor=NW,padx=2)
-            
+
         #OAuthSettings
         group = LabelFrame(root, text="OAuth Settings", padx=5, pady=5)
-        group.place(x=0,y=0,height=200,width=300)  
+        group.place(x=0,y=0,height=200,width=300)
 
         l = Label(group, text="Client ID")
         l.pack(anchor=W)
-        
+
         ClientID = Entry(group)
         ClientID.pack(fill=X,padx=10)
         if CLIENT_ID != "":
@@ -163,7 +163,7 @@ def GUI():
 
         ClientSecret = Entry(group)
         ClientSecret.pack(fill=X,padx=10)
-        if CLIENT_SECRET != "":    
+        if CLIENT_SECRET != "":
             ClientSecret.insert(0, CLIENT_SECRET)
         else:
             ClientSecret.insert(0, "Client Secret")
@@ -186,34 +186,34 @@ def GUI():
         if REFRESH_TOKEN != "":
             RefreshToken.insert(0, REFRESH_TOKEN)
         else:
-            RefreshToken.insert(0, "Refresh Token")       
+            RefreshToken.insert(0, "Refresh Token")
 
         #GeneralSettings
         group = LabelFrame(root, text="General Settings", padx=5, pady=5)
         group.place(x=0,y=200,height=200,width=300)
 
         l = Label(group, text="Subreddit")
-        l.pack(anchor=W)    
+        l.pack(anchor=W)
 
         Subreddit = Entry(group)
         Subreddit.pack(fill=X,padx=10)
         if SUBREDDIT != "":
             Subreddit.insert(0, SUBREDDIT)
         else:
-            Subreddit.insert(0, "Subreddit")    	
-        
+            Subreddit.insert(0, "Subreddit")
+
         StickyVar = IntVar()
         Sticky = Checkbutton(group, text="Toggle Sticky", variable=StickyVar)
         if STICKY == 1:
             Sticky.select()
             Sticky.pack(anchor=W)
         else:
-            Sticky.pack(anchor=W) 
+            Sticky.pack(anchor=W)
 
         l = Label(group, text="Localization")
-        l.pack(anchor=W)		
-            
-        f = Frame(group)	
+        l.pack(anchor=W)
+
+        f = Frame(group)
 
         BotTimeZone = [
             "ET","CT","MT","PT"
@@ -225,14 +225,14 @@ def GUI():
             BotTimeZoneVar.set(BotTimeZone[0])
         BotTimeZone = apply(OptionMenu, (f, BotTimeZoneVar) + tuple(BotTimeZone))
         BotTimeZone.pack(anchor=W, side=LEFT)
-        
+
         l = Label(f, text="Bot Time Zone")
         l.pack(anchor=W, side=LEFT)
 
         f.pack(fill=X,padx=10)
-        
+
         f = Frame(group)
-        
+
         TeamTimeZone = [
             "ET","CT","MT","PT"
         ]
@@ -243,14 +243,14 @@ def GUI():
             TeamTimeZoneVar.set(TeamTimeZone[0])
         TeamTimeZone = apply(OptionMenu, (f, TeamTimeZoneVar) + tuple(TeamTimeZone))
         TeamTimeZone.pack(side=LEFT, anchor=W)
-        
+
         l = Label(f, text="Team Time Zone")
-        l.pack(side=LEFT, anchor=W)	
-        
-        f.pack(fill=X,padx=10)	
-        
-        f = Frame(group)	
-        
+        l.pack(side=LEFT, anchor=W)
+
+        f.pack(fill=X,padx=10)
+
+        f = Frame(group)
+
         TeamCode = [
             "ana","ari","atl","bal","bos","cha","chn","cin","cle","col","det","hou","kca","lan","mia","min","mil","nya","nyn","oak","phi","pit","sdn","sea","sfn","sln","tex","tba","tor","was"
         ]
@@ -261,15 +261,15 @@ def GUI():
             TeamCodeVar.set(TeamCode[0])
         TeamCode = apply(OptionMenu, (f, TeamCodeVar) + tuple(TeamCode))
         TeamCode.pack(side=LEFT, anchor=W)
-        
+
         l = Label(f, text="Team Code")
-        l.pack(side=LEFT, anchor=W)	
-        
-        f.pack(fill=X,padx=10)		
-        
+        l.pack(side=LEFT, anchor=W)
+
+        f.pack(fill=X,padx=10)
+
         #GameThreadSettings
         group = LabelFrame(root, text="Game Thread Settings", padx=5, pady=5)
-        group.place(x=305,y=200,height=250,width=300) 
+        group.place(x=305,y=200,height=250,width=300)
 
         l = Label(group, text="Game Thread Tag")
         l.pack(anchor=W)
@@ -283,9 +283,9 @@ def GUI():
 
         l = Label(group, text="Modules")
         l.pack(anchor=W)
-        
+
         f = Frame(group)
-        
+
         SuggestedSort = [
             "New","Best","Blank"
         ]
@@ -295,16 +295,16 @@ def GUI():
         else:
             SuggestedSortVar.set(SuggestedSort[0])
         SuggestedSort = apply(OptionMenu, (f, SuggestedSortVar) + tuple(SuggestedSort))
-        SuggestedSort.pack(side=LEFT, anchor=W)  
+        SuggestedSort.pack(side=LEFT, anchor=W)
 
         l = Label(f, text="Suggested Sort")
         l.pack(side=LEFT, anchor=W)
-        
-        f.pack(side=BOTTOM,fill=X,padx=10)    	
+
+        f.pack(side=BOTTOM,fill=X,padx=10)
 
         f = Frame(group)
         PostTime = [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12    
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
         ]
         PostTimeVar = StringVar(f)
         if POST_TIME != "":
@@ -312,31 +312,31 @@ def GUI():
         else:
             PostTimeVar.set(PostTime[0])
         PostTime = apply(OptionMenu, (f, PostTimeVar) + tuple(PostTime))
-        PostTime.pack(side=LEFT, anchor=W)   
+        PostTime.pack(side=LEFT, anchor=W)
 
         l = Label(f, text="Post Time (hours before game)")
         l.pack(side=LEFT, anchor=W)
 
-        f.pack(side=BOTTOM,fill=X,padx=10)    
-        
+        f.pack(side=BOTTOM,fill=X,padx=10)
+
         f = Frame(group)
-        
+
         HeaderVar = IntVar()
         Header = Checkbutton(f, text="Header", variable=HeaderVar)
         if HEADER == 1:
             Header.select()
             Header.pack(anchor=W)
         else:
-            Header.pack(anchor=W) 
-        
+            Header.pack(anchor=W)
+
         BoxScoreVar = IntVar()
         BoxScore = Checkbutton(f, text="Box Score", variable=BoxScoreVar)
         if BOX_SCORE == 1:
             BoxScore.select()
             BoxScore.pack(anchor=W)
         else:
-            BoxScore.pack(anchor=W) 
-        
+            BoxScore.pack(anchor=W)
+
         LineScoreVar = IntVar()
         LineScore = Checkbutton(f, text="Line Score", variable=LineScoreVar)
         if LINE_SCORE == 1:
@@ -352,27 +352,27 @@ def GUI():
             Message.pack(anchor=W)
         else:
             Message.pack(anchor=W)
-            
+
         f.pack(side=LEFT, anchor=N)
 
         f = Frame(group)
-        
+
         ScoringPlaysVar = IntVar()
         ScoringPlays = Checkbutton(f, text="Scoring Plays", variable=ScoringPlaysVar)
         if SCORING_PLAYS == 1:
             ScoringPlays.select()
             ScoringPlays.pack(anchor=W)
         else:
-            ScoringPlays.pack(anchor=W) 
-        
+            ScoringPlays.pack(anchor=W)
+
         HighlightsVar = IntVar()
         Highlights = Checkbutton(f, text="Highlights", variable=HighlightsVar)
         if HIGHLIGHTS == 1:
             Highlights.select()
             Highlights.pack(anchor=W)
         else:
-            Highlights.pack(anchor=W) 
-        
+            Highlights.pack(anchor=W)
+
         FooterVar = IntVar()
         Footer = Checkbutton(f, text="Footer", variable=FooterVar)
         if FOOTER == 1:
@@ -381,22 +381,22 @@ def GUI():
         else:
             Footer.pack(anchor=W)
 
-        f.pack(side=RIGHT, anchor=N) 
+        f.pack(side=RIGHT, anchor=N)
 
         #PregameSettings
         group = LabelFrame(root, text="Pregame Thread Settings", padx=5, pady=5)
         group.place(x=305,y=0,height=200,width=300)
-        
+
         PregameThreadVar = IntVar()
         PregameThread = Checkbutton(group, text="Toggle Pregame Thread", variable=PregameThreadVar)
         if PREGAME_THREAD == 1:
             PregameThread.select()
             PregameThread.pack(anchor=W)
         else:
-            PregameThread.pack(anchor=W) 	
-        
+            PregameThread.pack(anchor=W)
+
         l = Label(group, text="Pregame Thread Tag")
-        l.pack(anchor=W)	
+        l.pack(anchor=W)
 
         PregameThreadTag = Entry(group)
         PregameThreadTag.pack(fill=X,padx=10)
@@ -407,25 +407,25 @@ def GUI():
 
         l = Label(group, text="Modules")
         l.pack(anchor=W)
-        
+
         ProbablesVar = IntVar()
         Probables = Checkbutton(group, text="Probables", variable=ProbablesVar)
         if PROBABLES == 1:
             Probables.select()
             Probables.pack(anchor=W)
         else:
-            Probables.pack(anchor=W) 
-        
+            Probables.pack(anchor=W)
+
         FirstPitchVar = IntVar()
         FirstPitch = Checkbutton(group, text="First Pitch", variable=FirstPitchVar)
         if FIRST_PITCH == 1:
             FirstPitch.select()
             FirstPitch.pack(anchor=W)
         else:
-            FirstPitch.pack(anchor=W) 
-            
+            FirstPitch.pack(anchor=W)
+
         f = Frame(group)
-        
+
         PreThreadTime = [
             "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM"
         ]
@@ -438,14 +438,14 @@ def GUI():
         PreThreadTime.pack(side=LEFT)
 
         l = Label(f, text="Pregame Thread Time")
-        l.pack(side=LEFT)	
+        l.pack(side=LEFT)
 
-        f.pack(side=BOTTOM,fill=X,padx=10) 	
+        f.pack(side=BOTTOM,fill=X,padx=10)
 
         #Postgame settings
         group = LabelFrame(root, text="Postgame Thread Settings", padx=5, pady=5)
         group.place(x=305,y=450,height=175,width=300)
-            
+
         PostgameThreadVar = IntVar()
         PostgameThread = Checkbutton(group, text="Toggle Postgame Thread", variable=PostgameThreadVar)
         if POST_GAME_THREAD == 1:
@@ -453,7 +453,7 @@ def GUI():
             PostgameThread.pack(anchor=W)
         else:
             PostgameThread.pack(anchor=W)
-        
+
         l = Label(group, text="Postgame Thread Tag")
         l.pack(anchor=W)
 
@@ -468,23 +468,23 @@ def GUI():
         l.pack(anchor=W)
 
         f = Frame(group)
-        
+
         PostHeaderVar = IntVar()
         PostHeader = Checkbutton(f, text="Header", variable=PostHeaderVar)
         if POST_HEADER == 1:
             PostHeader.select()
             PostHeader.pack(anchor=W)
         else:
-            PostHeader.pack(anchor=W) 
-        
+            PostHeader.pack(anchor=W)
+
         PostBoxScoreVar = IntVar()
         PostBoxScore = Checkbutton(f, text="Box Score", variable=PostBoxScoreVar)
         if POST_BOX_SCORE == 1:
             PostBoxScore.select()
             PostBoxScore.pack(anchor=W)
         else:
-            PostBoxScore.pack(anchor=W) 
-        
+            PostBoxScore.pack(anchor=W)
+
         PostLineScoreVar = IntVar()
         PostLineScore = Checkbutton(f, text="Line Score", variable=PostLineScoreVar)
         if POST_LINE_SCORE == 1:
@@ -496,23 +496,23 @@ def GUI():
         f.pack(side=LEFT, anchor=N)
 
         f = Frame(group)
-        
+
         PostScoringPlaysVar = IntVar()
         PostScoringPlays = Checkbutton(f, text="Scoring Plays", variable=PostScoringPlaysVar)
         if POST_SCORING_PLAYS == 1:
             PostScoringPlays.select()
             PostScoringPlays.pack(anchor=W)
         else:
-            PostScoringPlays.pack(anchor=W) 
-        
+            PostScoringPlays.pack(anchor=W)
+
         PostHighlightsVar = IntVar()
         PostHighlights = Checkbutton(f, text="Highlights", variable=PostHighlightsVar)
         if POST_HIGHLIGHTS == 1:
             PostHighlights.select()
             PostHighlights.pack(anchor=W)
         else:
-            PostHighlights.pack(anchor=W) 
-        
+            PostHighlights.pack(anchor=W)
+
         PostFooterVar = IntVar()
         PostFooter = Checkbutton(f, text="Footer", variable=PostFooterVar)
         if POST_FOOTER == 1:
@@ -521,7 +521,7 @@ def GUI():
         else:
             PostFooter.pack(anchor=W)
 
-        f.pack(side=RIGHT, anchor=N)        			
+        f.pack(side=RIGHT, anchor=N)
 
         root.mainloop()
 
