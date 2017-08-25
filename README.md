@@ -1,13 +1,13 @@
-Baseball GDT Bot by Matt Bullock
+Baseball GDT Bot
 =====================================
 
-### Current Version: 3.0.2
-	
+### Current Version: 3.1.0
+
 The point of this project is to create a bot that will generate a
 	game discussion thread that contains live linescore and boxscore,
 	post it in the correct subreddit for that team, and keep it
 	updated throughout the game.
-	
+
 Version 1.0 was written in a mix of Python and Java, and has been
 	completely ported to Python for v2.0 and v3.0 (this version).
 
@@ -15,13 +15,15 @@ Version 1.0 was written in a mix of Python and Java, and has been
 
 ### Set Up OAuth
 
-Go to reddit.com’s app page, click on the “are you a developer? create an app” button. Fill out the name, description and about url. Name must be filled out, but the rest doesn’t. Write whatever you please. For redirect uri set it to `http://127.0.0.1:65010/authorize_callback`. All four variables can be changed later.
+Go to reddit.com’s app page, click on the “are you a developer? create an app” button. Fill out the name, description and about url. Name must be filled out, but the rest doesn’t. Write whatever you please. For redirect uri set it to `http://127.0.0.1:8080`. All four variables can be changed later.
 
-Next, open setup.py, fill in the client_id, client_secret and redirect_uri fields and run the script. Your browser will open. Click allow on the displayed web page. 
+Copy sample_settings.json to the src folder and rename it to settings.json. Fill in the CLIENT_ID, CLIENT_SECRET, and REDIRECT_URI fields in the settings.json file and save.
 
-Enter the uniqueKey&code from the URL into the console -- wrapped in single quotes -- and the access information will be printed. This includes the final bit of info you need, the refresh token.
+Run the script. Your browser will open. Click allow on the displayed web page.
 
-Finally, Copy sample_settings.json to the src folder and rename it to settings.json. Fill in the CLIENT_ID, CLIENT_SECRET, REDIRECT_URI and REFRESH_TOKEN fields in the settings.json file and save. 
+Enter the code from the URL into the console and the access information will be printed. This includes the final bit of info you need, the refresh token.
+
+Fill in the REFRESH_TOKEN field in the settings.json file and save.
 
 ### Configuration
 
@@ -56,26 +58,29 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 * `THREAD_SETTINGS` - what to include in game threads, example footer: "**Remember to sort by new to keep up!**"
 
 * `POST_THREAD_SETTINGS` - what to include in postgame threads, example footer: "**Remember to sort by new to keep up!**"
-	
----	
+
+---
 
 If something doesn't seem right, feel free to message me or post it as a bug here.
-	
+
 This was written in Python 2.7, so beware if you are running Python 3 or
 	above that it may not work correctly. Also make sure you install
 	praw and simplejson before running!
-	
+
 Modules being used:
 
-	praw - interfacing reddit
+	praw v5.0.1 - interfacing reddit
 	simplejson - JSON parsing
 	urllib2 - pulling data from MLB servers
 	ElementTree - XML parsing
 
 ### Updates
 
+#### v3.1.0
+* Updated to praw version v5.0.1
+
 #### v3.0.2
-* GUI added. 
+* GUI added.
 
 #### v3.0.1
 * Now uses OAuth!
