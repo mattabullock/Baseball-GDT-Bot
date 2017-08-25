@@ -1,7 +1,8 @@
 {
     "CLIENT_ID": "XXX",
     "CLIENT_SECRET": "XXX",
-    "REDIRECT_URI": "http://127.0.0.1:65010/authorize_callback",
+    "USER_AGENT": "",
+    "REDIRECT_URI": "http://127.0.0.1:8080",
     "REFRESH_TOKEN": "XXX",
     "BOT_TIME_ZONE": "ET",
     "TEAM_TIME_ZONE": "ET",
