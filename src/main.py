@@ -237,7 +237,7 @@ class Bot:
 
                                 if self.SUGGESTED_SORT != "":
                                     print "Setting suggested sort to " + self.SUGGESTED_SORT + "..."
-                                    sub.set_suggested_sort(self.SUGGESTED_SORT)
+                                    sub.mod.suggested_sort(self.SUGGESTED_SORT)
                                     print "Suggested sort set..."
 
                                 if self.MESSAGE:

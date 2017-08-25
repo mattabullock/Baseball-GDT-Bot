@@ -16,13 +16,13 @@ class Editor:
         (self.pre_thread_tag, self.pre_thread_time,
             (self.pre_probables, self.pre_first_pitch)
         ) = pre_thread_settings
-        (self.thread_tag, 
-            (self.header, self.box_score, 
+        (self.thread_tag,
+            (self.header, self.box_score,
              self.line_score, self.scoring_plays,
              self.highlights, self.footer)
         ) = thread_settings
-        (self.post_thread_tag, 
-            (self.post_header, self.post_box_score, 
+        (self.post_thread_tag,
+            (self.post_header, self.post_box_score,
              self.post_line_score, self.post_scoring_plays,
              self.post_highlights, self.post_footer)
         ) = post_thread_settings
@@ -110,7 +110,7 @@ class Editor:
             probables += "[" + game.get('home_team_name') + "](" + subs[0] + ")|" + home_pitcher + "|" + home_tv_broadcast + "|" + home_radio_broadcast + "|" + home_preview + "\n"
 
             probables += "\n"
-            
+
             return probables
         except:
             print "Missing data for probables, returning empty string..."
@@ -426,12 +426,12 @@ class Editor:
             highlight = highlight + "|Team|Highlight|\n"
             highlight = highlight + "|:--|:--|\n"
             for v in video:
-                if v.get('type') == "video" and v.get('media-type') == "T":              
+                if v.get('type') == "video" and v.get('media-type') == "T":
                     try:
                         team = self.get_team(v.get('team_id'))
-                        highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                   
+                        highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"
                     except:
-                        highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"                     
+                        highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"
             highlight = highlight + "\n\n"
             print "Returning highlight..."
             return highlight
@@ -620,8 +620,8 @@ class Editor:
         notes.append(options[homename])
         notes.append(options[awayname])
         return notes
-        
-        
+
+
     def get_team(self, team_id):
         team = []
         options = {
@@ -657,4 +657,4 @@ class Editor:
             "144": "[ATL](/r/Braves)"
         }
         team.append(options[team_id])
-        return team        
+        return team
