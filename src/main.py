@@ -23,7 +23,7 @@ import urllib2
 class Bot:
 
     def __init__(self):
-        continue
+        return
 
     def read_settings(self):
         import os
