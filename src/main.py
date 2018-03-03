@@ -151,8 +151,9 @@ class Bot:
         while True:
             today = datetime.today()
 
-            url = "http://gd2.mlb.com/components/game/mlb/"
-            url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d")
+            # url = "http://gd2.mlb.com/components/game/mlb/"
+            url = "https://statsapi.mlb.com/api/v1/schedule?language=en&sportId=1&date="
+            url .= today.strftime("%m/%b/%Y")
 
             response = ""
             while not response:
@@ -161,6 +162,9 @@ class Bot:
                 except:
                     print "Couldn't find URL, trying again..."
                     time.sleep(20)
+
+            schedule = json.loads(response)
+            todayGames = schedule["dates"][0]["games"]
 
             html = response.readlines()
             directories = []
