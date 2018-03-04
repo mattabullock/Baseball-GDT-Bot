@@ -37,7 +37,7 @@ class pitcher:
 # Represents a batter in game, holds a batter's stats
 
 class batter:
-    def __init__(self="", name="", pos="", ab="", r="", h="", rbi="", bb="", so="", ba="", id=""):
+    def __init__(self="", name="", pos="", ab="", r="", h="", rbi="", bb="", so="", ba="", obp="", ops="", id=""):
         self.name = name
         self.pos = pos
         self.ab = ab
@@ -54,7 +54,8 @@ class batter:
         if self.id != "":
             s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")"
         s = s + "|" + str(self.pos) + "|" + str(self.ab) + "|" + str(self.r) + "|" + str(self.h) + "|" + str(
-            self.rbi) + "|" + str(self.bb) + "|" + str(self.so) + "|" + str(self.ba)
+            self.rbi) + "|" + str(self.bb) + "|" + str(self.so) + "|" + str(self.ba) + "|" + str(self.obp) +
+            "|" + str(self.ops)
         return s
 
 
