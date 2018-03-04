@@ -152,8 +152,9 @@ class Bot:
             today = datetime.today()
 
             # url = "http://gd2.mlb.com/components/game/mlb/"
-            url = "https://statsapi.mlb.com/api/v1/schedule?language=en&sportId=1&date="
-            url .= today.strftime("%m/%b/%Y")
+            baseURL = "https://statsapi.mlb.com"
+            url = baseURL + "/api/v1/schedule?language=en&sportId=1&date="
+            url += today.strftime("%m/%b/%Y")
 
             response = ""
             while not response:
@@ -163,18 +164,16 @@ class Bot:
                     print "Couldn't find URL, trying again..."
                     time.sleep(20)
 
-            schedule = json.loads(response)
+            schedule = json.load(response)
             todayGames = schedule["dates"][0]["games"]
 
-            html = response.readlines()
-            directories = []
-            for v in html:
-                if self.TEAM_CODE in v:
-                    v = v[v.index("\"") + 1:len(v)]
-                    v = v[0:v.index("\"")]
-                    directories.append(url + v)
+            teamGames = []
+            for game in todayGames:
+                if game["teams"]["away"]["team"]["id"] == self.TEAM_CODE || game["teams"]["home"]["team"]["id"] == self.TEAM_CODE:
+                    teamGames.append(baseURL + game["link"])
 
-            if self.PREGAME_THREAD and len(directories) > 0:
+            # TODO: FIX THIS
+            if self.PREGAME_THREAD and len(teamGames) > 0:
                 timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
                 title = edit.generate_title(directories[0],"pre")
                 while True:
@@ -208,9 +207,10 @@ class Bot:
                         print err
                         time.sleep(300)
 
-            for d in directories:
-                timechecker.gamecheck(d)
+            for game in teamGames:
+                timechecker.gamecheck(game)
                 title = edit.generate_title(d,"game")
+                # TODO: fix ppcheck
                 if not timechecker.ppcheck(d):
                     while True:
                         check = datetime.today()

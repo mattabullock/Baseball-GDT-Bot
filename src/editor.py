@@ -10,7 +10,7 @@ import time
 
 class Editor:
 
-    def __init__(self,time_info,pre_thread_settings,thread_settings,
+    def __init__(self, time_info, pre_thread_settings, thread_settings,
             post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
         (self.pre_thread_tag, self.pre_thread_time,
@@ -28,30 +28,30 @@ class Editor:
         ) = post_thread_settings
 
 
-    def generate_title(self,dir,thread):
+    def generate_title(self, gameURL, thread):
         if thread == "pre": title = self.pre_thread_tag + " "
         elif thread == "game": title = self.thread_tag + " "
         elif thread == "post": title = self.post_thread_tag + " "
         while True:
             try:
-                response = urllib2.urlopen(dir + "linescore.json")
+                response = urllib2.urlopen(gameURL)
                 break
             except:
                 print "Couldn't find linescore.json for title, trying again..."
                 time.sleep(20)
-        filething = json.load(response)
-        game = filething.get('data').get('game')
-        timestring = game.get('time_date') + " " + game.get('ampm')
+        game = json.load(response)["gameData"]
+        time = game["datetime"]
+        timestring = time["timeDate"] + " " + time["ampm"]
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-        title = title + game.get('away_team_name') + " (" + game.get('away_win') + "-" + game.get('away_loss') + ")"
+        title = title + game["teams"]["away"]["name"]["full"] + " (" + game["teams"]["away"]["record"]["wins"] + "-" + game["teams"]["away"]["record"]["losses"] + ")"
         title = title + " @ "
-        title = title + game.get('home_team_name') + " (" + game.get('home_win') + "-" + game.get('home_loss') + ")"
+        title = title + game["teams"]["home"]["name"]["full"] + " (" + game["teams"]["home"]["record"]["wins"] + "-" + game["teams"]["home"]["record"]["losses"] + ")"
         title = title + " - "
         title = title + date_object.strftime("%B %d, %Y")
         print "Returning title..."
         return title
 
-    def generate_pre_code(self,dirs):
+    def generate_pre_code(self, dirs):
         code = ""
         for d in dirs:
             temp_dirs = []
@@ -134,31 +134,29 @@ class Editor:
             return first_pitch
 
 
-    def generate_code(self,dir,thread):
+    def generate_code(self,gameURL,thread):
         code = ""
-        dirs = []
-        dirs.append(dir + "linescore.json")
-        dirs.append(dir + "boxscore.json")
-        dirs.append(dir + "gamecenter.xml")
-        dirs.append(dir + "plays.json")
-        dirs.append(dir + "/inning/inning_Scores.xml")
-        dirs.append(dir + "/media/mobile.xml")
-        files = self.download_files(dirs)
+        try:
+            response = urllib2.urlopen(gameURL)
+            game = json.load(response)
+        except Exception as e:
+            print e
+
         if thread == "game":
-            if self.header: code = code + self.generate_header(files)
-            if self.box_score: code = code + self.generate_boxscore(files)
-            if self.line_score: code = code + self.generate_linescore(files)
-            if self.scoring_plays: code = code + self.generate_scoring_plays(files)
-            if self.highlights: code = code + self.generate_highlights(files)
+            if self.header: code = code + self.generate_header(game)
+            if self.box_score: code = code + self.generate_boxscore(game)
+            if self.line_score: code = code + self.generate_linescore(game)
+            if self.scoring_plays: code = code + self.generate_scoring_plays(game)
+            if self.highlights: code = code + self.generate_highlights(game)
             if self.footer: code = code + self.footer + "\n\n"
         elif thread == "post":
-            if self.post_header: code = code + self.generate_header(files)
-            if self.post_box_score: code = code + self.generate_boxscore(files)
-            if self.post_line_score: code = code + self.generate_linescore(files)
-            if self.post_scoring_plays: code = code + self.generate_scoring_plays(files)
-            if self.post_highlights: code = code + self.generate_highlights(files)
+            if self.post_header: code = code + self.generate_header(game)
+            if self.post_box_score: code = code + self.generate_boxscore(game)
+            if self.post_line_score: code = code + self.generate_linescore(game)
+            if self.post_scoring_plays: code = code + self.generate_scoring_plays(game)
+            if self.post_highlights: code = code + self.generate_highlights(game)
             if self.post_footer: code = code + self.post_footer + "\n\n"
-        code = code + self.generate_status(files)
+        code = code + self.generate_status(game)
         print "Returning all code..."
         return code
 
@@ -168,60 +166,57 @@ class Editor:
         try:
             response = urllib2.urlopen(dirs[0])
             files["linescore"] = json.load(response)
-            response = urllib2.urlopen(dirs[1])
-            files["boxscore"] = json.load(response)
-            response = urllib2.urlopen(dirs[2])
-            files["gamecenter"] = ET.parse(response)
-            response = urllib2.urlopen(dirs[3])
-            files["plays"] = json.load(response)
-            response = urllib2.urlopen(dirs[4])
-            files["scores"] = ET.parse(response)
-            response = urllib2.urlopen(dirs[5])
-            files["highlights"] = ET.parse(response)
         except Exception as e:
             print e
 
         return files
 
 
-    def generate_header(self,files):
+    def generate_header(self,data):
         header = ""
         try:
-            game = files["linescore"].get('data').get('game')
-            timestring = game.get('time_date') + " " + game.get('ampm')
+            gameData = data["gameData"]
+            game = data["game"]
+            time = data["datetime"]
+            weather = game["weather"]
+            teams = game["teams"]
+
+            # Get time data
+            timestring = time["timeDate"] + " " + time["ampm"]
             date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
             t = timedelta(hours=self.time_change)
             timezone = self.time_zone
             date_object = date_object - t
-            header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
-            header = header + "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")\n\n"
-            weather = files["plays"].get('data').get('game').get('weather')
+
+            # Get other header data
             root = files["gamecenter"].getroot()
-            broadcast = root.find('broadcast')
-            notes = self.get_notes(game.get('home_team_name'), game.get('away_team_name'))
+            broadcast = root.find('broadcast') # TODO: figure out how to get this
+            notes = self.get_notes(teams["home"]["name"]["brief"]), teams["away"]["name"]["brief"])
+
+            # Build out header
+            header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
+            header = header + "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")\n\n" # TODO: gameday_link
             header = "|Game Info|Links|\n"
             header = header + "|:--|:--|\n"
-            header = header + "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game.get(
-                'venue') + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get(
-                'gameday_link') + ")|\n"
-            header = header + "|**Weather:** " + weather.get('condition') + ", " + weather.get(
-                'temp') + " F, " + "Wind " + weather.get('wind')
-            if "Y" in game.get('double_header_sw') or "S" in game.get('double_header_sw'):
+            header = header + "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game["venue"]["name"] +
+                "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")|\n"
+            header = header + "|**Weather:** " + weather["condition"] + ", " + weather["temp"] + " F, " + "Wind " + weather["wind"]
+            if "Y" in game["game"]["doubleHeader"] or "S" in game["game"]["doubleHeader"]:
                 header = header + "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime(
-                    "%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=" + game.get(
-                    'game_nbr') + "&season=" + date_object.strftime("%Y") + ")|\n"
+                    "%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=" + game["gameNumber"] +
+                    "&season=" + date_object.strftime("%Y") + ")|\n"
             else:
                 header = header + "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime(
-                    "%Y-%m-%d") + "&team=" + game.get('home_team_name') + "&dh=0&season=" + date_object.strftime(
+                    "%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=0&season=" + date_object.strftime(
                     "%Y") + ")|\n"
             header = header + "|**TV:** "
-            if not isinstance(broadcast[0][0].text, type(None)):
+            if not isinstance(broadcast[0][0].text, type(None)): # TODO: broadcast shit
                 header = header + broadcast[0][0].text
             if not isinstance(broadcast[1][0].text, type(None)):
                 header = header + ", " + broadcast[1][0].text
             header = header + "|[Strikezone Map](http://www.brooksbaseball.net/pfxVB/zoneTrack.php?month=" + date_object.strftime(
                 "%m") + "&day=" + date_object.strftime("%d") + "&year=" + date_object.strftime(
-                "%Y") + "&game=gid_" + game.get('gameday_link') + "%2F)|\n"
+                "%Y") + "&game=gid_" + game.get('gameday_link') + "%2F)|\n" # TODO: gameday link
             header = header + "|**Radio:** "
             if not isinstance(broadcast[0][1].text, type(None)):
                 header = header + broadcast[0][1].text
@@ -237,13 +232,14 @@ class Editor:
             return header
 
 
-    def generate_boxscore(self,files):
+    def generate_boxscore(self,data):
         boxscore = ""
         try:
             homebatters = []
             awaybatters = []
             homepitchers = []
             awaypitchers = []
+
             game = files["boxscore"].get('data').get('boxscore')
             team = files["linescore"].get('data').get('game')
             batting = game.get('batting')

@@ -23,19 +23,19 @@ class TimeCheck:
                 time.sleep(600)
 
 
-    def gamecheck(self,dir):
+    def gamecheck(self,gameURL):
         while True:
             try:
-                response = urllib2.urlopen(dir + "linescore.json")
+                response = urllib2.urlopen(gameURL)
                 break
             except:
                 check = datetime.today()
                 print datetime.strftime(check, "%d %I:%M %p")
                 print "gamecheck couldn't find file, trying again..."
                 time.sleep(20)
-        jsonfile = json.load(response)
-        game = jsonfile.get('data').get('game')
-        timestring = game.get('time_date') + " " + game.get('ampm')
+        jsonResponse = json.load(response)
+        time = jsonResponse["gameData"]["datetime"]
+        timestring = time["timeDate"] + " " + time["ampm"]
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         while True:
             check = datetime.today()
