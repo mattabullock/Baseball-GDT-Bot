@@ -10,6 +10,40 @@ import time
 
 class Editor:
 
+    options = {
+            "Twins": { "sub": "/r/minnesotatwins", "tag": "[MIN](/r/minnesotatwins)", "notes": "min" },
+            "White Sox": { "sub": "/r/WhiteSox", "tag": "[CWS](/r/WhiteSox)", "notes": "cws" },
+            "Tigers": { "sub": "/r/MotorCityKitties", "tag": "[DET](/r/MotorCityKitties)", "notes": "det" },
+            "Royals": { "sub": "/r/KCRoyals", "tag": "[KCR](/r/KCRoyals)", "notes": "kc" },
+            "Indians": { "sub": "/r/WahoosTipi", "tag": "[CLE](/r/WahoosTipi)", "notes": "cle" },
+            "Rangers": { "sub": "/r/TexasRangers", "tag": "[TEX](/r/TexasRangers)", "notes": "tex" },
+            "Astros": { "sub": "/r/Astros", "tag": "[HOU](/r/Astros)", "notes": "hou" },
+            "Athletics": { "sub": "/r/OaklandAthletics", "tag": "[OAK](/r/OaklandAthletics)", "notes": "oak" },
+            "Angels": { "sub": "/r/AngelsBaseball", "tag": "[LAA](/r/AngelsBaseball)", "notes": "ana" },
+            "Mariners": { "sub": "/r/Mariners", "tag": "[SEA](/r/Mariners)", "notes": "sea" },
+            "Red Sox": { "sub": "/r/RedSox", "tag": "[BOS](/r/RedSox)", "notes": "bos" },
+            "Yankees": { "sub": "/r/NYYankees", "tag": "[NYY](/r/NYYankees)", "notes": "nyy" },
+            "Blue Jays": { "sub": "/r/TorontoBlueJays", "tag": "[TOR](/r/TorontoBlueJays)", "notes": "tor" },
+            "Rays": { "sub": "/r/TampaBayRays", "tag": "[TBR](/r/TampaBayRays)", "notes": "tb" },
+            "Orioles": { "sub": "/r/Orioles", "tag": "[BAL](/r/Orioles)", "notes": "bal" },
+            "Cardinals": { "sub": "/r/Cardinals", "tag": "[STL](/r/Cardinals)", "notes": "stl" },
+            "Reds": { "sub": "/r/Reds", "tag": "[CIN](/r/Reds)", "notes": "cin" },
+            "Pirates": { "sub": "/r/Buccos", "tag": "[PIT](/r/Buccos)", "notes": "pit" },
+            "Cubs": { "sub": "/r/CHICubs", "tag": "[CHC](/r/CHICubs)", "notes": "chc" },
+            "Brewers": { "sub": "/r/Brewers", "tag": "[MIL](/r/Brewers)", "notes": "mil" },
+            "Giants": { "sub": "/r/SFGiants", "tag": "[SFG](/r/SFGiants)", "notes": "sf" },
+            "Diamondbacks": { "sub": "/r/azdiamondbacks", "tag": "[ARI](/r/azdiamondbacks)", "notes": "ari" },
+            "D-backs": { "sub": "/r/azdiamondbacks", "tag": "[ARI](/r/azdiamondbacks)", "notes": "ari" },
+            "Rockies": { "sub": "/r/ColoradoRockies", "tag": "[COL](/r/ColoradoRockies)", "notes": "col" },
+            "Dodgers": { "sub": "/r/Dodgers", "tag": "[LAD](/r/Dodgers)", "notes": "la" },
+            "Padres": { "sub": "/r/Padres", "tag": "[SDP](/r/Padres)", "notes": "sd" },
+            "Phillies": { "sub": "/r/Phillies", "tag": "[PHI](/r/Phillies)", "notes": "phi" },
+            "Mets": { "sub": "/r/NewYorkMets", "tag": "[NYM](/r/NewYorkMets)", "notes": "nym" },
+            "Marlins": { "sub": "/r/letsgofish", "tag": "[MIA](/r/letsgofish)", "notes": "mia" },
+            "Nationals": { "sub": "/r/Nationals", "tag": "[WSH](/r/Nationals)", "notes": "was" },
+            "Braves": { "sub": "/r/Braves", "tag": "[ATL](/r/Braves)", "notes": "atl"}
+        }
+
     def __init__(self, time_info, pre_thread_settings, thread_settings, post_thread_settings):
         (self.time_zone,self.time_change,) = time_info
         (self.pre_thread_tag, self.pre_thread_time,
@@ -26,7 +60,6 @@ class Editor:
              self.post_highlights, self.post_footer)
         ) = post_thread_settings
 
-
     def generate_title(self, gameURL, thread):
         if thread == "pre": title = self.pre_thread_tag + " "
         elif thread == "game": title = self.thread_tag + " "
@@ -42,11 +75,11 @@ class Editor:
         time = game["datetime"]
         timestring = time["timeDate"] + " " + time["ampm"]
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-        title = title + game["teams"]["away"]["name"]["full"] + " (" + game["teams"]["away"]["record"]["wins"] + "-" + game["teams"]["away"]["record"]["losses"] + ")"
-        title = title + " @ "
-        title = title + game["teams"]["home"]["name"]["full"] + " (" + game["teams"]["home"]["record"]["wins"] + "-" + game["teams"]["home"]["record"]["losses"] + ")"
-        title = title + " - "
-        title = title + date_object.strftime("%B %d, %Y")
+        title += game["teams"]["away"]["name"]["full"] + " (" + game["teams"]["away"]["record"]["wins"] + "-" + game["teams"]["away"]["record"]["losses"] + ")"
+        title += " @ "
+        title += game["teams"]["home"]["name"]["full"] + " (" + game["teams"]["home"]["record"]["wins"] + "-" + game["teams"]["home"]["record"]["losses"] + ")"
+        title += " - "
+        title += date_object.strftime("%B %d, %Y")
         print "Returning title..."
         return title
 
@@ -59,7 +92,7 @@ class Editor:
             files = self.download_pre_files(temp_dirs)
             if self.pre_probables: code = code + self.generate_pre_probables(files)
             if self.pre_first_pitch: code = code + self.generate_pre_first_pitch(files)
-            code = code + "\n\n"
+            code += "\n\n"
         print "Returning all code..."
         return code
 
@@ -70,7 +103,6 @@ class Editor:
         response = urllib2.urlopen(dirs[1])
         files["gamecenter"] = ET.parse(response)
         return files
-
 
     def generate_pre_probables(self,files):
         probables = ""
@@ -137,28 +169,31 @@ class Editor:
         try:
             response = urllib2.urlopen(gameURL)
             gameData = json.load(response)
+            response = urllib2.urlopen("https://statsapi.mlb.com/api/v1/game/" +
+                                        gameData["gameData"]["game"]["pk"]+ "/content")
+            mediaData = json.load(response)
         except Exception as e:
             print e
 
         if thread == "game":
-            if self.header: code = code + self.generate_header(gameData)
-            if self.box_score: code = code + self.generate_boxscore(gameData)
-            if self.line_score: code = code + self.generate_linescore(gameData)
-            if self.scoring_plays: code = code + self.generate_scoring_plays(gameData)
-            if self.highlights: code = code + self.generate_highlights(gameData)
-            if self.footer: code = code + self.footer + "\n\n"
+            if self.header: code += self.generate_header(gameData, mediaData)
+            if self.box_score: code += self.generate_boxscore(gameData)
+            if self.line_score: code += self.generate_linescore(gameData)
+            if self.scoring_plays: code += self.generate_scoring_plays(gameData)
+            if self.highlights: code += self.generate_highlights(mediaData)
+            if self.footer: code += self.footer + "\n\n"
         elif thread == "post":
-            if self.post_header: code = code + self.generate_header(gameData)
-            if self.post_box_score: code = code + self.generate_boxscore(gameData)
-            if self.post_line_score: code = code + self.generate_linescore(gameData)
-            if self.post_scoring_plays: code = code + self.generate_scoring_plays(gameData)
-            if self.post_highlights: code = code + self.generate_highlights(gameData)
-            if self.post_footer: code = code + self.post_footer + "\n\n"
-        code = code + self.generate_status(gameData)
+            if self.post_header: code += self.generate_header(gameData, mediaData)
+            if self.post_box_score: code += self.generate_boxscore(gameData)
+            if self.post_line_score: code += self.generate_linescore(gameData)
+            if self.post_scoring_plays: code += self.generate_scoring_plays(gameData)
+            if self.post_highlights: code += self.generate_highlights(mediaData)
+            if self.post_footer: code += self.post_footer + "\n\n"
+        code += self.generate_status(gameData)
         print "Returning all code..."
         return code
 
-    def generate_header(self,files):
+    def generate_header(self, data, mediaData):
         header = ""
         try:
             gameData = data["gameData"]
@@ -166,6 +201,8 @@ class Editor:
             time = data["datetime"]
             weather = game["weather"]
             teams = game["teams"]
+            videoBroadcast = mediaData["epg"][0]
+            audioBroadcast = mediaData["epg"][2]
 
             # Get time data
             timestring = time["timeDate"] + " " + time["ampm"]
@@ -174,43 +211,38 @@ class Editor:
             timezone = self.time_zone
             date_object = date_object - t
 
-            # Get other header data
-            root = files["gamecenter"].getroot()
-            broadcast = root.find('broadcast') # TODO: figure out how to get this
-            notes = self.get_notes(teams["home"]["name"]["brief"]), teams["away"]["name"]["brief"])
-
             # Build out header
             header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
-            header = header + "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")\n\n" # TODO: gameday_link
-            header = "|Game Info|Links|\n"
-            header = header + "|:--|:--|\n"
-            header = header + "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game["venue"]["name"] +
-                "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game.get('gameday_link') + ")|\n"
-            header = header + "|**Weather:** " + weather["condition"] + ", " + weather["temp"] + " F, " + "Wind " + weather["wind"]
+            header += "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")\n\n"
+            header += "|Game Info|Links|\n"
+            header += "|:--|:--|\n"
+            header += "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game["venue"]["name"] + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")|\n"
+            header += "|**Weather:** " + weather["condition"] + ", " + weather["temp"] + " F, " + "Wind " + weather["wind"]
             if "Y" in game["game"]["doubleHeader"] or "S" in game["game"]["doubleHeader"]:
-                header = header + "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime(
-                    "%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=" + game["gameNumber"] +
-                    "&season=" + date_object.strftime("%Y") + ")|\n"
+                header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=" + game["gameNumber"] + "&season=" + date_object.strftime("%Y") + ")|\n"
             else:
-                header = header + "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime(
-                    "%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=0&season=" + date_object.strftime(
-                    "%Y") + ")|\n"
-            header = header + "|**TV:** "
-            if not isinstance(broadcast[0][0].text, type(None)): # TODO: broadcast shit
-                header = header + broadcast[0][0].text
-            if not isinstance(broadcast[1][0].text, type(None)):
-                header = header + ", " + broadcast[1][0].text
-            header = header + "|[Strikezone Map](http://www.brooksbaseball.net/pfxVB/zoneTrack.php?month=" + date_object.strftime(
-                "%m") + "&day=" + date_object.strftime("%d") + "&year=" + date_object.strftime(
-                "%Y") + "&game=gid_" + game.get('gameday_link') + "%2F)|\n" # TODO: gameday link
-            header = header + "|**Radio:** "
-            if not isinstance(broadcast[0][1].text, type(None)):
-                header = header + broadcast[0][1].text
-            if not isinstance(broadcast[1][1].text, type(None)):
-                header = header + ", " + broadcast[1][1].text
-            header = header + "|**Notes:** [Away](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + notes[
-                1] + "), [Home](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + notes[0] + ")|\n"
-            header = header + "\n\n"
+                header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=0&season=" + date_object.strftime("%Y") + ")|\n"
+            header += "|**TV:** "
+
+            video = False
+            for item in videoBroadcast["items"]:
+                if item["callLetters"]:
+                    header += item["callLetters"] + ", "
+                    video = True
+            if video:
+                header = header[:-2]
+            header += "|[Strikezone Map](http://www.brooksbaseball.net/pfxVB/zoneTrack.php?month=" + date_object.strftime("%m") + "&day=" + date_object.strftime("%d") + "&year=" + date_object.strftime("%Y") + "&game=gid_" + game["id"] + "%2F)|\n"
+            header += "|**Radio:** "
+
+            audio = False
+            for item in audioBroadcast["items"]:
+                if item["callLetters"]:
+                    header += item["callLetters"] + ", "
+                    audio = True
+            if audio:
+                header = header[:-2]
+            header += "|**Notes:** [Away](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + editor.options[teams["away"]["name"]["brief"]]["notes"] + "), [Home](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + editor.options[teams["home"]["name"]["brief"]]["notes"] + ")|\n"
+            header += "\n\n"
             print "Returning header..."
             return header
         except:
@@ -237,7 +269,7 @@ class Editor:
                 gameStats = batter["gameStats"]["batting"]
                 seasonStats = batter["seasonStats"]["batting"]
                 if battingStats["battingOrder"] is not null:
-                    unorderedAwayBatters[gameStats["battingOrder"]] =
+                    unorderedAwayBatters[gameStats["battingOrder"]] = \
                         player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
                                 gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
                                 gameStats["strikeOuts"], seasonStats["batting"]["avg"],
@@ -247,7 +279,7 @@ class Editor:
                 gameStats = batter["gameStats"]["batting"]
                 seasonStats = batter["seasonStats"]["batting"]
                 if battingStats["battingOrder"] is not null:
-                    unorderedHomeBatters[gameStats["battingOrder"]] =
+                    unorderedHomeBatters[gameStats["battingOrder"]] = \
                         player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
                                 gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
                                 gameStats["strikeOuts"], seasonStats["batting"]["avg"],
@@ -292,24 +324,24 @@ class Editor:
             while len(awayPitchers) < len(homePitchers):
                 awayPitchers.append(player.pitcher())
 
-            boxscore = boxscore + awayTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO|BA|OBP|OPS|"
-            boxscore = boxscore + homeTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO|BA|OBP|OPS|"
-            boxscore = boxscore + "\n"
-            boxscore = boxscore + ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore = boxscore + ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore = boxscore + "\n"
+            boxscore += awayTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO|BA|OBP|OPS|"
+            boxscore += homeTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO|BA|OBP|OPS|"
+            boxscore += "\n"
+            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|"
+            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|"
+            boxscore += "\n"
             for i in range(0, len(homeBatters)):
-                boxscore = boxscore + str(awayBatters[i]) + "|" + str(homeBatters[i]) + "\n"
-            boxscore = boxscore + "\n"
-            boxscore = boxscore + awayTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
-            boxscore = boxscore + homeTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
-            boxscore = boxscore + "\n"
-            boxscore = boxscore + ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore = boxscore + ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore = boxscore + "\n"
+                boxscore += str(awayBatters[i]) + "|" + str(homeBatters[i]) + "\n"
+            boxscore += "\n"
+            boxscore += awayTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
+            boxscore += homeTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
+            boxscore += "\n"
+            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
+            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
+            boxscore += "\n"
             for i in range(0, len(homePitchers)):
-                boxscore = boxscore + str(awayPitchers[i]) + "|" + str(homePitchers[i]) + "\n"
-            boxscore = boxscore + "\n\n"
+                boxscore += str(awayPitchers[i]) + "|" + str(homePitchers[i]) + "\n"
+            boxscore += "\n\n"
 
             print "Returning boxscore..."
             return boxscore
@@ -317,38 +349,37 @@ class Editor:
             print "Missing data for boxscore, returning blank text..."
             return boxscore
 
-    def generate_linescore(self,data):
+    def generate_linescore(self, data):
         linescore = ""
         try:
             game = data["gameData"]
             awayTeamName = game["teams"]["away"]["name"]["brief"]
             homeTeamName = game["teams"]["home"]["name"]["brief"]
-            subreddits = self.get_subreddits(homeTeamName, awayTeamName)
 
             lineInfo = data["liveData"]["linescore"]
             inningsInfo = data["liveData"]["linescore"]
             numInnings = lineInfo["currentInning"] if lineInfo["currentInning"] > 9 else 9
 
             # Table headers
-            linescore = linescore + "Linescore|"
+            linescore += "Linescore|"
             for i in range(1, numInnings + 1):
-                linescore = linescore + str(i) + "|"
-            linescore = linescore + "R|H|E\n"
+                linescore += str(i) + "|"
+            linescore += "R|H|E\n"
             for i in range(0, numInnings + 4):
-                linescore = linescore + ":--|"
+                linescore += ":--|"
 
             # Away team linescore
-            linescore = linescore + "\n" + "[" + awayTeamName + "](" + subreddits[1] + ")" + "|"
+            linescore += "\n" + "[" + awayTeamName + "](" + editor.options[awayTeamName]["sub"] + ")" + "|"
             for i in range(0, numInnings):
                 linescore += inningsInfo[i]["away"] + "|" if i in inningsInfo else "|"
             linescore += lineInfo["away"]["runs"] + "|" + lineInfo["away"]["hits"] + "|" + lineInfo["away"]["errors"]
 
             # Home team linescore
-            linescore = linescore + "\n" + "[" + homeTeamName + "](" + subreddits[0] + ")" "|"
+            linescore += "\n" + "[" + homeTeamName + "](" + editor.options[homeTeamName]["sub"] + ")" "|"
             for i in range(0, numInnings):
                 linescore += inningsInfo[i]["home"] + "|" if i in inningsInfo else "|"
             linescore += lineInfo["home"]["runs"] + "|" + lineInfo["home"]["hits"] + "|" + lineInfo["home"]["errors"]
-            linescore = linescore + "\n\n"
+            linescore += "\n\n"
             print "Returning linescore..."
             return linescore
         except:
@@ -361,21 +392,24 @@ class Editor:
             allPlays = data["liveData"]["plays"]["allPlays"]
             teams = data["gameData"]["teams"]
 
-            scoringPlays = scoringPlays + "Inning|Scoring Play Description|Score\n"
-            scoringPlays = scoringPlays + ":--|:--|:--\n"
+            scoringPlays += "Inning|Scoring Play Description|Score\n"
+            scoringPlays += ":--|:--|:--\n"
 
             for play in allPlays:
                 if play["about"]["isScoringPlay"]:
                     scoringPlays += play["about"]["halfInning"].title() + " " + play["about"]["inning"] + "|"
                     scoringPlays += play["result"]["description"] + "|"
+
+                    # Put winning team's score first
                     if int(play["result"]["homeScore"]) > int(play["result"]["awayScore"]):
-                        scoringPlays = scoringPlays + play["result"]["homeScore"] + "-" + play["result"]["awayScore"] + " " + teams["home"]["name"]["abbrev"]
+                        scoringPlays += play["result"]["homeScore"] + "-" + play["result"]["awayScore"] + " " + teams["home"]["name"]["abbrev"]
                     elif int(play["result"]["homeScore"]) < int(play["result"]["awayScore"]):
-                        scoringPlays = scoringPlays + play["result"]["awayScore"] + "-" + play["result"]["homeScore"] + " " + teams["away"]["name"]["abbrev"]
+                        scoringPlays += play["result"]["awayScore"] + "-" + play["result"]["homeScore"] + " " + teams["away"]["name"]["abbrev"]
                     else:
-                        scoringPlays = scoringPlays + s.get("home") + "-" + s.get("away")
-                    scoringPlays = scoringPlays + "\n"
-            scoringPlays = scoringPlays + "\n\n"
+                        scoringPlays += play["result"]["awayScore"] + "-" + play["result"]["homeScore"]
+                    scoringPlays += "\n"
+
+            scoringPlays += "\n\n"
             print "Returning scoringPlays..."
             return scoringPlays
         except:
@@ -383,21 +417,19 @@ class Editor:
             return scoringPlays
 
 
-    def generate_highlights(self,files):
+    def generate_highlights(self, data):
         highlight = ""
         try:
-            root = files["highlights"].getroot()
-            video = root.findall("media")
-            highlight = highlight + "|Team|Highlight|\n"
-            highlight = highlight + "|:--|:--|\n"
-            for v in video:
-                if v.get('type') == "video" and v.get('media-type') == "T":
-                    try:
-                        team = self.get_team(v.get('team_id'))
-                        highlight = highlight + "|" + team[0] + "|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"
-                    except:
-                        highlight = highlight + "|[](/MLB)|[" + v.find("headline").text + "](" + v.find("url").text + ")|\n"
-            highlight = highlight + "\n\n"
+            highlights = data["highlights"]["live"]["items"]
+            highlight += "|Team|Highlight|\n"
+            highlight += "|:--|:--|\n"
+            for highlight in highlights:
+                try:
+                    highlight += "|" + editor.options[highlight["kicker"].replace(" Highlight", "")] + "|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+                except:
+                    highlight += "|[](/MLB)|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+
+            highlight += "\n\n"
             print "Returning highlight..."
             return highlight
         except:
@@ -405,98 +437,93 @@ class Editor:
             return highlight
 
 
-    def generate_decisions(self,files):
+    def generate_decisions(self, data):
         decisions = ""
         try:
             homepitchers = []
             awaypitchers = []
-            game = files["boxscore"].get('data').get('boxscore')
-            team = files["linescore"].get('data').get('game')
-            subreddits = self.get_subreddits(team.get('home_team_name'), team.get('away_team_name'))
-            pitching = game.get('pitching')
-            for i in range(0, len(pitching)):
-                players = pitching[i].get('pitcher')
-                if type(players) is list:
-                    for p in range(0, len(players)):
-                        if pitching[i].get('team_flag') == "home":
-                            homepitchers.append(
-                                player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
-                        else:
-                            awaypitchers.append(
-                                player.decision(players[p].get('name'), players[p].get('note'), players[p].get('id')))
-                elif type(players) is dict:
-                    if pitching[i].get('team_flag') == "home":
-                        homepitchers.append(
-                            player.decision(players.get('name'), players.get('note'), players.get('id')))
-                    else:
-                        awaypitchers.append(
-                            player.decision(players.get('name'), players.get('note'), players.get('id')))
-            decisions = decisions + "|Decisions||" + "\n"
-            decisions = decisions + "|:--|:--|" + "\n"
-            decisions = decisions + "|" + "[" + team.get('away_team_name') + "](" + subreddits[1] + ")|"
-            for i in range(0, len(awaypitchers)):
-                decisions = decisions + str(awaypitchers[i]) + " "
-            decisions = decisions + "\n" + "|" + "[" + team.get('home_team_name') + "](" + subreddits[0] + ")|"
-            for i in range(0, len(homepitchers)):
-                decisions = decisions + str(homepitchers[i])
-            decisions = decisions + "\n\n"
+            decisionsData = data["liveData"]["linescore"]["pitchers"]
+            if "ID" + decisions["win"] in data["liveData"]["boxscore"]["teams"]["home"]:
+                winningPitcher = data["liveData"]["boxscore"]["teams"]["home"]["ID" + decisionsData["win"]]
+                losingPitcher = data["liveData"]["boxscore"]["teams"]["away"]["ID" + decisionsData["loss"]]
+                savePitcher = data["liveData"]["boxscore"]["teams"]["home"]["ID" + decisionsData["save"]]
+                winningTeam = data["gameData"]["teams"]["home"]["name"]["brief"]
+                losingTeam = data["gameData"]["teams"]["away"]["name"]["brief"]
+            else:
+                winningPitcher = data["liveData"]["boxscore"]["teams"]["away"]["ID" + decisionsData["win"]]
+                losingPitcher = data["liveData"]["boxscore"]["teams"]["home"]["ID" + decisionsData["loss"]]
+                savePitcher = data["liveData"]["boxscore"]["teams"]["away"]["ID" + decisionsData["save"]]
+                winningTeam = data["gameData"]["teams"]["away"]["name"]["brief"]
+                losingTeam = data["gameData"]["teams"]["home"]["name"]["brief"]
+
+            decisions += "|Decisions||" + "\n"
+            decisions += "|:--|:--|" + "\n"
+            decisions += "|" + "[" + winningTeam + "](" + editor.options[winningTeam]["sub"] + ")|"
+            decisions += "[" + winningPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + winningPitcher["id"] + ")"
+            decisions += " " + winningPitcher["gameStats"]["pitching"]["notes"]
+
+            decisions += "|" + "[" + losingTeam + "](" + editor.options[losingTeam]["sub"] + ")|"
+            decisions += "[" + losingPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + losingPitcher["id"] + ")"
+            decisions += " " + losingPitcher["gameStats"]["pitching"]["notes"]
+            decisions += "\n\n"
             print "Returning decisions..."
             return decisions
         except:
             print "Missing data for decisions, returning blank text..."
             return decisions
 
-    def generate_status(self,files):
+    def generate_status(self, data):
         status = ""
         try:
-            game = files["linescore"].get('data').get('game')
-            if game.get('status') == "Game Over" or game.get('status') == "Final":
-                s = files["linescore"].get('data').get('game')
-                status = status + "##FINAL: "
-                if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
-                    status = status + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get(
-                        "away_team_name") + "\n"
-                    status = status + self.generate_decisions(files)
+            gameStatus = data["gameData"]["status"]["abstractGameState"]
+            linescore = data["liveData"]["linescore"]
+            homeTeamRuns = linescore["home"]["runs"]
+            awayTeamRuns = linescore["away"]["runs"]
+            homeTeamName = data["gameData"]["teams"]["home"]["names"]["brief"]
+            awayTeamName = data["gameData"]["teams"]["away"]["names"]["brief"]
+
+            if gameStatus == "Game Over" or gameStatus == "Final":
+                status += "##FINAL: "
+                if int(homeTeamRuns) < int(awayTeamRuns):
+                    status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
+                    status += self.generate_decisions(data)
                     print "Returning status..."
                     return status
-                elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
-                    status = status + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get(
-                        "home_team_name") + "\n"
-                    status = status + self.generate_decisions(files)
+                elif int(homeTeamRuns) > int(awayTeamRuns):
+                    status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
+                    status += self.generate_decisions(data)
                     print "Returning status..."
                     return status
-                elif int(s.get("home_team_runs")) == int(s.get("away_team_runs")):
-                    status = status + "TIE"
+                elif int(homeTeamRuns) == int(awayTeamRuns):
+                    status += "TIE"
                     print "Returning status..."
                     return status
-            elif game.get('status') == "Completed Early":
-                status = status + "##COMPLETED EARLY: "
-                if int(s.get("home_team_runs")) < int(s.get("away_team_runs")):
-                    status = status + s.get("away_team_runs") + "-" + s.get("home_team_runs") + " " + s.get(
-                        "away_team_name") + "\n"
-                    status = status + self.generate_decisions(files)
+            elif gameStatus == "Completed Early":
+                status += "##COMPLETED EARLY: "
+                if int(homeTeamRuns) < int(awayTeamRuns):
+                    status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
+                    status += self.generate_decisions(files)
                     print "Returning status..."
                     return status
-                elif int(s.get("home_team_runs")) > int(s.get("away_team_runs")):
-                    status = status + s.get("home_team_runs") + "-" + s.get("away_team_runs") + " " + s.get(
-                        "home_team_name") + "\n"
-                    status = status + self.generate_decisions(files)
+                elif int(homeTeamRuns) > int(awayTeamRuns):
+                    status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
+                    status += self.generate_decisions(files)
                     print "Returning status..."
                     return status
-                elif int(s.get("home_team_runs")) == int(s.get("away_team_runs")):
-                    status = status + "TIE"
+                elif int(homeTeamRuns) == int(awayTeamRuns):
+                    status += "TIE"
                     print "Returning status..."
                     return status
-            elif game.get('status') == "Postponed":
-                status = status + "##POSTPONED\n\n"
+            elif gameStatus == "Postponed":
+                status += "##POSTPONED\n\n"
                 print "Returning status..."
                 return status
-            elif game.get('status') == "Suspended":
-                status = status + "##SUSPENDED\n\n"
+            elif gameStatus == "Suspended":
+                status += "##SUSPENDED\n\n"
                 print "Returning status..."
                 return status
-            elif game.get('status') == "Cancelled":
-                status = status + "##CANCELLED\n\n"
+            elif gameStatus == "Cancelled":
+                status += "##CANCELLED\n\n"
                 print "Returning status..."
                 return status
             else:
@@ -505,118 +532,3 @@ class Editor:
         except:
             print "Missing data for status, returning blank text..."
             return status
-
-    def get_subreddits(self, homename, awayname):
-        subreddits = []
-        options = {
-            "Twins": "/r/minnesotatwins",
-            "White Sox": "/r/WhiteSox",
-            "Tigers": "/r/MotorCityKitties",
-            "Royals": "/r/KCRoyals",
-            "Indians": "/r/WahoosTipi",
-            "Rangers": "/r/TexasRangers",
-            "Astros": "/r/Astros",
-            "Athletics": "/r/OaklandAthletics",
-            "Angels": "/r/AngelsBaseball",
-            "Mariners": "/r/Mariners",
-            "Red Sox": "/r/RedSox",
-            "Yankees": "/r/NYYankees",
-            "Blue Jays": "/r/TorontoBlueJays",
-            "Rays": "/r/TampaBayRays",
-            "Orioles": "/r/Orioles",
-            "Cardinals": "/r/Cardinals",
-            "Reds": "/r/Reds",
-            "Pirates": "/r/Buccos",
-            "Cubs": "/r/CHICubs",
-            "Brewers": "/r/Brewers",
-            "Giants": "/r/SFGiants",
-            "Diamondbacks": "/r/azdiamondbacks",
-            "D-backs": "/r/azdiamondbacks",
-            "Rockies": "/r/ColoradoRockies",
-            "Dodgers": "/r/Dodgers",
-            "Padres": "/r/Padres",
-            "Phillies": "/r/Phillies",
-            "Mets": "/r/NewYorkMets",
-            "Marlins": "/r/letsgofish",
-            "Nationals": "/r/Nationals",
-            "Braves": "/r/Braves"
-        }
-        subreddits.append(options[homename])
-        subreddits.append(options[awayname])
-        return subreddits
-
-    def get_notes(self, homename, awayname):
-        notes = []
-        options = {
-            "Twins": "min",
-            "White Sox": "cws",
-            "Tigers": "det",
-            "Royals": "kc",
-            "Indians": "cle",
-            "Rangers": "tex",
-            "Astros": "hou",
-            "Athletics": "oak",
-            "Angels": "ana",
-            "Mariners": "sea",
-            "Red Sox": "bos",
-            "Yankees": "nyy",
-            "Blue Jays": "tor",
-            "Rays": "tb",
-            "Orioles": "bal",
-            "Cardinals": "stl",
-            "Reds": "cin",
-            "Pirates": "pit",
-            "Cubs": "chc",
-            "Brewers": "mil",
-            "Giants": "sf",
-            "Diamondbacks": "ari",
-            "D-backs": "ari",
-            "Rockies": "col",
-            "Dodgers": "la",
-            "Padres": "sd",
-            "Phillies": "phi",
-            "Mets": "nym",
-            "Marlins": "mia",
-            "Nationals": "was",
-            "Braves": "atl"
-        }
-        notes.append(options[homename])
-        notes.append(options[awayname])
-        return notes
-
-    def get_team(self, team_id):
-        team = []
-        options = {
-            "142": "[MIN](/r/minnesotatwins)",
-            "145": "[CWS](/r/WhiteSox)",
-            "116": "[DET](/r/MotorCityKitties)",
-            "118": "[KCR](/r/KCRoyals)",
-            "114": "[CLE](/r/WahoosTipi)",
-            "140": "[TEX](/r/TexasRangers)",
-            "117": "[HOU](/r/Astros)",
-            "133": "[OAK](/r/OaklandAthletics)",
-            "108": "[LAA](/r/AngelsBaseball)",
-            "136": "[SEA](/r/Mariners)",
-            "111": "[BOS](/r/RedSox)",
-            "147": "[NYY](/r/NYYankees)",
-            "141": "[TOR](/r/TorontoBlueJays)",
-            "139": "[TBR](/r/TampaBayRays)",
-            "110": "[BAL](/r/Orioles)",
-            "138": "[STL](/r/Cardinals)",
-            "113": "[CIN](/r/Reds)",
-            "134": "[PIT](/r/Buccos)",
-            "112": "[CHC](/r/CHICubs)",
-            "158": "[MIL](/r/Brewers)",
-            "137": "[SFG](/r/SFGiants)",
-            "109": "[ARI](/r/azdiamondbacks)",
-            "115": "[COL](/r/ColoradoRockies)",
-            "119": "[LAD](/r/Dodgers)",
-            "135": "[SDP](/r/Padres)",
-            "143": "[PHI](/r/Phillies)",
-            "121": "[NYM](/r/NewYorkMets)",
-            "146": "[MIA](/r/letsgofish)",
-            "120": "[WSH](/r/Nationals)",
-            "144": "[ATL](/r/Braves)"
-        }
-        team.append(options[team_id])
-        return team

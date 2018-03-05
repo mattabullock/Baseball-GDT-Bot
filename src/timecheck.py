@@ -23,7 +23,7 @@ class TimeCheck:
                 time.sleep(600)
 
 
-    def gamecheck(self,gameURL):
+    def gamecheck(self, gameURL):
         while True:
             try:
                 response = urllib2.urlopen(gameURL)
@@ -48,17 +48,16 @@ class TimeCheck:
             else:
                 return
 
-    def ppcheck(self,dir):
+    def ppcheck(self, gameURL):
         try:
-            response = urllib2.urlopen(dir + "linescore.json")
+            response = urllib2.urlopen(gameURL)
         except:
             check = datetime.today()
             print datetime.strftime(check, "%d %I:%M %p")
             print "ppcheck Couldn't find file, trying again..."
             time.sleep(20)
         jsonfile = json.load(response)
-        game = jsonfile.get('data').get('game')
-        return (game.get('status') == "Postponed")
+        return jsonfile["gameData"]["status"]["abstractGameState"] == "Postponed"
 
     def pregamecheck(self,pre_time):
         date_object = datetime.strptime(pre_time, "%I%p")

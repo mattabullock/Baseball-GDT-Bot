@@ -154,7 +154,7 @@ class Bot:
             # url = "http://gd2.mlb.com/components/game/mlb/"
             baseURL = "https://statsapi.mlb.com"
             url = baseURL + "/api/v1/schedule?language=en&sportId=1&date="
-            url += today.strftime("%m/%b/%Y")
+            url += today.strftime("%m/%d/%Y")
 
             response = ""
             while not response:
@@ -169,7 +169,7 @@ class Bot:
 
             teamGames = []
             for game in todayGames:
-                if game["teams"]["away"]["team"]["id"] == self.TEAM_CODE || game["teams"]["home"]["team"]["id"] == self.TEAM_CODE:
+                if game["teams"]["away"]["team"]["id"] == int(self.TEAM_CODE) or game["teams"]["home"]["team"]["id"] == int(self.TEAM_CODE):
                     teamGames.append(baseURL + game["link"])
 
             # TODO: FIX THIS
@@ -209,9 +209,8 @@ class Bot:
 
             for game in teamGames:
                 timechecker.gamecheck(game)
-                title = edit.generate_title(d,"game")
-                # TODO: fix ppcheck
-                if not timechecker.ppcheck(d):
+                title = edit.generate_title(game,"game")
+                if not timechecker.ppcheck(game):
                     while True:
                         check = datetime.today()
                         try:
@@ -231,7 +230,7 @@ class Bot:
                                         print "Unsticky failed, continuing."
 
                                 print "Submitting game thread..."
-                                sub = subreddit.submit(title, selftext=edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(title, selftext=edit.generate_code(game, "game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
@@ -261,7 +260,7 @@ class Bot:
 
                     while True:
                         check = datetime.today()
-                        str = edit.generate_code(d,"game")
+                        str = edit.generate_code(game, "game")
                         while True:
                             try:
                                 sub.edit(str)
@@ -312,7 +311,7 @@ class Bot:
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
                                 posttitle = edit.generate_title(d,"post")
-                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(game,"post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:
