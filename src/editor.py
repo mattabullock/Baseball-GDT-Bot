@@ -270,8 +270,9 @@ class Editor:
             gameStats = batter["gameStats"]["batting"]
             seasonStats = batter["seasonStats"]["batting"]
             if gameStats["battingOrder"] is not None:
+                batterName = batter["name"]["boxname"].encode('utf-8').strip()
                 unorderedAwayBatters[gameStats["battingOrder"]] = \
-                    player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
+                    player.batter(batterName, batter["position"], gameStats["atBats"],
                             gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
                             gameStats["strikeOuts"], seasonStats["avg"],
                             seasonStats["obp"], seasonStats["ops"], batter["id"])
@@ -281,8 +282,9 @@ class Editor:
             gameStats = batter["gameStats"]["batting"]
             seasonStats = batter["seasonStats"]["batting"]
             if gameStats["battingOrder"] is not None:
+                batterName = batter["name"]["boxname"].encode('utf-8').strip()
                 unorderedHomeBatters[gameStats["battingOrder"]] = \
-                    player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
+                    player.batter(batterName, batter["position"], gameStats["atBats"],
                             gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
                             gameStats["strikeOuts"], seasonStats["avg"],
                             seasonStats["obp"], seasonStats["ops"], batter["id"])
