@@ -47,11 +47,13 @@ class batter:
         self.bb = bb
         self.so = so
         self.ba = ba
+        self.obp = obp
+        self.ops = ops
         self.id = id
 
     def __str__(self):
         s = " "
         if self.id != "":
             s = "[" + str(self.name) + "](http://mlb.mlb.com/team/player.jsp?player_id=" + str(self.id) + ")"
-        s = s + "|" + str(self.pos) + "|" + str(self.ab) + "|" + str(self.r) + "|" + str(self.h) + "|" + str(self.rbi) + "|" + str(self.bb) + "|" + str(self.so) + "|" + str(self.ba) + "|" + str(self.obp) + "|" + str(self.ops)
+        s = s + "|" + str(self.pos) + "|" + str(self.ab) + "|" + str(self.r) + "|" + str(self.h) + "|" + str(self.rbi) + "|" + str(self.bb) + "|" + str(self.so) + "|" + str(self.ba) + "/" + str(self.obp) + "/" + str(self.ops)
         return s

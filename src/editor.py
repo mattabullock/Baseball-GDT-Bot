@@ -195,159 +195,162 @@ class Editor:
 
     def generate_header(self, data, mediaData):
         header = ""
-        try:
-            gameData = data["gameData"]
-            game = data["game"]
-            time = data["datetime"]
-            weather = game["weather"]
-            teams = game["teams"]
-            videoBroadcast = mediaData["epg"][0]
-            audioBroadcast = mediaData["epg"][2]
+        # try:
+        gameData = data["gameData"]
+        game = gameData["game"]
+        time = gameData["datetime"]
+        weather = gameData["weather"]
+        teams = gameData["teams"]
+        videoBroadcast = mediaData["media"]["epg"][0]
+        audioBroadcast = mediaData["media"]["epg"][2]
 
-            # Get time data
-            timestring = time["timeDate"] + " " + time["ampm"]
-            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-            t = timedelta(hours=self.time_change)
-            timezone = self.time_zone
-            date_object = date_object - t
+        # Get time data
+        timestring = time["timeDate"] + " " + time["ampm"]
+        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+        t = timedelta(hours=self.time_change)
+        timezone = self.time_zone
+        date_object = date_object - t
 
-            # Build out header
-            header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
-            header += "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")\n\n"
-            header += "|Game Info|Links|\n"
-            header += "|:--|:--|\n"
-            header += "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + game["venue"]["name"] + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")|\n"
-            header += "|**Weather:** " + weather["condition"] + ", " + weather["temp"] + " F, " + "Wind " + weather["wind"]
-            if "Y" in game["game"]["doubleHeader"] or "S" in game["game"]["doubleHeader"]:
-                header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=" + game["gameNumber"] + "&season=" + date_object.strftime("%Y") + ")|\n"
-            else:
-                header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=0&season=" + date_object.strftime("%Y") + ")|\n"
-            header += "|**TV:** "
+        # Build out header
+        header = "**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "\n\n"
+        header += "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")\n\n"
+        header += "|Game Info|Links|\n"
+        header += "|:--|:--|\n"
+        header += "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + gameData["venue"]["name"] + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")|\n"
+        header += "|**Weather:** " + weather["condition"] + ", " + weather["temp"] + " F, " + "Wind " + weather["wind"]
+        if "Y" in game["doubleHeader"] or "S" in game["doubleHeader"]:
+            header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=" + game["gameNumber"] + "&season=" + date_object.strftime("%Y") + ")|\n"
+        else:
+            header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=0&season=" + date_object.strftime("%Y") + ")|\n"
+        header += "|**TV:** "
 
-            video = False
-            for item in videoBroadcast["items"]:
-                if item["callLetters"]:
-                    header += item["callLetters"] + ", "
-                    video = True
-            if video:
-                header = header[:-2]
-            header += "|[Strikezone Map](http://www.brooksbaseball.net/pfxVB/zoneTrack.php?month=" + date_object.strftime("%m") + "&day=" + date_object.strftime("%d") + "&year=" + date_object.strftime("%Y") + "&game=gid_" + game["id"] + "%2F)|\n"
-            header += "|**Radio:** "
+        video = False
+        for item in videoBroadcast["items"]:
+            if item["callLetters"]:
+                header += item["callLetters"] + ", "
+                video = True
+        if video:
+            header = header[:-2]
+        header += "|[Strikezone Map](http://www.brooksbaseball.net/pfxVB/zoneTrack.php?month=" + date_object.strftime("%m") + "&day=" + date_object.strftime("%d") + "&year=" + date_object.strftime("%Y") + "&game=gid_" + game["id"] + "%2F)|\n"
+        header += "|**Radio:** "
 
-            audio = False
-            for item in audioBroadcast["items"]:
-                if item["callLetters"]:
-                    header += item["callLetters"] + ", "
-                    audio = True
-            if audio:
-                header = header[:-2]
-            header += "|**Notes:** [Away](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + editor.options[teams["away"]["name"]["brief"]]["notes"] + "), [Home](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + editor.options[teams["home"]["name"]["brief"]]["notes"] + ")|\n"
-            header += "\n\n"
-            print "Returning header..."
-            return header
-        except:
-            print "Missing data for header, returning empty string..."
-            return header
+        audio = False
+        for item in audioBroadcast["items"]:
+            if item["callLetters"]:
+                header += item["callLetters"] + ", "
+                audio = True
+        if audio:
+            header = header[:-2]
+        header += "|**Notes:** [Away](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + Editor.options[teams["away"]["name"]["brief"]]["notes"] + "), [Home](http://mlb.mlb.com/mlb/presspass/gamenotes.jsp?c_id=" + Editor.options[teams["home"]["name"]["brief"]]["notes"] + ")|\n"
+        header += "\n\n"
+        print "Returning header..."
+        return header
+        # except Exception e:
+            # print "Missing data for header, returning empty string..."
+            # return header
 
     def generate_boxscore(self,data):
         boxscore = ""
-        try:
-            unorderedAwayBatters = {}
-            unorderedHomeBatters = {}
-            awayBatters = []
-            homeBatters = []
-            awayPitchers = []
-            homePitchers = []
+        # try:
+        unorderedAwayBatters = {}
+        unorderedHomeBatters = {}
+        awayBatters = []
+        homeBatters = []
+        awayPitchers = []
+        homePitchers = []
 
-            awayTeam = data["liveData"]["boxscore"]["teams"]["away"]
-            homeTeam = data["liveData"]["boxscore"]["teams"]["home"]
-            awayTeamInfo = data["gameData"]["teams"]["away"]
-            homeTeamInfo = data["gameData"]["teams"]["home"]
+        awayTeam = data["liveData"]["boxscore"]["teams"]["away"]
+        homeTeam = data["liveData"]["boxscore"]["teams"]["home"]
+        awayTeamInfo = data["gameData"]["teams"]["away"]
+        homeTeamInfo = data["gameData"]["teams"]["home"]
 
-            # Get unordered batters
-            for batter in awayTeam["players"]:
-                gameStats = batter["gameStats"]["batting"]
-                seasonStats = batter["seasonStats"]["batting"]
-                if battingStats["battingOrder"] is not null:
-                    unorderedAwayBatters[gameStats["battingOrder"]] = \
-                        player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
-                                gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
-                                gameStats["strikeOuts"], seasonStats["batting"]["avg"],
-                                seasonStats["batting"]["obp"], seasonStats["batting"]["ops"])
+        # Get unordered batters
+        for batterID in awayTeam["players"]:
+            batter = awayTeam["players"][batterID]
+            gameStats = batter["gameStats"]["batting"]
+            seasonStats = batter["seasonStats"]["batting"]
+            if gameStats["battingOrder"] is not None:
+                print batter["name"]
+                unorderedAwayBatters[gameStats["battingOrder"]] = \
+                    player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
+                            gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
+                            gameStats["strikeOuts"], seasonStats["avg"],
+                            seasonStats["obp"], seasonStats["ops"], batter["id"])
 
-            for batter in homeTeam["players"]:
-                gameStats = batter["gameStats"]["batting"]
-                seasonStats = batter["seasonStats"]["batting"]
-                if battingStats["battingOrder"] is not null:
-                    unorderedHomeBatters[gameStats["battingOrder"]] = \
-                        player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
-                                gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
-                                gameStats["strikeOuts"], seasonStats["batting"]["avg"],
-                                seasonStats["batting"]["obp"], seasonStats["batting"]["ops"], batter["id"])
+        for batterID in homeTeam["players"]:
+            batter = homeTeam["players"][batterID]
+            gameStats = batter["gameStats"]["batting"]
+            seasonStats = batter["seasonStats"]["batting"]
+            if gameStats["battingOrder"] is not None:
+                unorderedHomeBatters[gameStats["battingOrder"]] = \
+                    player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
+                            gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
+                            gameStats["strikeOuts"], seasonStats["avg"],
+                            seasonStats["obp"], seasonStats["ops"], batter["id"])
 
-            # Order batters in correct order
-            for _, batter in sorted(unorderedAwayBatters):
-                awayBatters.append(batter)
-            for _, batter in sorted(unorderedHomeBatters):
-                homeBatters.append(batter)
+        # Order batters in correct order
+        for battingOrder in sorted(unorderedAwayBatters):
+            awayBatters.append(unorderedAwayBatters[battingOrder])
+        for battingOrder in sorted(unorderedHomeBatters):
+            homeBatters.append(unorderedHomeBatters[battingOrder])
 
-            # Get ordered pitchers
-            for _, pitcherID in awayTeam["pitchers"]:
-                pitcher = awayTeam["players"]["ID" + pitcherID]
-                gameStats = pitcher["gameStats"]["pitching"]
-                gameStats = pitcher["seasonStats"]["pitching"]
-                awayPitchers.append(
-                        player.pitcher(pitcher["name"]["boxname"], gameStats["inningsPitched"], gameStats["hits"],
-                            gameStats["runs"], gameStats["earnedRuns"], gameStats["baseOnBalls"],
-                            gameStats["strikeOuts"], gameStats["pitchesThrown"], gameStats["strikes"],
-                            seasonStats["era"], pitcher["id"])
-                        )
+        # Get ordered pitchers
+        for pitcherID in awayTeam["pitchers"]:
+            pitcher = awayTeam["players"]["ID" + pitcherID]
+            gameStats = pitcher["gameStats"]["pitching"]
+            seasonStats = pitcher["seasonStats"]["pitching"]
+            awayPitchers.append(
+                    player.pitcher(pitcher["name"]["boxname"], gameStats["inningsPitched"], gameStats["hits"],
+                        gameStats["runs"], gameStats["earnedRuns"], gameStats["baseOnBalls"],
+                        gameStats["strikeOuts"], gameStats["pitchesThrown"], gameStats["strikes"],
+                        seasonStats["era"], pitcher["id"])
+                    )
 
-            for _, pitcherID in homeTeam["pitchers"]:
-                pitcher = homeTeam["players"]["ID" + pitcherID]
-                gameStats = pitcher["gameStats"]["pitching"]
-                gameStats = pitcher["seasonStats"]["pitching"]
-                homePitchers.append(
-                        player.pitcher(pitcher["name"]["boxname"], gameStats["inningsPitched"], gameStats["hits"],
-                            gameStats["runs"], gameStats["earnedRuns"], gameStats["baseOnBalls"],
-                            gameStats["strikeOuts"], gameStats["pitchesThrown"], gameStats["strikes"],
-                            seasonStats["era"], pitcher["id"])
-                        )
+        for pitcherID in homeTeam["pitchers"]:
+            pitcher = homeTeam["players"]["ID" + pitcherID]
+            gameStats = pitcher["gameStats"]["pitching"]
+            seasonStats = pitcher["seasonStats"]["pitching"]
+            homePitchers.append(
+                    player.pitcher(pitcher["name"]["boxname"], gameStats["inningsPitched"], gameStats["hits"],
+                        gameStats["runs"], gameStats["earnedRuns"], gameStats["baseOnBalls"],
+                        gameStats["strikeOuts"], gameStats["pitchesThrown"], gameStats["strikes"],
+                        seasonStats["era"], pitcher["id"])
+                    )
 
-            # Make home and away same size for the chart
-            while len(homeBatters) < len(awayBatters):
-                homeBatters.append(player.batter())
-            while len(awayBatters) < len(homeBatters):
-                awayBatters.append(player.batter())
-            while len(homePitchers) < len(awayPitchers):
-                homePitchers.append(player.pitcher())
-            while len(awayPitchers) < len(homePitchers):
-                awayPitchers.append(player.pitcher())
+        # Make home and away same size for the chart
+        while len(homeBatters) < len(awayBatters):
+            homeBatters.append(player.batter())
+        while len(awayBatters) < len(homeBatters):
+            awayBatters.append(player.batter())
+        while len(homePitchers) < len(awayPitchers):
+            homePitchers.append(player.pitcher())
+        while len(awayPitchers) < len(homePitchers):
+            awayPitchers.append(player.pitcher())
 
-            boxscore += awayTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO|BA|OBP|OPS|"
-            boxscore += homeTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO|BA|OBP|OPS|"
-            boxscore += "\n"
-            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore += "\n"
-            for i in range(0, len(homeBatters)):
-                boxscore += str(awayBatters[i]) + "|" + str(homeBatters[i]) + "\n"
-            boxscore += "\n"
-            boxscore += awayTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
-            boxscore += homeTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
-            boxscore += "\n"
-            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
-            boxscore += "\n"
-            for i in range(0, len(homePitchers)):
-                boxscore += str(awayPitchers[i]) + "|" + str(homePitchers[i]) + "\n"
-            boxscore += "\n\n"
+        boxscore += awayTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO||"
+        boxscore += homeTeamInfo["name"]["brief"] + "|Pos|AB|R|H|RBI|BB|SO||"
+        boxscore += "\n"
+        boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
+        boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
+        boxscore += "\n"
+        for i in range(0, len(homeBatters)):
+            boxscore += str(awayBatters[i]) + "|" + str(homeBatters[i]) + "\n"
+        boxscore += "\n"
+        boxscore += awayTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
+        boxscore += homeTeamInfo["name"]["brief"] + "|IP|H|R|ER|BB|SO|P-S|ERA|"
+        boxscore += "\n"
+        boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
+        boxscore += ":--|:--|:--|:--|:--|:--|:--|:--|:--|"
+        boxscore += "\n"
+        for i in range(0, len(homePitchers)):
+            boxscore += str(awayPitchers[i]) + "|" + str(homePitchers[i]) + "\n"
+        boxscore += "\n\n"
 
-            print "Returning boxscore..."
-            return boxscore
-        except:
-            print "Missing data for boxscore, returning blank text..."
-            return boxscore
+        print "Returning boxscore..."
+        return boxscore
+        # except:
+            # print "Missing data for boxscore, returning blank text..."
+            # return boxscore
 
     def generate_linescore(self, data):
         linescore = ""
@@ -369,13 +372,13 @@ class Editor:
                 linescore += ":--|"
 
             # Away team linescore
-            linescore += "\n" + "[" + awayTeamName + "](" + editor.options[awayTeamName]["sub"] + ")" + "|"
+            linescore += "\n" + "[" + awayTeamName + "](" + Editor.options[awayTeamName]["sub"] + ")" + "|"
             for i in range(0, numInnings):
                 linescore += inningsInfo[i]["away"] + "|" if i in inningsInfo else "|"
             linescore += lineInfo["away"]["runs"] + "|" + lineInfo["away"]["hits"] + "|" + lineInfo["away"]["errors"]
 
             # Home team linescore
-            linescore += "\n" + "[" + homeTeamName + "](" + editor.options[homeTeamName]["sub"] + ")" "|"
+            linescore += "\n" + "[" + homeTeamName + "](" + Editor.options[homeTeamName]["sub"] + ")" "|"
             for i in range(0, numInnings):
                 linescore += inningsInfo[i]["home"] + "|" if i in inningsInfo else "|"
             linescore += lineInfo["home"]["runs"] + "|" + lineInfo["home"]["hits"] + "|" + lineInfo["home"]["errors"]
@@ -425,7 +428,7 @@ class Editor:
             highlight += "|:--|:--|\n"
             for highlight in highlights:
                 try:
-                    highlight += "|" + editor.options[highlight["kicker"].replace(" Highlight", "")] + "|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+                    highlight += "|" + Editor.options[highlight["kicker"].replace(" Highlight", "")] + "|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
                 except:
                     highlight += "|[](/MLB)|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
 
@@ -458,11 +461,11 @@ class Editor:
 
             decisions += "|Decisions||" + "\n"
             decisions += "|:--|:--|" + "\n"
-            decisions += "|" + "[" + winningTeam + "](" + editor.options[winningTeam]["sub"] + ")|"
+            decisions += "|" + "[" + winningTeam + "](" + Editor.options[winningTeam]["sub"] + ")|"
             decisions += "[" + winningPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + winningPitcher["id"] + ")"
             decisions += " " + winningPitcher["gameStats"]["pitching"]["notes"]
 
-            decisions += "|" + "[" + losingTeam + "](" + editor.options[losingTeam]["sub"] + ")|"
+            decisions += "|" + "[" + losingTeam + "](" + Editor.options[losingTeam]["sub"] + ")|"
             decisions += "[" + losingPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + losingPitcher["id"] + ")"
             decisions += " " + losingPitcher["gameStats"]["pitching"]["notes"]
             decisions += "\n\n"
@@ -474,61 +477,61 @@ class Editor:
 
     def generate_status(self, data):
         status = ""
-        try:
-            gameStatus = data["gameData"]["status"]["abstractGameState"]
-            linescore = data["liveData"]["linescore"]
-            homeTeamRuns = linescore["home"]["runs"]
-            awayTeamRuns = linescore["away"]["runs"]
-            homeTeamName = data["gameData"]["teams"]["home"]["names"]["brief"]
-            awayTeamName = data["gameData"]["teams"]["away"]["names"]["brief"]
+        # try:
+        gameStatus = data["gameData"]["status"]["abstractGameState"]
+        linescore = data["liveData"]["linescore"]
+        homeTeamRuns = linescore["home"]["runs"]
+        awayTeamRuns = linescore["away"]["runs"]
+        homeTeamName = data["gameData"]["teams"]["home"]["name"]["brief"]
+        awayTeamName = data["gameData"]["teams"]["away"]["name"]["brief"]
 
-            if gameStatus == "Game Over" or gameStatus == "Final":
-                status += "##FINAL: "
-                if int(homeTeamRuns) < int(awayTeamRuns):
-                    status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
-                    status += self.generate_decisions(data)
-                    print "Returning status..."
-                    return status
-                elif int(homeTeamRuns) > int(awayTeamRuns):
-                    status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
-                    status += self.generate_decisions(data)
-                    print "Returning status..."
-                    return status
-                elif int(homeTeamRuns) == int(awayTeamRuns):
-                    status += "TIE"
-                    print "Returning status..."
-                    return status
-            elif gameStatus == "Completed Early":
-                status += "##COMPLETED EARLY: "
-                if int(homeTeamRuns) < int(awayTeamRuns):
-                    status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
-                    status += self.generate_decisions(files)
-                    print "Returning status..."
-                    return status
-                elif int(homeTeamRuns) > int(awayTeamRuns):
-                    status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
-                    status += self.generate_decisions(files)
-                    print "Returning status..."
-                    return status
-                elif int(homeTeamRuns) == int(awayTeamRuns):
-                    status += "TIE"
-                    print "Returning status..."
-                    return status
-            elif gameStatus == "Postponed":
-                status += "##POSTPONED\n\n"
+        if gameStatus == "Game Over" or gameStatus == "Final":
+            status += "##FINAL: "
+            if int(homeTeamRuns) < int(awayTeamRuns):
+                status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
+                status += self.generate_decisions(data)
                 print "Returning status..."
                 return status
-            elif gameStatus == "Suspended":
-                status += "##SUSPENDED\n\n"
+            elif int(homeTeamRuns) > int(awayTeamRuns):
+                status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
+                status += self.generate_decisions(data)
                 print "Returning status..."
                 return status
-            elif gameStatus == "Cancelled":
-                status += "##CANCELLED\n\n"
+            elif int(homeTeamRuns) == int(awayTeamRuns):
+                status += "TIE"
                 print "Returning status..."
                 return status
-            else:
-                print "Status not final or postponed, returning blank text..."
+        elif gameStatus == "Completed Early":
+            status += "##COMPLETED EARLY: "
+            if int(homeTeamRuns) < int(awayTeamRuns):
+                status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
+                status += self.generate_decisions(files)
+                print "Returning status..."
                 return status
-        except:
-            print "Missing data for status, returning blank text..."
+            elif int(homeTeamRuns) > int(awayTeamRuns):
+                status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
+                status += self.generate_decisions(files)
+                print "Returning status..."
+                return status
+            elif int(homeTeamRuns) == int(awayTeamRuns):
+                status += "TIE"
+                print "Returning status..."
+                return status
+        elif gameStatus == "Postponed":
+            status += "##POSTPONED\n\n"
+            print "Returning status..."
             return status
+        elif gameStatus == "Suspended":
+            status += "##SUSPENDED\n\n"
+            print "Returning status..."
+            return status
+        elif gameStatus == "Cancelled":
+            status += "##CANCELLED\n\n"
+            print "Returning status..."
+            return status
+        else:
+            print "Status not final or postponed, returning blank text..."
+            return status
+        # except:
+            # print "Missing data for status, returning blank text..."
+            # return status
