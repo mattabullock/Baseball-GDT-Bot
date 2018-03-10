@@ -270,7 +270,6 @@ class Editor:
             gameStats = batter["gameStats"]["batting"]
             seasonStats = batter["seasonStats"]["batting"]
             if gameStats["battingOrder"] is not None:
-                print batter["name"]
                 unorderedAwayBatters[gameStats["battingOrder"]] = \
                     player.batter(batter["name"]["boxname"], batter["position"], gameStats["atBats"],
                             gameStats["runs"], gameStats["hits"], gameStats["rbi"], gameStats["baseOnBalls"],
