@@ -300,8 +300,9 @@ class Editor:
             pitcher = awayTeam["players"]["ID" + pitcherID]
             gameStats = pitcher["gameStats"]["pitching"]
             seasonStats = pitcher["seasonStats"]["pitching"]
+            pitcherName = pitcher["name"]["boxname"].encode('utf-8').strip()
             awayPitchers.append(
-                    player.pitcher(pitcher["name"]["boxname"], gameStats["inningsPitched"], gameStats["hits"],
+                    player.pitcher(pitcherName, gameStats["inningsPitched"], gameStats["hits"],
                         gameStats["runs"], gameStats["earnedRuns"], gameStats["baseOnBalls"],
                         gameStats["strikeOuts"], gameStats["pitchesThrown"], gameStats["strikes"],
                         seasonStats["era"], pitcher["id"])
@@ -311,8 +312,9 @@ class Editor:
             pitcher = homeTeam["players"]["ID" + pitcherID]
             gameStats = pitcher["gameStats"]["pitching"]
             seasonStats = pitcher["seasonStats"]["pitching"]
+            pitcherName = pitcher["name"]["boxname"].encode('utf-8').strip()
             homePitchers.append(
-                    player.pitcher(pitcher["name"]["boxname"], gameStats["inningsPitched"], gameStats["hits"],
+                    player.pitcher(pitcherName, gameStats["inningsPitched"], gameStats["hits"],
                         gameStats["runs"], gameStats["earnedRuns"], gameStats["baseOnBalls"],
                         gameStats["strikeOuts"], gameStats["pitchesThrown"], gameStats["strikes"],
                         seasonStats["era"], pitcher["id"])
@@ -355,40 +357,40 @@ class Editor:
 
     def generate_linescore(self, data):
         linescore = ""
-        try:
-            game = data["gameData"]
-            awayTeamName = game["teams"]["away"]["name"]["brief"]
-            homeTeamName = game["teams"]["home"]["name"]["brief"]
+        # try:
+        game = data["gameData"]
+        awayTeamName = game["teams"]["away"]["name"]["brief"]
+        homeTeamName = game["teams"]["home"]["name"]["brief"]
 
-            lineInfo = data["liveData"]["linescore"]
-            inningsInfo = data["liveData"]["linescore"]
-            numInnings = lineInfo["currentInning"] if lineInfo["currentInning"] > 9 else 9
+        lineInfo = data["liveData"]["linescore"]
+        inningsInfo = data["liveData"]["linescore"]["innings"]
+        numInnings = lineInfo["currentInning"] if lineInfo["currentInning"] > 9 else 9
 
-            # Table headers
-            linescore += "Linescore|"
-            for i in range(1, numInnings + 1):
-                linescore += str(i) + "|"
-            linescore += "R|H|E\n"
-            for i in range(0, numInnings + 4):
-                linescore += ":--|"
+        # Table headers
+        linescore += "Linescore|"
+        for i in range(1, numInnings + 1):
+            linescore += str(i) + "|"
+        linescore += "R|H|E\n"
+        for i in range(0, numInnings + 4):
+            linescore += ":--|"
 
-            # Away team linescore
-            linescore += "\n" + "[" + awayTeamName + "](" + Editor.options[awayTeamName]["sub"] + ")" + "|"
-            for i in range(0, numInnings):
-                linescore += inningsInfo[i]["away"] + "|" if i in inningsInfo else "|"
-            linescore += lineInfo["away"]["runs"] + "|" + lineInfo["away"]["hits"] + "|" + lineInfo["away"]["errors"]
+        # Away team linescore
+        linescore += "\n" + "[" + awayTeamName + "](" + Editor.options[awayTeamName]["sub"] + ")" + "|"
+        for i in range(0, numInnings):
+            linescore += inningsInfo[i]["away"].encode('utf-8').strip() + "|" if i < len(inningsInfo) and "away" in inningsInfo[i] else "|"
+        linescore += lineInfo["away"]["runs"] + "|" + lineInfo["away"]["hits"] + "|" + lineInfo["away"]["errors"]
 
-            # Home team linescore
-            linescore += "\n" + "[" + homeTeamName + "](" + Editor.options[homeTeamName]["sub"] + ")" "|"
-            for i in range(0, numInnings):
-                linescore += inningsInfo[i]["home"] + "|" if i in inningsInfo else "|"
-            linescore += lineInfo["home"]["runs"] + "|" + lineInfo["home"]["hits"] + "|" + lineInfo["home"]["errors"]
-            linescore += "\n\n"
-            print "Returning linescore..."
-            return linescore
-        except:
-            print "Missing data for linescore, returning blank text..."
-            return linescore
+        # Home team linescore
+        linescore += "\n" + "[" + homeTeamName + "](" + Editor.options[homeTeamName]["sub"] + ")" "|"
+        for i in range(0, numInnings):
+            linescore += inningsInfo[i]["home"].encode('utf-8').strip() + "|" if i < len(inningsInfo) and "home" in inningsInfo[i] else "|"
+        linescore += lineInfo["home"]["runs"] + "|" + lineInfo["home"]["hits"] + "|" + lineInfo["home"]["errors"]
+        linescore += "\n\n"
+        print "Returning linescore..."
+        return linescore
+        # except:
+            # print "Missing data for linescore, returning blank text..."
+            # return linescore
 
     def generate_scoring_plays(self, data):
         scoringPlays = ""
@@ -422,23 +424,23 @@ class Editor:
 
 
     def generate_highlights(self, data):
-        highlight = ""
+        highlightCode = ""
         try:
             highlights = data["highlights"]["live"]["items"]
-            highlight += "|Team|Highlight|\n"
-            highlight += "|:--|:--|\n"
+            highlightCode += "|Team|Highlight|\n"
+            highlightCode += "|:--|:--|\n"
             for highlight in highlights:
                 try:
-                    highlight += "|" + Editor.options[highlight["kicker"].replace(" Highlight", "")] + "|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+                    highlightCode += "|" + Editor.options[highlight["kicker"].replace("Highlight ", "")]["tag"] + "|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
                 except:
-                    highlight += "|[](/MLB)|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+                    highlightCode += "|[](/MLB)|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
 
-            highlight += "\n\n"
+            highlightCode += "\n\n"
             print "Returning highlight..."
-            return highlight
+            return highlightCode
         except:
             print "Missing data for highlight, returning blank text..."
-            return highlight
+            return highlightCode
 
 
     def generate_decisions(self, data):
