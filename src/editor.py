@@ -478,6 +478,7 @@ class Editor:
         decisions += "|" + "[" + winningTeam + "](" + Editor.options[winningTeam]["sub"] + ")|"
         decisions += "[" + winningPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + winningPitcher["id"] + ")"
         decisions += " " + winningPitcher["gameStats"]["pitching"]["note"]
+        decisions += "\n"
 
         decisions += "|" + "[" + losingTeam + "](" + Editor.options[losingTeam]["sub"] + ")|"
         decisions += "[" + losingPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + losingPitcher["id"] + ")"
@@ -500,14 +501,14 @@ class Editor:
         awayTeamName = data["gameData"]["teams"]["away"]["name"]["brief"]
 
         if gameStatus == "Game Over" or gameStatus == "Final":
-            status += "##FINAL: "
+            status += "## FINAL: "
             if int(homeTeamRuns) < int(awayTeamRuns):
-                status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
+                status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n\n"
                 status += self.generate_decisions(data)
                 print "Returning status..."
                 return status
             elif int(homeTeamRuns) > int(awayTeamRuns):
-                status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
+                status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n\n"
                 status += self.generate_decisions(data)
                 print "Returning status..."
                 return status
@@ -518,12 +519,12 @@ class Editor:
         elif gameStatus == "Completed Early":
             status += "##COMPLETED EARLY: "
             if int(homeTeamRuns) < int(awayTeamRuns):
-                status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n"
+                status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n\n"
                 status += self.generate_decisions(files)
                 print "Returning status..."
                 return status
             elif int(homeTeamRuns) > int(awayTeamRuns):
-                status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n"
+                status += homeTeamRuns + "-" + awayTeamRuns + " " + homeTeamName + "\n\n"
                 status += self.generate_decisions(files)
                 print "Returning status..."
                 return status
