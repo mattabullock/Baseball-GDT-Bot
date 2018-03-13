@@ -310,8 +310,8 @@ class Bot:
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
-                                posttitle = edit.generate_title(d,"post")
-                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(game,"post"), send_replies=self.INBOXREPLIES)
+                                posttitle = edit.generate_title(game, "post")
+                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(game, "post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:

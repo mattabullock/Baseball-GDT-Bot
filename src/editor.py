@@ -445,38 +445,49 @@ class Editor:
 
     def generate_decisions(self, data):
         decisions = ""
-        try:
-            homepitchers = []
-            awaypitchers = []
-            decisionsData = data["liveData"]["linescore"]["pitchers"]
-            if "ID" + decisions["win"] in data["liveData"]["boxscore"]["teams"]["home"]:
-                winningPitcher = data["liveData"]["boxscore"]["teams"]["home"]["ID" + decisionsData["win"]]
-                losingPitcher = data["liveData"]["boxscore"]["teams"]["away"]["ID" + decisionsData["loss"]]
-                savePitcher = data["liveData"]["boxscore"]["teams"]["home"]["ID" + decisionsData["save"]]
-                winningTeam = data["gameData"]["teams"]["home"]["name"]["brief"]
-                losingTeam = data["gameData"]["teams"]["away"]["name"]["brief"]
+        # try:
+        homepitchers = []
+        awaypitchers = []
+        decisionsData = data["liveData"]["linescore"]["pitchers"]
+        liveDataTeams = data["liveData"]["boxscore"]["teams"]
+        gameDataTeams = data["gameData"]["teams"]
+        winningPitcherID = decisionsData["win"]
+        losingPitcherID = decisionsData["loss"]
+        savePitcherID = decisionsData["save"]
+        if "ID" + decisionsData["win"] in liveDataTeams["home"]["players"]:
+            winningPitcher = liveDataTeams["home"]["players"]["ID" + winningPitcherID]
+            losingPitcher = liveDataTeams["away"]["players"]["ID" + losingPitcherID]
+            if decisionsData["save"] is not None:
+                savePitcher = liveDataTeams["home"]["players"]["ID" + savePitcherID]
             else:
-                winningPitcher = data["liveData"]["boxscore"]["teams"]["away"]["ID" + decisionsData["win"]]
-                losingPitcher = data["liveData"]["boxscore"]["teams"]["home"]["ID" + decisionsData["loss"]]
-                savePitcher = data["liveData"]["boxscore"]["teams"]["away"]["ID" + decisionsData["save"]]
-                winningTeam = data["gameData"]["teams"]["away"]["name"]["brief"]
-                losingTeam = data["gameData"]["teams"]["home"]["name"]["brief"]
+                savePitcher = None
+            winningTeam = gameDataTeams["home"]["name"]["brief"]
+            losingTeam = gameDataTeams["away"]["name"]["brief"]
+        else:
+            winningPitcher = liveDataTeams["away"]["players"]["ID" + winningPitcherID]
+            losingPitcher = liveDataTeams["home"]["players"]["ID" + losingPitcherID]
+            if decisionsData["save"] is not None:
+                savePitcher = liveDataTeams["away"]["players"]["ID" + savePitcherID]
+            else:
+                savePitcher = None
+            winningTeam = gameDataTeams["away"]["name"]["brief"]
+            losingTeam = gameDataTeams["home"]["name"]["brief"]
 
-            decisions += "|Decisions||" + "\n"
-            decisions += "|:--|:--|" + "\n"
-            decisions += "|" + "[" + winningTeam + "](" + Editor.options[winningTeam]["sub"] + ")|"
-            decisions += "[" + winningPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + winningPitcher["id"] + ")"
-            decisions += " " + winningPitcher["gameStats"]["pitching"]["notes"]
+        decisions += "|Decisions||" + "\n"
+        decisions += "|:--|:--|" + "\n"
+        decisions += "|" + "[" + winningTeam + "](" + Editor.options[winningTeam]["sub"] + ")|"
+        decisions += "[" + winningPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + winningPitcher["id"] + ")"
+        decisions += " " + winningPitcher["gameStats"]["pitching"]["note"]
 
-            decisions += "|" + "[" + losingTeam + "](" + Editor.options[losingTeam]["sub"] + ")|"
-            decisions += "[" + losingPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + losingPitcher["id"] + ")"
-            decisions += " " + losingPitcher["gameStats"]["pitching"]["notes"]
-            decisions += "\n\n"
-            print "Returning decisions..."
-            return decisions
-        except:
-            print "Missing data for decisions, returning blank text..."
-            return decisions
+        decisions += "|" + "[" + losingTeam + "](" + Editor.options[losingTeam]["sub"] + ")|"
+        decisions += "[" + losingPitcher["name"]["boxname"] + "](http://mlb.mlb.com/team/player.jsp?player_id=" + losingPitcher["id"] + ")"
+        decisions += " " + losingPitcher["gameStats"]["pitching"]["note"]
+        decisions += "\n\n"
+        print "Returning decisions..."
+        return decisions
+        # except:
+            # print "Missing data for decisions, returning blank text..."
+            # return decisions
 
     def generate_status(self, data):
         status = ""
