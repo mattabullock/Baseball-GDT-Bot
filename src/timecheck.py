@@ -34,9 +34,13 @@ class TimeCheck:
                 print "gamecheck couldn't find file, trying again..."
                 time.sleep(20)
         jsonResponse = json.load(response)
-        time = jsonResponse["gameData"]["datetime"]
-        timestring = time["timeDate"] + " " + time["ampm"]
-        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+        timeData = jsonResponse["gameData"]["datetime"]
+        if "timeDate" in timeData:
+            timestring = timeData["timeDate"] + " " + timeData["ampm"]
+            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+        else:
+            timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
+            date_object = datetime.strptime(timestring, "%Y-%m-%d %I:%M %p")
         while True:
             check = datetime.today()
             if date_object >= check:
