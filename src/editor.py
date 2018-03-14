@@ -216,7 +216,7 @@ class Editor:
         header += "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")\n\n"
         header += "|Game Info|Links|\n"
         header += "|:--|:--|\n"
-        header += "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + "@ " + gameData["venue"]["name"] + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")|\n"
+        header += "|**First Pitch:** " + date_object.strftime("%I:%M %p ") + timezone + " @ " + gameData["venue"]["name"] + "|[Gameday](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + game["id"] + ")|\n"
         header += "|**Weather:** " + weather["condition"] + ", " + weather["temp"] + " F, " + "Wind " + weather["wind"]
         if "Y" in game["doubleHeader"] or "S" in game["doubleHeader"]:
             header += "|[Game Graph](http://www.fangraphs.com/livewins.aspx?date=" + date_object.strftime("%Y-%m-%d") + "&team=" + teams["home"]["name"]["brief"] + "&dh=" + game["gameNumber"] + "&season=" + date_object.strftime("%Y") + ")|\n"
