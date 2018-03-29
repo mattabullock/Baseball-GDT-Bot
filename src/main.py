@@ -276,27 +276,27 @@ class Bot:
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game final..."
                             pgt_submit = True
-                        elif "##COMPLETED EARLY" in str:
+                        elif "## COMPLETED EARLY" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Completed Early..."
                             pgt_submit = True
-                        elif "##FINAL: TIE" in str:
+                        elif "## FINAL: TIE" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game final (tie)..."
                             pgt_submit = True
-                        elif "##POSTPONED" in str:
+                        elif "## POSTPONED" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game postponed..."
                             pgt_submit = True
-                        elif "##SUSPENDED" in str:
+                        elif "## SUSPENDED" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game suspended..."
                             pgt_submit = True
-                        elif "##CANCELLED" in str:
+                        elif "## CANCELLED" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game cancelled..."

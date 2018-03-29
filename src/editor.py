@@ -517,7 +517,7 @@ class Editor:
                 print "Returning status..."
                 return status
         elif gameStatus == "Completed Early":
-            status += "##COMPLETED EARLY: "
+            status += "## COMPLETED EARLY: "
             if int(homeTeamRuns) < int(awayTeamRuns):
                 status += awayTeamRuns + "-" + homeTeamRuns + " " + awayTeamName + "\n\n"
                 status += self.generate_decisions(files)
@@ -533,15 +533,15 @@ class Editor:
                 print "Returning status..."
                 return status
         elif gameStatus == "Postponed":
-            status += "##POSTPONED\n\n"
+            status += "## POSTPONED\n\n"
             print "Returning status..."
             return status
         elif gameStatus == "Suspended":
-            status += "##SUSPENDED\n\n"
+            status += "## SUSPENDED\n\n"
             print "Returning status..."
             return status
         elif gameStatus == "Cancelled":
-            status += "##CANCELLED\n\n"
+            status += "## CANCELLED\n\n"
             print "Returning status..."
             return status
         else:
