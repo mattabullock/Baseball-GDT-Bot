@@ -75,9 +75,10 @@ class Editor:
         timeData = game["datetime"]
         if "timeDate" in timeData:
             timestring = timeData["timeDate"] + " " + timeData["ampm"]
+            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         else:
             timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
-        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+            date_object = datetime.strptime(timestring, "%Y-%m-%d %I:%M %p")
         title += game["teams"]["away"]["name"]["full"] + " (" + game["teams"]["away"]["record"]["wins"] + "-" + game["teams"]["away"]["record"]["losses"] + ")"
         title += " @ "
         title += game["teams"]["home"]["name"]["full"] + " (" + game["teams"]["home"]["record"]["wins"] + "-" + game["teams"]["home"]["record"]["losses"] + ")"
@@ -210,10 +211,10 @@ class Editor:
         # Get time data
         if "timeDate" in timeData:
             timestring = timeData["timeDate"] + " " + timeData["ampm"]
+            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         else:
             timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
-        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
-        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+            date_object = datetime.strptime(timestring, "%Y-%m-%d %I:%M %p")
         t = timedelta(hours=self.time_change)
         timezone = self.time_zone
         date_object = date_object - t
