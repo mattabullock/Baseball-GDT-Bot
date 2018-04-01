@@ -72,8 +72,11 @@ class Editor:
                 print "Couldn't find linescore.json for title, trying again..."
                 time.sleep(20)
         game = json.load(response)["gameData"]
-        time = game["datetime"]
-        timestring = time["timeDate"] + " " + time["ampm"]
+        timeData = game["datetime"]
+        if "timeDate" in timeData:
+            timestring = timeData["timeDate"] + " " + timeData["ampm"]
+        else:
+            timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         title += game["teams"]["away"]["name"]["full"] + " (" + game["teams"]["away"]["record"]["wins"] + "-" + game["teams"]["away"]["record"]["losses"] + ")"
         title += " @ "
@@ -198,14 +201,18 @@ class Editor:
         # try:
         gameData = data["gameData"]
         game = gameData["game"]
-        time = gameData["datetime"]
+        timeData = gameData["datetime"]
         weather = gameData["weather"]
         teams = gameData["teams"]
         videoBroadcast = mediaData["media"]["epg"][0]
         audioBroadcast = mediaData["media"]["epg"][2]
 
         # Get time data
-        timestring = time["timeDate"] + " " + time["ampm"]
+        if "timeDate" in timeData:
+            timestring = timeData["timeDate"] + " " + timeData["ampm"]
+        else:
+            timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
+        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
         t = timedelta(hours=self.time_change)
         timezone = self.time_zone
