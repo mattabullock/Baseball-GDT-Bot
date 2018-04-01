@@ -87,44 +87,52 @@ class Editor:
         print "Returning title..."
         return title
 
-    def generate_pre_code(self, dirs):
+    def generate_pre_code(self, games):
         code = ""
-        for d in dirs:
-            temp_dirs = []
-            temp_dirs.append(d + "linescore.json")
-            temp_dirs.append(d + "gamecenter.xml")
-            files = self.download_pre_files(temp_dirs)
-            if self.pre_probables: code = code + self.generate_pre_probables(files)
-            if self.pre_first_pitch: code = code + self.generate_pre_first_pitch(files)
+        for g in games:
+            response = urllib2.urlopen(g)
+            gameData = json.load(response)
+            response = urllib2.urlopen("https://statsapi.mlb.com/api/v1/game/" +
+                                        gameData["gameData"]["game"]["pk"]+ "/content")
+            mediaData = json.load(response)
+            if self.pre_probables: code += self.generate_pre_probables(gameData, mediaData)
+            if self.pre_first_pitch: code += self.generate_pre_first_pitch(gameData)
             code += "\n\n"
         print "Returning all code..."
         return code
 
-    def download_pre_files(self,dirs):
-        files = dict()
-        response = urllib2.urlopen(dirs[0])
-        files["linescore"] = json.load(response)
-        response = urllib2.urlopen(dirs[1])
-        files["gamecenter"] = ET.parse(response)
-        return files
-
     def generate_pre_probables(self,files):
         probables = ""
         try:
-            game = files["linescore"].get('data').get('game')
             subs = self.get_subreddits(game.get('home_team_name'), game.get('away_team_name'))
 
-            root = files["gamecenter"].getroot()
-            broadcast = root.find('broadcast')
+            videoBroadcast = mediaData["media"]["epg"][0]
+            audioBroadcast = mediaData["media"]["epg"][2]
 
-            if not isinstance(broadcast[0][0].text, type(None)):
-                home_tv_broadcast = broadcast[0][0].text
-            if not isinstance(broadcast[1][0].text, type(None)):
-                away_tv_broadcast = broadcast[1][0].text
-            if not isinstance(broadcast[0][1].text, type(None)):
-                home_radio_broadcast = broadcast[0][1].text
-            if not isinstance(broadcast[1][1].text, type(None)):
-                away_radio_broadcast = broadcast[1][1].text
+            header += "|**TV:** "
+
+            video = False
+            homeVideo = ""
+            awayVideo = ""
+            for item in videoBroadcast["items"]:
+                if item["callLetters"]:
+                    header += item["callLetters"] + ", "
+                    video = True
+            if video:
+                header = header[:-2]
+            header += "|**Radio:** "
+
+            audio = False
+            homeAudio = ""
+            awayAudio = ""
+            for item in audioBroadcast["items"]:
+                if item["callLetters"]:
+                    if item["type"] is "HOME":
+                        homeAudio += item["callLetters"] + ", "
+                    if item["type"] is "AWAY":
+                        awayAudio += item["callLetters"] + ", "
+            if audio:
+                header = header[:-2]
 
             away_pitcher_obj = game.get('away_probable_pitcher')
             home_pitcher_obj = game.get('home_probable_pitcher')
@@ -430,7 +438,6 @@ class Editor:
             print "Missing data for scoringPlays, returning blank text..."
             return scoringPlays
 
-
     def generate_highlights(self, data):
         highlightCode = ""
         try:
@@ -449,7 +456,6 @@ class Editor:
         except:
             print "Missing data for highlight, returning blank text..."
             return highlightCode
-
 
     def generate_decisions(self, data):
         decisions = ""
