@@ -149,14 +149,12 @@ class Editor:
             awayPitcher = "[" + awayPitcherName + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + awayPitcherID + ")"
             awayPitcher += " (" + awayPitcherStats["wins"] + "-" + awayPitcherStats["losses"] + ", " + awayPitcherStats["era"] + ")"
 
-            #TODO: find these
-            home_preview = "[Link](http://mlb.com" + game.get('home_preview_link') + ")"
-            away_preview = "[Link](http://mlb.com" + game.get('away_preview_link') + ")"
+            preview = "[Preview](http://mlb.mlb.com/mlb/gameday/index.jsp?gid=" + gameData["gameData"]["game"]["id"] + ")\n\n"
 
-            probables  = " |Pitcher|TV|Radio|Preview\n"
-            probables += "-|-|-|-|-\n"
-            probables += "[" + awayTeamName + "](" + awaySub + ")|" + awayPitcher + "|" + awayVideo + "|" + awayAudio + "|" + away_preview + "\n"
-            probables += "[" + homeTeamName + "](" + homeSub + ")|" + homePitcher + "|" + homeVideo + "|" + homeAudio + "|" + home_preview + "\n"
+            probables  = "| |Pitcher|TV|Radio|Preview\n"
+            probables += "|-|-|-|-|-\n"
+            probables += "[" + awayTeamName + "](" + awaySub + ")|" + awayPitcher + "|" + awayVideo + "|" + awayAudio + "|" + preview + "\n"
+            probables += "[" + homeTeamName + "](" + homeSub + ")|" + homePitcher + "|" + homeVideo + "|" + homeAudio + "|" + preview + "\n"
 
             probables += "\n"
 
@@ -165,13 +163,17 @@ class Editor:
             print "Missing data for probables, returning empty string..."
             return probables
 
-    def generate_pre_first_pitch(self,files):
+    def generate_pre_first_pitch(self, gameData):
         first_pitch = ""
         try:
-            game = files["linescore"].get('data').get('game')
-
-            timestring = game.get('time_date') + " " + game.get('ampm')
-            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+            # Get time data
+            timeData = gameData["datetime"]
+            if "timeDate" in timeData:
+                timestring = timeData["timeDate"] + " " + timeData["ampm"]
+                date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+            else:
+                timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
+                date_object = datetime.strptime(timestring, "%Y-%m-%d %I:%M %p")
             t = timedelta(hours=self.time_change)
             timezone = self.time_zone
             date_object = date_object - t
