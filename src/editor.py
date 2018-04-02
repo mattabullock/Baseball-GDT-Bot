@@ -87,62 +87,76 @@ class Editor:
         print "Returning title..."
         return title
 
-    def generate_pre_code(self, dirs):
+    def generate_pre_code(self, games):
         code = ""
-        for d in dirs:
-            temp_dirs = []
-            temp_dirs.append(d + "linescore.json")
-            temp_dirs.append(d + "gamecenter.xml")
-            files = self.download_pre_files(temp_dirs)
-            if self.pre_probables: code = code + self.generate_pre_probables(files)
-            if self.pre_first_pitch: code = code + self.generate_pre_first_pitch(files)
+        for g in games:
+            response = urllib2.urlopen(g)
+            gameData = json.load(response)
+            response = urllib2.urlopen("https://statsapi.mlb.com/api/v1/game/" +
+                                        gameData["gameData"]["game"]["pk"]+ "/content")
+            mediaData = json.load(response)
+            if self.pre_probables: code += self.generate_pre_probables(gameData, mediaData)
+            if self.pre_first_pitch: code += self.generate_pre_first_pitch(gameData)
             code += "\n\n"
         print "Returning all code..."
         return code
 
-    def download_pre_files(self,dirs):
-        files = dict()
-        response = urllib2.urlopen(dirs[0])
-        files["linescore"] = json.load(response)
-        response = urllib2.urlopen(dirs[1])
-        files["gamecenter"] = ET.parse(response)
-        return files
-
-    def generate_pre_probables(self,files):
+    def generate_pre_probables(self, gameData, mediaData):
         probables = ""
         try:
-            game = files["linescore"].get('data').get('game')
-            subs = self.get_subreddits(game.get('home_team_name'), game.get('away_team_name'))
+            homeTeamName = gameData["gameData"]["teams"]["home"]["teamName"]
+            awayTeamName = gameData["gameData"]["teams"]["away"]["teamName"]
+            homeSub = self.options[homeTeamName]["sub"]
+            awaySub = self.options[awayTeamName]["sub"]
 
-            root = files["gamecenter"].getroot()
-            broadcast = root.find('broadcast')
+            videoBroadcast = mediaData["media"]["epg"][0]
+            audioBroadcast = mediaData["media"]["epg"][2]
 
-            if not isinstance(broadcast[0][0].text, type(None)):
-                home_tv_broadcast = broadcast[0][0].text
-            if not isinstance(broadcast[1][0].text, type(None)):
-                away_tv_broadcast = broadcast[1][0].text
-            if not isinstance(broadcast[0][1].text, type(None)):
-                home_radio_broadcast = broadcast[0][1].text
-            if not isinstance(broadcast[1][1].text, type(None)):
-                away_radio_broadcast = broadcast[1][1].text
+            homeVideo = ""
+            awayVideo = ""
+            for item in videoBroadcast["items"]:
+                if item["callLetters"]:
+                    if item["type"] is "HOME":
+                        homeVideo += item["callLetters"] + ", "
+                    if item["type"] is "AWAY":
+                        awayVideo += item["callLetters"] + ", "
 
-            away_pitcher_obj = game.get('away_probable_pitcher')
-            home_pitcher_obj = game.get('home_probable_pitcher')
+            homeVideo = homeVideo[:-2] if homeVideo else ""
+            awayVideo = awayVideo[:-2] if awayVideo else ""
 
-            away_pitcher = away_pitcher_obj.get('first_name') + " " + away_pitcher_obj.get('last_name')
-            away_pitcher = "[" + away_pitcher + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + away_pitcher_obj.get('id') + ")"
-            away_pitcher += " (" + away_pitcher_obj.get('wins') + "-" + away_pitcher_obj.get('losses') + ", " + away_pitcher_obj.get('era') + ")"
-            home_pitcher = home_pitcher_obj.get('first_name') + " " + home_pitcher_obj.get('last_name')
-            home_pitcher = "[" + home_pitcher + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + home_pitcher_obj.get('id') + ")"
-            home_pitcher += " (" + home_pitcher_obj.get('wins') + "-" + home_pitcher_obj.get('losses') + ", " + home_pitcher_obj.get('era') + ")"
+            homeAudio = ""
+            awayAudio = ""
+            for item in audioBroadcast["items"]:
+                if item["callLetters"]:
+                    if item["type"] is "HOME":
+                        homeAudio += item["callLetters"] + ", "
+                    if item["type"] is "AWAY":
+                        awayAudio += item["callLetters"] + ", "
 
-            away_preview = "[Link](http://mlb.com" + game.get('away_preview_link') + ")"
+            homeAudio = homeAudio[:-2] if homeAudio else ""
+            awayAudio = awayAudio[:-2] if awayAudio else ""
+
+
+            homePitcherID = gameData["gameData"]["probablePitchers"]["home"]["id"]
+            awayPitcherID = gameData["gameData"]["probablePitchers"]["away"]["id"]
+            homePitcherName = gameData["gameData"]["probablePitchers"]["home"]["fullName"]
+            awayPitcherName = gameData["gameData"]["probablePitchers"]["away"]["fullName"]
+            homePitcherStats = gameData["liveData"]["boxscore"]["teams"]["home"]["players"]["ID" + homePitcherID]["seasonStats"]["pitching"]
+            awayPitcherStats = gameData["liveData"]["boxscore"]["teams"]["away"]["players"]["ID" + awayPitcherID]["seasonStats"]["pitching"]
+
+            homePitcher = "[" + homePitcherName + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + homePitcherID + ")"
+            homePitcher += " (" + homePitcherStats["wins"] + "-" + homePitcherStats["losses"] + ", " + homePitcherStats["era"] + ")"
+            awayPitcher = "[" + awayPitcherName + "](" + "http://mlb.mlb.com/team/player.jsp?player_id=" + awayPitcherID + ")"
+            awayPitcher += " (" + awayPitcherStats["wins"] + "-" + awayPitcherStats["losses"] + ", " + awayPitcherStats["era"] + ")"
+
+            #TODO: find these
             home_preview = "[Link](http://mlb.com" + game.get('home_preview_link') + ")"
+            away_preview = "[Link](http://mlb.com" + game.get('away_preview_link') + ")"
 
             probables  = " |Pitcher|TV|Radio|Preview\n"
             probables += "-|-|-|-|-\n"
-            probables += "[" + game.get('away_team_name') + "](" + subs[1] + ")|" + away_pitcher + "|" + away_tv_broadcast + "|" + away_radio_broadcast + "|" + away_preview + "\n"
-            probables += "[" + game.get('home_team_name') + "](" + subs[0] + ")|" + home_pitcher + "|" + home_tv_broadcast + "|" + home_radio_broadcast + "|" + home_preview + "\n"
+            probables += "[" + awayTeamName + "](" + awaySub + ")|" + awayPitcher + "|" + awayVideo + "|" + awayAudio + "|" + away_preview + "\n"
+            probables += "[" + homeTeamName + "](" + homeSub + ")|" + homePitcher + "|" + homeVideo + "|" + homeAudio + "|" + home_preview + "\n"
 
             probables += "\n"
 
@@ -430,7 +444,6 @@ class Editor:
             print "Missing data for scoringPlays, returning blank text..."
             return scoringPlays
 
-
     def generate_highlights(self, data):
         highlightCode = ""
         try:
@@ -450,7 +463,6 @@ class Editor:
         except:
             print "Missing data for highlight, returning blank text..."
             return highlightCode
-
 
     def generate_decisions(self, data):
         decisions = ""

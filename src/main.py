@@ -173,9 +173,9 @@ class Bot:
                     teamGames.append(baseURL + game["link"])
 
             # TODO: FIX THIS
-            if self.PREGAME_THREAD and len(teamGames) > 0:
+            if self.PREGAME_THREAD and len(teamGames) > 0 and 1==0:
                 timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
-                title = edit.generate_title(directories[0],"pre")
+                title = edit.generate_title(teamGames[0],"pre")
                 while True:
                     try:
                         posted = False
@@ -183,7 +183,7 @@ class Bot:
                         for submission in subreddit.new():
                             if submission.title == title:
                                 print "Pregame thread already posted, getting submission..."
-                                submission.edit(edit.generate_pre_code(directories))
+                                submission.edit(edit.generate_pre_code(teamGames))
                                 posted = True
                                 break
                         if not posted:
