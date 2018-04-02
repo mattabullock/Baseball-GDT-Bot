@@ -435,13 +435,14 @@ class Editor:
         highlightCode = ""
         try:
             highlights = data["highlights"]["live"]["items"]
-            highlightCode += "|Team|Highlight|\n"
-            highlightCode += "|:--|:--|\n"
+            highlightCode += "|Team|Highlight|SD|HD|\n"
+            highlightCode += "|:--|:--|:--|:--|\n"
             for highlight in highlights:
                 try:
-                    highlightCode += "|" + Editor.options[highlight["kicker"].replace("Highlight ", "")]["tag"] + "|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+                    highlightCode += "|" + Editor.options[highlight["kicker"].replace("Highlight ", "")]["tag"]
                 except:
-                    highlightCode += "|[](/MLB)|[" + highlight["headline"] + "](" + highlight["playbacks"][2]["url"] + ")|\n"
+                    highlightCode += "|[](/MLB)"
+                highlightCode += "|" + highlight["headline"] + "|[SD](" + highlight["playbacks"][0]["url"] + ")|[HD](" + highlight["playbacks"][2]["url"] + ")|\n"
 
             highlightCode += "\n\n"
             print "Returning highlight..."
