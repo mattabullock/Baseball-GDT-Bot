@@ -70,5 +70,5 @@ class TimeCheck:
             if date_object.hour <= check.hour:
                 return
             else:
-                print "Last pre-game check: " + datetime.strftime(check, "%d %I:%M %p")
+                print "Last pre-game/offday check: " + datetime.strftime(check, "%d %I:%M %p")
                 time.sleep(600)

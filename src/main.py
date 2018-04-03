@@ -61,6 +61,9 @@ class Bot:
             self.TEAM_CODE = settings.get('TEAM_CODE')
             if self.TEAM_CODE == None: return "Missing TEAM_CODE"
 
+            self.OFFDAY_THREAD = settings.get('OFFDAY_THREAD')
+            if self.OFFDAY_THREAD == None: return "Missing OFFDAY_THREAD"
+
             self.PREGAME_THREAD = settings.get('PREGAME_THREAD')
             if self.PREGAME_THREAD == None: return "Missing PREGAME_THREAD"
 
@@ -78,6 +81,9 @@ class Bot:
 
             self.INBOXREPLIES = settings.get('INBOXREPLIES')
             if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
+
+            temp_settings = settings.get('OFFDAY_THREAD_SETTINGS')
+            self.OFFDAY_THREAD_SETTINGS = (temp_settings.get('OFFDAY_THREAD_TAG'),temp_settings.get('OFFDAY_THREAD_TIME'))
 
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
@@ -172,8 +178,40 @@ class Bot:
                 if game["teams"]["away"]["team"]["id"] == int(self.TEAM_CODE) or game["teams"]["home"]["team"]["id"] == int(self.TEAM_CODE):
                     teamGames.append(baseURL + game["link"])
 
-            # TODO: FIX THIS
-            if self.PREGAME_THREAD and len(teamGames) > 0 and 1==0:
+            if self.OFFDAY_THREAD and not teamGames:
+                timechecker.pregamecheck(self.OFFDAY_THREAD_SETTINGS[1])
+                title = self.OFFDAY_THREAD_SETTINGS[0] + datetime.today().strftime("%B %m, %Y")
+                while True:
+                    try:
+                        posted = False
+                        subreddit = r.subreddit(self.SUBREDDIT)
+                        for submission in subreddit.new():
+                            if submission.title == title:
+                                print "Offday thread already posted, getting submission..."
+                                posted = True
+                                break
+                        if not posted:
+                            print "Submitting off day thread..."
+                            if self.STICKY and 'sub' in locals():
+                                try:
+                                    sub.mod.sticky(state=False)
+                                except Exception, err:
+                                    print "Unsticky failed, continuing."
+                            sub = subreddit.submit(title, selftext="", send_replies=self.INBOXREPLIES)
+                            print "off day thread submitted..."
+                            if self.STICKY:
+                                print "Stickying submission..."
+                                sub.mod.sticky()
+                                print "Submission stickied..."
+                            print "Sleeping for two minutes..."
+                            print datetime.strftime(datetime.today(), "%d %I:%M %p")
+                            time.sleep(5)
+                        break
+                    except Exception, err:
+                        print err
+                        time.sleep(300)
+
+            if self.PREGAME_THREAD and len(teamGames) > 0:
                 timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
                 title = edit.generate_title(teamGames[0],"pre")
                 while True:
