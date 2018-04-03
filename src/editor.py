@@ -454,7 +454,7 @@ class Editor:
             highlightCode += "|:--|:--|:--|:--|\n"
             for highlight in highlights:
                 try:
-                    highlightCode += "|" + Editor.options[highlight["kicker"].replace("Highlight ", "")]["tag"]
+                    highlightCode += "|" + Editor.options[highlight["kicker"].replace("Highlights ", "").replace("Top Play ", "")]["tag"]
                 except:
                     highlightCode += "|[](/MLB)"
                 highlightCode += "|" + highlight["headline"] + "|[SD](" + highlight["playbacks"][0]["url"] + ")|[HD](" + highlight["playbacks"][2]["url"] + ")|\n"
