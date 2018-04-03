@@ -1,7 +1,7 @@
 Baseball GDT Bot
 =====================================
 
-### Current Version: 3.1.0
+### Current Version: 4.0.0
 
 The point of this project is to create a bot that will generate a
 	game discussion thread that contains live linescore and boxscore,
@@ -41,6 +41,8 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 
 * `TEAM_CODE` - three letter code that represents team, look this up
 
+* `OFFDAY_THREAD` - do you want an offday discussion thread?
+
 * `PREGAME_THREAD` - do you want a pre game thread?
 
 * `POST_GAME_THREAD` - do you want a post game thread?
@@ -52,6 +54,8 @@ To use the default settings, copy `sample_settings.json` into `src/settings.json
 * `MESSAGE` - send submission shortlink to /u/baseballbot
 
 * `INBOXREPLIES` - do you want to receive thread replies in the bot's inbox?
+
+* `OFFDAY_THREAD_SETTINGS` - what to include in the offday threads
 
 * `PRE_THREAD_SETTINGS` - what to include in the pregame threads
 
@@ -75,6 +79,9 @@ Modules being used:
 	ElementTree - XML parsing
 
 ### Updates
+
+#### v4.0.0
+* Updated to new MLB stats API.
 
 #### v3.1.0
 * Updated to praw version v5.0.1

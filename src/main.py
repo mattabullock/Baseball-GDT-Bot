@@ -61,6 +61,9 @@ class Bot:
             self.TEAM_CODE = settings.get('TEAM_CODE')
             if self.TEAM_CODE == None: return "Missing TEAM_CODE"
 
+            self.OFFDAY_THREAD = settings.get('OFFDAY_THREAD')
+            if self.OFFDAY_THREAD == None: return "Missing OFFDAY_THREAD"
+
             self.PREGAME_THREAD = settings.get('PREGAME_THREAD')
             if self.PREGAME_THREAD == None: return "Missing PREGAME_THREAD"
 
@@ -78,6 +81,9 @@ class Bot:
 
             self.INBOXREPLIES = settings.get('INBOXREPLIES')
             if self.INBOXREPLIES == None: return "Missing INBOXREPLIES"
+
+            temp_settings = settings.get('OFFDAY_THREAD_SETTINGS')
+            self.OFFDAY_THREAD_SETTINGS = (temp_settings.get('OFFDAY_THREAD_TAG'),temp_settings.get('OFFDAY_THREAD_TIME'))
 
             temp_settings = settings.get('PRE_THREAD_SETTINGS')
             content_settings = temp_settings.get('CONTENT')
@@ -151,8 +157,10 @@ class Bot:
         while True:
             today = datetime.today()
 
-            url = "http://gd2.mlb.com/components/game/mlb/"
-            url = url + "year_" + today.strftime("%Y") + "/month_" + today.strftime("%m") + "/day_" + today.strftime("%d")
+            # url = "http://gd2.mlb.com/components/game/mlb/"
+            baseURL = "https://statsapi.mlb.com"
+            url = baseURL + "/api/v1/schedule?language=en&sportId=1&date="
+            url += today.strftime("%m/%d/%Y")
 
             response = ""
             while not response:
@@ -162,17 +170,50 @@ class Bot:
                     print "Couldn't find URL, trying again..."
                     time.sleep(20)
 
-            html = response.readlines()
-            directories = []
-            for v in html:
-                if self.TEAM_CODE in v:
-                    v = v[v.index("\"") + 1:len(v)]
-                    v = v[0:v.index("\"")]
-                    directories.append(url + v)
+            schedule = json.load(response)
+            todayGames = schedule["dates"][0]["games"]
 
-            if self.PREGAME_THREAD and len(directories) > 0:
+            teamGames = []
+            for game in todayGames:
+                if game["teams"]["away"]["team"]["id"] == int(self.TEAM_CODE) or game["teams"]["home"]["team"]["id"] == int(self.TEAM_CODE):
+                    teamGames.append(baseURL + game["link"])
+
+            if self.OFFDAY_THREAD and not teamGames:
+                timechecker.pregamecheck(self.OFFDAY_THREAD_SETTINGS[1])
+                title = self.OFFDAY_THREAD_SETTINGS[0] + datetime.today().strftime("%B %m, %Y")
+                while True:
+                    try:
+                        posted = False
+                        subreddit = r.subreddit(self.SUBREDDIT)
+                        for submission in subreddit.new():
+                            if submission.title == title:
+                                print "Offday thread already posted, getting submission..."
+                                posted = True
+                                break
+                        if not posted:
+                            print "Submitting off day thread..."
+                            if self.STICKY and 'sub' in locals():
+                                try:
+                                    sub.mod.sticky(state=False)
+                                except Exception, err:
+                                    print "Unsticky failed, continuing."
+                            sub = subreddit.submit(title, selftext="", send_replies=self.INBOXREPLIES)
+                            print "off day thread submitted..."
+                            if self.STICKY:
+                                print "Stickying submission..."
+                                sub.mod.sticky()
+                                print "Submission stickied..."
+                            print "Sleeping for two minutes..."
+                            print datetime.strftime(datetime.today(), "%d %I:%M %p")
+                            time.sleep(5)
+                        break
+                    except Exception, err:
+                        print err
+                        time.sleep(300)
+
+            if self.PREGAME_THREAD and len(teamGames) > 0:
                 timechecker.pregamecheck(self.PRE_THREAD_SETTINGS[1])
-                title = edit.generate_title(directories[0],"pre")
+                title = edit.generate_title(teamGames[0],"pre")
                 while True:
                     try:
                         posted = False
@@ -180,7 +221,7 @@ class Bot:
                         for submission in subreddit.new():
                             if submission.title == title:
                                 print "Pregame thread already posted, getting submission..."
-                                submission.edit(edit.generate_pre_code(directories))
+                                submission.edit(edit.generate_pre_code(teamGames))
                                 posted = True
                                 break
                         if not posted:
@@ -204,10 +245,10 @@ class Bot:
                         print err
                         time.sleep(300)
 
-            for d in directories:
-                timechecker.gamecheck(d)
-                title = edit.generate_title(d,"game")
-                if not timechecker.ppcheck(d):
+            for game in teamGames:
+                timechecker.gamecheck(game)
+                title = edit.generate_title(game,"game")
+                if not timechecker.ppcheck(game):
                     while True:
                         check = datetime.today()
                         try:
@@ -227,7 +268,7 @@ class Bot:
                                         print "Unsticky failed, continuing."
 
                                 print "Submitting game thread..."
-                                sub = subreddit.submit(title, selftext=edit.generate_code(d,"game"), send_replies=self.INBOXREPLIES)
+                                sub = subreddit.submit(title, selftext=edit.generate_code(game, "game"), send_replies=self.INBOXREPLIES)
                                 print "Game thread submitted..."
 
                                 if self.STICKY:
@@ -257,7 +298,7 @@ class Bot:
 
                     while True:
                         check = datetime.today()
-                        str = edit.generate_code(d,"game")
+                        str = edit.generate_code(game, "game")
                         while True:
                             try:
                                 sub.edit(str)
@@ -273,27 +314,27 @@ class Bot:
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game final..."
                             pgt_submit = True
-                        elif "##COMPLETED EARLY" in str:
+                        elif "## COMPLETED EARLY" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Completed Early..."
                             pgt_submit = True
-                        elif "##FINAL: TIE" in str:
+                        elif "## FINAL: TIE" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game final (tie)..."
                             pgt_submit = True
-                        elif "##POSTPONED" in str:
+                        elif "## POSTPONED" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game postponed..."
                             pgt_submit = True
-                        elif "##SUSPENDED" in str:
+                        elif "## SUSPENDED" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game suspended..."
                             pgt_submit = True
-                        elif "##CANCELLED" in str:
+                        elif "## CANCELLED" in str:
                             check = datetime.today()
                             print datetime.strftime(check, "%d %I:%M %p")
                             print "Game cancelled..."
@@ -307,8 +348,8 @@ class Bot:
 
                             if self.POST_GAME_THREAD:
                                 print "Submitting postgame thread..."
-                                posttitle = edit.generate_title(d,"post")
-                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(d,"post"), send_replies=self.INBOXREPLIES)
+                                posttitle = edit.generate_title(game, "post")
+                                sub = subreddit.submit(posttitle, selftext=edit.generate_code(game, "post"), send_replies=self.INBOXREPLIES)
                                 print "Postgame thread submitted..."
 
                                 if self.STICKY:

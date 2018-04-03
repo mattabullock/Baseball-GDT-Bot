@@ -23,20 +23,24 @@ class TimeCheck:
                 time.sleep(600)
 
 
-    def gamecheck(self,dir):
+    def gamecheck(self, gameURL):
         while True:
             try:
-                response = urllib2.urlopen(dir + "linescore.json")
+                response = urllib2.urlopen(gameURL)
                 break
             except:
                 check = datetime.today()
                 print datetime.strftime(check, "%d %I:%M %p")
                 print "gamecheck couldn't find file, trying again..."
                 time.sleep(20)
-        jsonfile = json.load(response)
-        game = jsonfile.get('data').get('game')
-        timestring = game.get('time_date') + " " + game.get('ampm')
-        date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+        jsonResponse = json.load(response)
+        timeData = jsonResponse["gameData"]["datetime"]
+        if "timeDate" in timeData:
+            timestring = timeData["timeDate"] + " " + timeData["ampm"]
+            date_object = datetime.strptime(timestring, "%Y/%m/%d %I:%M %p")
+        else:
+            timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
+            date_object = datetime.strptime(timestring, "%Y-%m-%d %I:%M %p")
         while True:
             check = datetime.today()
             if date_object >= check:
@@ -48,17 +52,16 @@ class TimeCheck:
             else:
                 return
 
-    def ppcheck(self,dir):
+    def ppcheck(self, gameURL):
         try:
-            response = urllib2.urlopen(dir + "linescore.json")
+            response = urllib2.urlopen(gameURL)
         except:
             check = datetime.today()
             print datetime.strftime(check, "%d %I:%M %p")
             print "ppcheck Couldn't find file, trying again..."
             time.sleep(20)
         jsonfile = json.load(response)
-        game = jsonfile.get('data').get('game')
-        return (game.get('status') == "Postponed")
+        return jsonfile["gameData"]["status"]["abstractGameState"] == "Postponed"
 
     def pregamecheck(self,pre_time):
         date_object = datetime.strptime(pre_time, "%I%p")
@@ -67,5 +70,5 @@ class TimeCheck:
             if date_object.hour <= check.hour:
                 return
             else:
-                print "Last pre-game check: " + datetime.strftime(check, "%d %I:%M %p")
+                print "Last pre-game/offday check: " + datetime.strftime(check, "%d %I:%M %p")
                 time.sleep(600)
