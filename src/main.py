@@ -231,7 +231,7 @@ class Bot:
                                     sub.mod.sticky(state=False)
                                 except Exception, err:
                                     print "Unsticky failed, continuing."
-                            sub = subreddit.submit(title, selftext=edit.generate_pre_code(directories), send_replies=self.INBOXREPLIES)
+                            sub = subreddit.submit(title, selftext=edit.generate_pre_code(teamGames), send_replies=self.INBOXREPLIES)
                             print "Pregame thread submitted..."
                             if self.STICKY:
                                 print "Stickying submission..."

@@ -79,9 +79,11 @@ class Editor:
         else:
             timestring = timeData["originalDate"] + " " + timeData["time"] + " " + timeData["ampm"]
             date_object = datetime.strptime(timestring, "%Y-%m-%d %I:%M %p")
-        title += game["teams"]["away"]["name"]["full"] + " (" + game["teams"]["away"]["record"]["wins"] + "-" + game["teams"]["away"]["record"]["losses"] + ")"
+        awayTeamName = game["teams"]["away"]["name"] if isinstance(game["teams"]["away"]["name"], basestring) else game["teams"]["away"]["name"]["full"]
+        homeTeamName = game["teams"]["home"]["name"] if isinstance(game["teams"]["home"]["name"], basestring) else game["teams"]["home"]["name"]["full"]
+        title += awayTeamName + " (" + str(game["teams"]["away"]["record"]["wins"]) + "-" + str(game["teams"]["away"]["record"]["losses"]) + ")"
         title += " @ "
-        title += game["teams"]["home"]["name"]["full"] + " (" + game["teams"]["home"]["record"]["wins"] + "-" + game["teams"]["home"]["record"]["losses"] + ")"
+        title += homeTeamName + " (" + str(game["teams"]["home"]["record"]["wins"]) + "-" + str(game["teams"]["home"]["record"]["losses"]) + ")"
         title += " - "
         title += date_object.strftime("%B %d, %Y")
         print "Returning title..."
@@ -457,7 +459,14 @@ class Editor:
                     highlightCode += "|" + Editor.options[highlight["kicker"].replace("Highlights ", "").replace("Top Play ", "")]["tag"]
                 except:
                     highlightCode += "|[](/MLB)"
-                highlightCode += "|" + highlight["headline"] + "|[SD](" + highlight["playbacks"][0]["url"] + ")|[HD](" + highlight["playbacks"][2]["url"] + ")|\n"
+                SDHighlightURL = ""
+                HDHighlightURL = ""
+                for playback in highlight["playbacks"]:
+                    if playback["name"] == "FLASH_1200K_640X360":
+                        SDHighlightURL = playback["url"]
+                    elif playback["name"] == "FLASH_2500K_1280X720":
+                        HDHighlightURL = playback["url"]
+                highlightCode += "|" + highlight["headline"] + "|[SD](" + SDHighlightURL + ")|[HD](" + HDHighlightURL + ")|\n"
 
             highlightCode += "\n\n"
             print "Returning highlight..."
