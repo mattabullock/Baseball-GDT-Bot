@@ -180,7 +180,7 @@ class Bot:
 
             if self.OFFDAY_THREAD and not teamGames:
                 timechecker.pregamecheck(self.OFFDAY_THREAD_SETTINGS[1])
-                title = self.OFFDAY_THREAD_SETTINGS[0] + datetime.today().strftime("%B %m, %Y")
+                title = self.OFFDAY_THREAD_SETTINGS[0] + datetime.strftime(datetime.today(), "%B %d, %Y")
                 while True:
                     try:
                         posted = False
