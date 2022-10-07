@@ -1,9 +1,9 @@
 {
-    "CLIENT_ID": "XXX",
-    "CLIENT_SECRET": "XXX",
+    "CLIENT_ID": "ZZZ",
+    "CLIENT_SECRET": "ZZZ",
     "USER_AGENT": "",
     "REDIRECT_URI": "http://127.0.0.1:8080",
-    "REFRESH_TOKEN": "XXX",
+    "REFRESH_TOKEN": "ZZZ",
     "BOT_TIME_ZONE": "ET",
     "TEAM_TIME_ZONE": "ET",
     "POST_TIME": 1,
